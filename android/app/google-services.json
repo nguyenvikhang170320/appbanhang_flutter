@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "233984732592",
+    "project_id": "appbanhangflutter",
+    "storage_bucket": "appbanhangflutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233984732592:android:f236edc216b9f9c4447a75",
+        "android_client_info": {
+          "package_name": "com.example.appbanhang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233984732592-9dfnqi0c9j46emn0s58uo291uri5816h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuDFtOd6roJ9BVh_8nG5DvGWWWhIpYhb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233984732592-9dfnqi0c9j46emn0s58uo291uri5816h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
