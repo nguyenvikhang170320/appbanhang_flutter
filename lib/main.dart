@@ -6,7 +6,13 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // kết nối firebase
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+    apiKey: 'AIzaSyAuDFtOd6roJ9BVh_8nG5DvGWWWhIpYhb0',
+    appId: '1:233984732592:android:f236edc216b9f9c4447a75',
+    messagingSenderId: 'sendid',
+    projectId: 'appbanhangflutter',
+  )); // kết nối firebase
   runApp(const MyApp());
 }
 

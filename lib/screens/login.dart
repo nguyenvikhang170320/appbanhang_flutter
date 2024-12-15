@@ -18,6 +18,7 @@ class Login extends StatefulWidget {
 }
 
 final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+final _messangerKey = GlobalKey<ScaffoldMessengerState>();
 
 final RegExp nameRegExp = RegExp(
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
@@ -33,8 +34,8 @@ class _LoginState extends State<Login> {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
         ScaffoldMessenger.of(context).showSnackBar((SnackBar(
-          content:
-              Text("Đăng nhập thành công!", style: TextStyle(fontSize: 20.0)),
+          content: Text("Đăng nhập thành công!",
+              style: TextStyle(fontSize: 20.0, color: Colors.yellow)),
         )));
         // Navigator.pushReplacement(
         //     context, MaterialPageRoute(builder: (context) => BottomNav()));
@@ -43,20 +44,20 @@ class _LoginState extends State<Login> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
             "Không tìm thấy người dùng nào cho email đó",
-            style: TextStyle(fontSize: 18.0, color: Colors.black),
+            style: TextStyle(fontSize: 18.0, color: Colors.red),
           )));
         } else if (e.code == 'wrong-password') {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
             "Sai mật khẩu",
-            style: TextStyle(fontSize: 18.0, color: Colors.black),
+            style: TextStyle(fontSize: 18.0, color: Colors.red),
           )));
         }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Vui lòng kiểm tra lại thông tin nhập liệu.'),
+          content: Text('Vui lòng kiểm tra lại thông tin.'),
         ),
       );
     }
@@ -97,6 +98,8 @@ class _LoginState extends State<Login> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Vui lòng nhập mật khẩu";
+              } else if (value == "wrong-password") {
+                return "Mật khẩu sai";
               }
               return null;
             },
@@ -144,6 +147,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _messangerKey,
       resizeToAvoidBottomInset: false,
       // ignore: avoid_unnecessary_containers
       body: Form(
