@@ -1,8 +1,8 @@
-import 'package:appbanhang/screens/account.dart';
-import 'package:appbanhang/screens/bill.dart';
-import 'package:appbanhang/screens/cart.dart';
-import 'package:appbanhang/screens/home.dart';
-import 'package:appbanhang/screens/wishlist.dart';
+import 'package:appbanhang/pages/account.dart';
+import 'package:appbanhang/pages/bill.dart';
+import 'package:appbanhang/pages/cart.dart';
+import 'package:appbanhang/pages/home.dart';
+import 'package:appbanhang/pages/wishlist.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 

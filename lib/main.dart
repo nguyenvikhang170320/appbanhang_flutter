@@ -1,6 +1,6 @@
-import 'package:appbanhang/screens/bottomnav.dart';
-import 'package:appbanhang/screens/login.dart';
-import 'package:appbanhang/screens/signup.dart';
+// import 'package:appbanhang/pages/bottomnav.dart';
+// import 'package:appbanhang/pages/home.dart';
+import 'package:appbanhang/pages/homepages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Login(),
+          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          // useMaterial3: true,
+          ),
+      home: HomePages(),
     );
   }
 }
