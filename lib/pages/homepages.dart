@@ -1,3 +1,8 @@
+import 'package:appbanhang/pages/listcategory.dart';
+import 'package:appbanhang/pages/listproduct.dart';
+import 'package:appbanhang/widgets/carouselview.dart';
+import 'package:appbanhang/widgets/loadproducthortical.dart';
+import 'package:appbanhang/widgets/loadproductvertical.dart';
 import 'package:appbanhang/widgets/singleproduct.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,151 +17,6 @@ class HomePages extends StatelessWidget {
         width: 55,
         height: 55,
         fit: BoxFit.fill,
-      ),
-    );
-  }
-
-  //UI tìm kiếm - nỗi bật - xem tất cả
-  Widget _buildProduct() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  height: 70,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Sản phẩm nổi bật",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                      Text(
-                        "Xem tất cả",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  height: 200,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.8,
-                    scrollDirection: Axis.vertical,
-                    children: <Widget>[
-                      SingleProduct(
-                          name: "Thịt bò", price: 30.0, image: "thit_bo.jpg"),
-                      SingleProduct(name: "Cá", price: 25.0, image: "fish.jpg"),
-                      SingleProduct(
-                          name: "Dép lê", price: 35.0, image: "shoe_dep.jpg"),
-                      SingleProduct(
-                          name: "Giày snecker",
-                          price: 40.0,
-                          image: "shoe.jpeg"),
-                      SingleProduct(
-                          name: "Quần áo", price: 25.0, image: "clothes1.jpg"),
-                      SingleProduct(
-                          name: "Giày", price: 25.0, image: "shoe2.jpg"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductNew() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  height: 70,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Sản phẩm mới",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                      Text(
-                        "Xem tất cả",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  height: 400,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.8,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      SingleProduct(
-                          name: "Thịt bò", price: 30.0, image: "thit_bo.jpg"),
-                      SingleProduct(
-                          name: "Thịt heo", price: 35.0, image: "thit_heo.jpg"),
-                      SingleProduct(
-                          name: "Thịt gà", price: 25.0, image: "thit_ga.jpg"),
-                      SingleProduct(
-                          name: "Dép lê", price: 35.0, image: "shoe_dep.jpg"),
-                      SingleProduct(
-                          name: "Giày snecker",
-                          price: 40.0,
-                          image: "shoe.jpeg"),
-                      SingleProduct(name: "Cá", price: 25.0, image: "fish.jpg"),
-                      SingleProduct(
-                          name: "Quần áo", price: 25.0, image: "clothes.jpg"),
-                      SingleProduct(
-                          name: "Quần áo", price: 25.0, image: "clothes1.jpg"),
-                      SingleProduct(
-                          name: "Giày", price: 25.0, image: "shoe1.jpg"),
-                      SingleProduct(
-                          name: "Giày", price: 25.0, image: "shoe2.jpg"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -209,6 +69,7 @@ class HomePages extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: <Widget>[
+            CarouselView(),
             Container(
               height: 50,
               child: Row(
@@ -218,9 +79,24 @@ class HomePages extends StatelessWidget {
                     "Danh mục",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "Tất cả",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  GestureDetector(
+                    onTap: () {
+                      //Xem danh mục
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (ctx) => (ListCategory(
+                            name: "Các loại Danh mục",
+                          )),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Xem thêm",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
                   ),
                 ],
               ),
@@ -230,16 +106,16 @@ class HomePages extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _buildImageCategory("shoe.jpeg"),
+                  _buildImageCategory("dienthoai.jpg"),
+                  _buildImageCategory("laptop.jpg"),
                   _buildImageCategory("clothes.jpg"),
-                  _buildImageCategory("shoe1.jpg"),
                   _buildImageCategory("shoe_dep.jpg"),
-                  _buildImageCategory("fish.jpg"),
+                  _buildImageCategory("doan1.jpg"),
                 ],
               ),
             ),
-            _buildProduct(),
-            _buildProductNew()
+            LoadProductVertical(name: "Sản phẩm phổ biến"),
+            LoadProductHortical(name: "Sản phẩm"),
           ],
         ),
       ),

@@ -1,10 +1,11 @@
 import 'package:appbanhang/pages/homepages.dart';
+import 'package:appbanhang/widgets/singlecategory.dart';
 import 'package:appbanhang/widgets/singleproduct.dart';
 import 'package:flutter/material.dart';
 
-class ListProduct extends StatelessWidget {
+class ListCategory extends StatelessWidget {
   final String name;
-  const ListProduct({super.key, required this.name});
+  const ListCategory({super.key, required this.name});
 
   //UI load sản phẩm
   Widget _buildFeatureProduct(String name, double price, String image) {
@@ -75,7 +76,7 @@ class ListProduct extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Danh sách sản phẩm",
+          "Danh mục",
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -125,34 +126,12 @@ class ListProduct extends StatelessWidget {
               childAspectRatio: 0.8,
               scrollDirection: Axis.vertical,
               children: <Widget>[
-                SingleProduct(name: "Gỏi cuốn", price: 2.0, image: "doan.jpg"),
-                SingleProduct(
-                    name: "Trứng chiên xà lách",
-                    price: 2.0,
-                    image: "doan1.jpg"),
-                SingleProduct(
-                    name: "Hamburger", price: 10.0, image: "hamberger.jpg"),
-                SingleProduct(name: "Bánh mì", price: 2.0, image: "banhmi.jpg"),
-                SingleProduct(name: "Kem", price: 2.0, image: "kem.jpg"),
-                SingleProduct(
-                    name: "Sandwich", price: 2.0, image: "sanwick.jpg"),
-                SingleProduct(
-                    name: "Thịt bò", price: 30.0, image: "thit_bo.jpg"),
-                SingleProduct(
-                    name: "Thịt heo", price: 35.0, image: "thit_heo.jpg"),
-                SingleProduct(
-                    name: "Thịt gà", price: 25.0, image: "thit_ga.jpg"),
-                SingleProduct(
-                    name: "Dép lê", price: 35.0, image: "shoe_dep.jpg"),
-                SingleProduct(
-                    name: "Giày snecker", price: 40.0, image: "shoe.jpeg"),
-                SingleProduct(name: "Cá", price: 25.0, image: "fish.jpg"),
-                SingleProduct(
-                    name: "Quần áo", price: 25.0, image: "clothes.jpg"),
-                SingleProduct(
-                    name: "Quần áo", price: 25.0, image: "clothes1.jpg"),
-                SingleProduct(name: "Giày", price: 25.0, image: "shoe1.jpg"),
-                SingleProduct(name: "Giày", price: 25.0, image: "shoe2.jpg"),
+                SingleCategory(name: "Điện thoại", image: "dienthoai.jpg"),
+                SingleCategory(name: "Laptop", image: "laptop.jpg"),
+                SingleCategory(name: "Quần áo", image: "clothes.jpg"),
+                SingleCategory(name: "Giày", image: "shoe.jpeg"),
+                SingleCategory(name: "Dép", image: "shoe_dep.jpg"),
+                SingleCategory(name: "Đồ ăn", image: "doan.jpg"),
               ],
             ),
           ),
