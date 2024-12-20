@@ -1,8 +1,8 @@
 import 'package:appbanhang/pages/account.dart';
-import 'package:appbanhang/pages/bill.dart';
+import 'package:appbanhang/pages/notifications.dart';
 import 'package:appbanhang/pages/cart.dart';
 import 'package:appbanhang/pages/home.dart';
-import 'package:appbanhang/pages/wishlist.dart';
+import 'package:appbanhang/pages/bill.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class _BottomNavState extends State<BottomNav> {
   late Home home;
   late Account account;
   late Cart cart;
-  late WishList wishList;
+  late Notifications notification;
   late Bill bill;
 
   @override
@@ -29,10 +29,10 @@ class _BottomNavState extends State<BottomNav> {
     home = Home();
     account = Account();
     cart = Cart();
-    wishList = WishList();
+    notification = Notifications();
     bill = Bill();
 
-    pages = [home, wishList, cart, bill, account];
+    pages = [home, cart, bill , notification, account];
     super.initState();
   }
 
@@ -56,11 +56,7 @@ class _BottomNavState extends State<BottomNav> {
               size: 30,
               color: Colors.black,
             ),
-            Icon(
-              Icons.favorite_border_outlined,
-              size: 30,
-              color: Colors.black,
-            ),
+
             Icon(
               Icons.shopping_cart,
               size: 30,
@@ -68,6 +64,11 @@ class _BottomNavState extends State<BottomNav> {
             ),
             Icon(
               Icons.wallet_giftcard_outlined,
+              size: 30,
+              color: Colors.black,
+            ),
+            Icon(
+              Icons.favorite_border_outlined,
               size: 30,
               color: Colors.black,
             ),

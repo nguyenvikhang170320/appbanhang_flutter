@@ -1,6 +1,7 @@
 // import 'package:appbanhang/pages/bottomnav.dart';
 // import 'package:appbanhang/pages/home.dart';
 // import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 // import 'package:appbanhang/pages/login.dart';
