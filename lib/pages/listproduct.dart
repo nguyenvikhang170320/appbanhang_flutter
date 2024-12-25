@@ -1,6 +1,44 @@
+import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/widgets/singleproduct.dart';
 import 'package:flutter/material.dart';
+
+class Product {
+  final String name;
+  final double price;
+  final String image;
+
+  Product({required this.name, required this.price, required this.image});
+}
+
+List<Product> products = [
+  Product(name: "Laptop", price: 600.0, image: "laptop.jpg"),
+  Product(name: "Điện thoại", price: 300.0, image: "dienthoai.jpg"),
+  Product(name: "Bánh mì sandwich", price: 2.0, image: "sanwick.jpg"),
+  Product(name: "Kem", price: 2.0, image: "kem.jpg"),
+  Product(name: "Thịt bò", price: 5.0, image: "thit_bo.jpg"),
+  Product(name: "Thịt heo", price: 5.0, image: "thit_heo.jpg"),
+  Product(name: "Thịt gà", price: 5.0, image: "thit_ga.jpg"),
+  Product(name: "Cá", price: 5.0, image: "fish.jpg"),
+  Product(name: "Đôi ruốc nữ", price: 20.0, image: "shoe2.jpg"),
+  Product(name: "Thịt", price: 5.0, image: "thit_ga.jpg"),
+  Product(name: "Cá", price: 5.0, image: "fish.jpg"),
+  Product(name: "Quần áo hàn quốc", price: 15.0, image: "clothes.jpg"),
+  Product(name: "Quần áo", price: 15.0, image: "clothes1.jpg"),
+  Product(name: "Giày da của nam", price: 20.0, image: "shoe1.jpg"),
+  Product(name: "Giày sneaker nam", price: 10.0, image: "shoe.jpeg"),
+  Product(name: "Đôi guốc của nữ", price: 20.0, image: "shoe2.jpg"),
+  Product(name: "Dép lê", price: 3.0, image: "shoe_dep.jpg"),
+  Product(name: "Sửa Arla", price: 2.0, image: "sua_arla.jpg"),
+  Product(
+      name: "Sửa tươi không đường", price: 2.0, image: "sua_khongduong.png"),
+  Product(name: "Trái cam", price: 2.0, image: "traicam.png"),
+  Product(name: "Trái chuối", price: 2.0, image: "traichuoi.png"),
+  Product(name: "Trái dâu", price: 2.0, image: "traidau.png"),
+  Product(name: "Trái nho", price: 2.0, image: "trainho.png"),
+  Product(name: "Trái thanh long", price: 2.0, image: "traithanhlong.png"),
+  Product(name: "Trái thanh long", price: 2.0, image: "traithanhlong.png"),
+];
 
 class ListProduct extends StatelessWidget {
   const ListProduct({super.key});
@@ -57,68 +95,31 @@ class ListProduct extends StatelessWidget {
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                   scrollDirection: Axis.vertical,
-                  children: <Widget>[
-                    SingleProduct(
-                        name: "Điện thoại",
-                        price: 300.0,
-                        image: "dienthoai.jpg"),
-                    SingleProduct(
-                        name: "Laptop", price: 600.0, image: "laptop.jpg"),
-                    SingleProduct(
-                        name: "Bánh mì sandwich",
-                        price: 2.0,
-                        image: "sanwick.jpg"),
-                    SingleProduct(name: "Kem", price: 2.0, image: "kem.jpg"),
-                    SingleProduct(
-                        name: "Thịt bò", price: 5.0, image: "thit_bo.jpg"),
-                    SingleProduct(
-                        name: "Thịt heo", price: 5.0, image: "thit_heo.jpg"),
-                    SingleProduct(
-                        name: "Thịt gà", price: 5.0, image: "thit_ga.jpg"),
-                    SingleProduct(name: "Cá", price: 5.0, image: "fish.jpg"),
-                    SingleProduct(
-                        name: "Quần áo", price: 15.0, image: "clothes.jpg"),
-                    SingleProduct(
-                        name: "Quần áo", price: 15.0, image: "clothes1.jpg"),
-                    SingleProduct(
-                        name: "Giày da của nam",
-                        price: 20.0,
-                        image: "shoe1.jpg"),
-                    SingleProduct(
-                        name: "Đôi guốc của nữ",
-                        price: 20.0,
-                        image: "shoe2.jpg"),
-                    SingleProduct(
-                        name: "Giày sneaker nam",
-                        price: 10.0,
-                        image: "shoe.jpeg"),
-                    SingleProduct(
-                        name: "Dép lê", price: 3.0, image: "shoe_dep.jpg"),
-                    SingleProduct(
-                        name: "Sửa Arla", price: 2.0, image: "sua_arla.jpg"),
-                    SingleProduct(
-                        name: "Sửa tươi không đường",
-                        price: 2.0,
-                        image: "sua_khongduong.png"),
-                    SingleProduct(
-                        name: "Trái cam", price: 2.0, image: "traicam.png"),
-                    SingleProduct(
-                        name: "Trái chuối", price: 2.0, image: "traichuoi.png"),
-                    SingleProduct(
-                        name: "Trái dâu", price: 2.0, image: "traidau.png"),
-                    SingleProduct(
-                        name: "Trái nho", price: 2.0, image: "trainho.png"),
-                    SingleProduct(
-                        name: "Trái thanh long",
-                        price: 2.0,
-                        image: "traithanhlong.png"),
-                    SingleProduct(
-                        name: "Trái dưa hấu",
-                        price: 2.0,
-                        image: "traiduahau.png"),
-                    SingleProduct(
-                        name: "Trái đu đủ", price: 2.0, image: "traidudu.png"),
-                  ],
+                  children: List.generate(
+                    25, // Số lượng sản phẩm
+                    (index) {
+                      final product = products[
+                          index]; // Lấy thông tin sản phẩm từ danh sách
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (ctx) => DetailPage(
+                                name: product.name,
+                                price: product.price,
+                                image: product.image,
+                              ),
+                            ),
+                          );
+                        },
+                        child: SingleProduct(
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
