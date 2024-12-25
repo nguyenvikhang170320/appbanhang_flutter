@@ -48,12 +48,11 @@ class ListCategory extends StatelessWidget {
         ],
       ),
       body: Container(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.fromLTRB(10, 10, 5, 5),
           child: Column(
             children: <Widget>[
               Container(
-                height: 750,
-                width: 400,
+                height: 700,
                 child: GridView.count(
                   crossAxisCount: 2,
                   crossAxisSpacing: 5,

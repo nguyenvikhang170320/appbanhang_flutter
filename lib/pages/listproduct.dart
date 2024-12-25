@@ -37,7 +37,6 @@ List<Product> products = [
   Product(name: "Trái dâu", price: 2.0, image: "traidau.png"),
   Product(name: "Trái nho", price: 2.0, image: "trainho.png"),
   Product(name: "Trái thanh long", price: 2.0, image: "traithanhlong.png"),
-  Product(name: "Trái thanh long", price: 2.0, image: "traithanhlong.png"),
 ];
 
 class ListProduct extends StatelessWidget {
@@ -84,19 +83,19 @@ class ListProduct extends StatelessWidget {
         ],
       ),
       body: Container(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.fromLTRB(10, 10, 5, 5),
           child: Column(
             children: <Widget>[
               Container(
-                height: 750,
-                width: 400,
+                height: 700,
                 child: GridView.count(
                   crossAxisCount: 2,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
+                  childAspectRatio: 0.8,
                   scrollDirection: Axis.vertical,
                   children: List.generate(
-                    25, // Số lượng sản phẩm
+                    24, // Số lượng sản phẩm
                     (index) {
                       final product = products[
                           index]; // Lấy thông tin sản phẩm từ danh sách
