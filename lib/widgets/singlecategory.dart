@@ -9,9 +9,8 @@ class SingleCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        height: 220,
-        width: 150,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
               height: 120,

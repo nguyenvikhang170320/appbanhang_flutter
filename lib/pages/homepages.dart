@@ -18,11 +18,11 @@ class _HomePagesState extends State<HomePages> {
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(60),
+      borderRadius: BorderRadius.circular(200),
       child: Image.asset(
         "assets/images/$image",
-        width: 55,
-        height: 55,
+        width: 80,
+        height: 80,
         fit: BoxFit.fill,
       ),
     );
@@ -256,9 +256,7 @@ class _HomePagesState extends State<HomePages> {
                       //Xem danh mục
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (ctx) => (ListCategory(
-                            name: "Các loại Danh mục",
-                          )),
+                          builder: (ctx) => ListCategory(),
                         ),
                       );
                     },
@@ -275,19 +273,28 @@ class _HomePagesState extends State<HomePages> {
             ),
             Container(
               height: 60,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: GridView.count(
+                crossAxisCount: 1,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.8,
+                scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   _buildImageCategory("dienthoai.jpg"),
                   _buildImageCategory("laptop.jpg"),
                   _buildImageCategory("clothes.jpg"),
                   _buildImageCategory("shoe_dep.jpg"),
-                  _buildImageCategory("doan1.jpg"),
+                  _buildImageCategory("shoe.jpeg"),
+                  _buildImageCategory("sanwick.jpg"),
+                  _buildImageCategory("kem.jpg"),
+                  _buildImageCategory("traidau.png"),
+                  _buildImageCategory("thit_ga.jpg"),
+                  _buildImageCategory("fish.jpg"),
                 ],
               ),
             ),
-            LoadProductVertical(name: "Sản phẩm phổ biến"),
-            LoadProductHortical(name: "Sản phẩm"),
+            LoadProductHortical(name: "Sản phẩm phổ biến"),
+            LoadProductVertical(name: "Sản phẩm"),
           ],
         ),
       ),
