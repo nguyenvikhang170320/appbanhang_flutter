@@ -1,14 +1,17 @@
 import 'package:appbanhang/pages/account.dart';
+import 'package:appbanhang/pages/cartpage.dart';
+import 'package:appbanhang/pages/favorites.dart';
+import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/notifications.dart';
-import 'package:appbanhang/pages/cart.dart';
-import 'package:appbanhang/pages/home.dart';
 import 'package:appbanhang/pages/bill.dart';
+import 'package:appbanhang/pages/postproduct.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
-
+  const BottomNav({
+    super.key,
+  });
   @override
   State<BottomNav> createState() => _BottomNavState();
 }
@@ -18,21 +21,20 @@ class _BottomNavState extends State<BottomNav> {
 
   late List<Widget> pages;
   late Widget currentPage;
-  late Home home;
+  late HomePages home;
   late Account account;
-  late Cart cart;
-  late Notifications notification;
+  late Favorites favorites;
+  late PostProduct postProduct;
   late Bill bill;
 
   @override
   void initState() {
-    home = Home();
+    home = HomePages();
     account = Account();
-    cart = Cart();
-    notification = Notifications();
+    favorites = Favorites();
+    postProduct = PostProduct();
     bill = Bill();
-
-    pages = [home, cart, bill , notification, account];
+    pages = [home, postProduct, bill, favorites, account];
     super.initState();
   }
 
@@ -56,9 +58,8 @@ class _BottomNavState extends State<BottomNav> {
               size: 30,
               color: Colors.black,
             ),
-
             Icon(
-              Icons.shopping_cart,
+              Icons.add_a_photo_outlined,
               size: 30,
               color: Colors.black,
             ),

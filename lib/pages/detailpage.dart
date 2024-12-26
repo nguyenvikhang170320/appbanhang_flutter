@@ -1,5 +1,7 @@
-import 'package:appbanhang/pages/homepages.dart';
+import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/pages/cartpage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class DetailPage extends StatefulWidget {
   final String image;
@@ -43,6 +45,193 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
+  //image
+  Widget _buildImage() {
+    return Container(
+      width: 320,
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          color: Colors.white,
+          child: Container(
+            height: 220,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage("assets/images/${widget.image}"),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //tên sản phẩm and chữ mô tả
+  Widget _buildNameAndDescription() {
+    return Container(
+      height: 80,
+      color: Colors.white,
+      child: Row(
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(widget.name, style: myStyle),
+              Text(
+                "\$ ${widget.price.toString()}",
+                style: TextStyle(fontSize: 16, color: Colors.red),
+              ),
+              Text(
+                "Mô tả",
+                style: myStyle,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  //mô tả sản phẩm
+  Widget _buildDescription() {
+    return Container(
+      height: 160,
+      child: Wrap(
+        children: <Widget>[
+          Text(
+            "Chúng ta vẫn biết rằng, làm việc với một đoạn văn bản dễ đọc và rõ nghĩa dễ gây rối trí và cản trở việc tập trung vào yếu tố trình bày văn bản. Lorem Ipsum có ưu điểm hơn so với đoạn văn bản chỉ gồm nội dung kiểu Nội dung là nó khiến văn bản giống thật hơn, bình thường hơn. Nhiều phần mềm thiết kế giao diện web và dàn trang ngày nay đã sử dụng Lorem Ipsum làm đoạn văn bản giả, và nếu bạn thử tìm các đoạn. Lorem ipsum trên mạng thì sẽ khám phá ra nhiều trang web hiện vẫn đang trong quá trình xây dựng. Có nhiều phiên bản khác nhau đã xuất hiện, đôi khi do vô tình, nhiều khi do cố ý (xen thêm vào những câu hài hước hay thông tục).",
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //chọn size sản phẩm
+  Widget _buildSize() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Size",
+          style: myStyle,
+        ),
+        Container(
+          width: 270,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _buildSizeProduct("S"),
+              _buildSizeProduct("M"),
+              _buildSizeProduct("L"),
+              _buildSizeProduct("XXL"),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  //màu
+  Widget _buildColor() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Màu",
+          style: myStyle,
+        ),
+        Container(
+          width: 320,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _buildColorProduct(color: Colors.red),
+              _buildColorProduct(color: Colors.yellow),
+              _buildColorProduct(color: Colors.lightBlue),
+              _buildColorProduct(color: Colors.brown),
+              _buildColorProduct(color: Colors.grey),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  //số lượng tăng giảm
+  Widget _buildQuantity() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Số lượng",
+          style: myStyle,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          width: 120,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                child: Icon(Icons.remove),
+                onTap: () {
+                  setState(() {
+                    if (count > 1) {
+                      count--;
+                    }
+                  });
+                },
+              ),
+              Text(
+                count.toString(),
+                style: myStyle,
+              ),
+              GestureDetector(
+                child: Icon(Icons.add),
+                onTap: () {
+                  setState(() {
+                    count++;
+                  });
+                },
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  //button thêm vào giỏ hàng
+  Widget _buildAddToCart() {
+    return Container(
+      height: 60,
+      width: 150,
+      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      child: ElevatedButton(
+        style: raisedButtonStyle,
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (ctx) => CartPage(
+                  image: widget.image, name: widget.name, price: widget.price),
+            ),
+          );
+        },
+        child: Text('Thêm vào giỏ hàng'),
+      ),
+    );
+  }
+
   //style button
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     foregroundColor: Colors.black87,
@@ -59,6 +248,13 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: 60,
+        width: 100,
+        padding: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        child: _buildAddToCart(),
+      ),
       appBar: AppBar(
         title: Text(
           "Chi tiết sản phẩm",
@@ -72,7 +268,7 @@ class _DetailPageState extends State<DetailPage> {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (ctx) => HomePages(),
+                builder: (ctx) => BottomNav(),
               ),
             );
           },
@@ -90,174 +286,34 @@ class _DetailPageState extends State<DetailPage> {
       body: Container(
         child: ListView(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Center(
-                  child: Container(
-                    width: 320,
-                    child: Card(
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        color: Colors.white,
-                        child: Container(
-                          height: 220,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image:
-                                  AssetImage("assets/images/${widget.image}"),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+            _buildImage(),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildNameAndDescription(), // tên sản phẩm and chữ mô tả
+                  _buildDescription(), // mô tả sản phẩm
+                  SizedBox(
+                    height: 130,
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        height: 80,
-                        color: Colors.white,
-                        child: Row(
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(widget.name, style: myStyle),
-                                Text(
-                                  "\$ ${widget.price.toString()}",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.red),
-                                ),
-                                Text(
-                                  "Mô tả",
-                                  style: myStyle,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 160,
-                        child: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Chúng ta vẫn biết rằng, làm việc với một đoạn văn bản dễ đọc và rõ nghĩa dễ gây rối trí và cản trở việc tập trung vào yếu tố trình bày văn bản. Lorem Ipsum có ưu điểm hơn so với đoạn văn bản chỉ gồm nội dung kiểu Nội dung là nó khiến văn bản giống thật hơn, bình thường hơn. Nhiều phần mềm thiết kế giao diện web và dàn trang ngày nay đã sử dụng Lorem Ipsum làm đoạn văn bản giả, và nếu bạn thử tìm các đoạn. Lorem ipsum trên mạng thì sẽ khám phá ra nhiều trang web hiện vẫn đang trong quá trình xây dựng. Có nhiều phiên bản khác nhau đã xuất hiện, đôi khi do vô tình, nhiều khi do cố ý (xen thêm vào những câu hài hước hay thông tục).",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 130,
-                      ),
-                      Text(
-                        "Size",
-                        style: myStyle,
-                      ),
-                      Container(
-                        width: 270,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            _buildSizeProduct("S"),
-                            _buildSizeProduct("M"),
-                            _buildSizeProduct("L"),
-                            _buildSizeProduct("XXL"),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Màu",
-                        style: myStyle,
-                      ),
-                      Container(
-                        width: 320,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            _buildColorProduct(color: Colors.red),
-                            _buildColorProduct(color: Colors.yellow),
-                            _buildColorProduct(color: Colors.lightBlue),
-                            _buildColorProduct(color: Colors.brown),
-                            _buildColorProduct(color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Số lượng",
-                        style: myStyle,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            GestureDetector(
-                              child: Icon(Icons.remove),
-                              onTap: () {
-                                setState(() {
-                                  if (count > 1) {
-                                    count--;
-                                  }
-                                });
-                              },
-                            ),
-                            Text(
-                              count.toString(),
-                              style: myStyle,
-                            ),
-                            GestureDetector(
-                              child: Icon(Icons.add),
-                              onTap: () {
-                                setState(() {
-                                  count++;
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(200, 5, 5, 5),
-                        height: 40,
-                        width: 140,
-                        child: ElevatedButton(
-                          style: raisedButtonStyle,
-                          onPressed: () {},
-                          child: Text('Thanh toán'),
-                        ),
-                      ),
-                    ],
+                  _buildSize(),
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-              ],
+                  _buildColor(), // màu sản phẩm
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildQuantity(), // số lượng tăng giảm sản phẩm
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
