@@ -1,4 +1,5 @@
 import 'package:appbanhang/pages/login.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/widgets/changescreen.dart';
 import 'package:appbanhang/widgets/mybutton.dart';
 import 'package:appbanhang/widgets/mytextformfield.dart';
@@ -7,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -17,6 +20,8 @@ class SignUp extends StatefulWidget {
 
 final RegExp emailRegExp = RegExp(
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+bool isChecked = false;
 
 class _SignUpState extends State<SignUp> {
   bool obserText = true;
@@ -31,39 +36,54 @@ class _SignUpState extends State<SignUp> {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         print(userCredential.user!.uid);
+        ToastService.showSuccessToast(context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "Đăng ký thành công");
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Mật khẩu quá yếu, mật khẩu ít nhất 6 số'),
-            ),
+          ToastService.showWarningToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "Mật khẩu quá yếu, ít nhất 6 số",
           );
         } else if (e.code == 'email-already-in-use') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email đã tồn tại.'),
-            ),
+          ToastService.showWarningToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "Email đã tồn tại!!",
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Đã xảy ra lỗi, vui lòng thử lại.'),
-            ),
+          ToastService.showErrorToast(
+            context,
+            length: ToastLength.medium,
+            expandedHeight: 100,
+            message: "Đã xảy ra lỗi, vui lòng thử lại.",
           );
         }
       } on PlatformException catch (e) {
         print(e.message.toString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đã xảy ra lỗi, vui lòng thử lại.'),
-          ),
+
+        ToastService.showErrorToast(
+          context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Đã xảy ra lỗi, vui lòng thử lại.",
         );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Vui lòng kiểm tra lại thông tin nhập liệu.'),
-        ),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Vui lòng kiểm tra lại thông tin nhập liệu.'),
+      //   ),
+      // );
+      ToastService.showWarningToast(
+        context,
+        length: ToastLength.medium,
+        expandedHeight: 100,
+        message: "Vui lòng kiểm tra lại thông tin!! Bạn chưa nhập thông tin",
       );
     }
   }
@@ -152,7 +172,7 @@ class _SignUpState extends State<SignUp> {
 
   Widget _buildBottomPart() {
     return Container(
-      height: 600,
+      height: 500,
       margin: const EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: Column(
@@ -162,8 +182,8 @@ class _SignUpState extends State<SignUp> {
           MyButton(
             name: "Đăng ký",
             onPressed: () {
-              print(validation);
               validation();
+              print(validation);
             },
           ),
           ChangeScreen(
@@ -183,7 +203,26 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // ignore: avoid_unnecessary_containers
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            "Đăng ký",
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.black,
+          onPressed: () {
+            // quay về trang welcome
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WelcomePage()),
+            );
+          },
+        ),
+      ),
       body: SafeArea(
         child: Form(
           key: formState,
@@ -191,22 +230,10 @@ class _SignUpState extends State<SignUp> {
             child: Container(
               child: Column(
                 children: [
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    color: Colors.white,
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Đăng ký",
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
+                  Image.asset(
+                    'assets/images/shop1.jpg',
+                    width: 300,
+                    height: 150,
                   ),
                   const SizedBox(
                     height: 20,

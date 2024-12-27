@@ -1,9 +1,14 @@
+import 'dart:ffi';
+
+import 'package:appbanhang/auth/auth.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/pages/listproduct.dart';
+import 'package:appbanhang/pages/login.dart';
 import 'package:appbanhang/widgets/carouselview.dart';
 import 'package:appbanhang/widgets/loadproducthortical.dart';
 import 'package:appbanhang/widgets/loadproductvertical.dart';
 import 'package:appbanhang/widgets/singleproduct.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -179,7 +184,7 @@ class _HomePagesState extends State<HomePages> {
           ListTile(
             onTap: () {
               //đăng xuất
-              setState(() {});
+              FirebaseAuth.instance.signOut();
             },
             title: Text("Đăng xuất"),
             leading: Icon(Icons.exit_to_app),

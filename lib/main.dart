@@ -1,8 +1,6 @@
 import 'package:appbanhang/pages/bottomnav.dart';
-// import 'package:appbanhang/pages/detailpage.dart';
-// import 'package:appbanhang/pages/homepages.dart';
-// import 'package:appbanhang/pages/listproduct.dart';
-// import 'package:appbanhang/pages/login.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -25,11 +23,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          // useMaterial3: true,
-          ),
-      home: BottomNav(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (ctx, snapShot) =>
+            snapShot.hasData ? BottomNav() : WelcomePage(),
+      ),
     );
   }
 }
