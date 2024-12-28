@@ -1,6 +1,8 @@
 import 'dart:ffi';
 
-import 'package:appbanhang/auth/auth.dart';
+import 'package:appbanhang/admin/admin_login.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/pages/login.dart';
@@ -11,6 +13,8 @@ import 'package:appbanhang/widgets/singleproduct.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
 
 class HomePages extends StatefulWidget {
   HomePages({super.key});
@@ -71,12 +75,12 @@ class _HomePagesState extends State<HomePages> {
               });
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (ctx) => HomePages(),
+                  builder: (ctx) => AdminLogin(),
                 ),
               );
             },
-            title: Text("Trang chủ"),
-            leading: Icon(Icons.home),
+            title: Text("Admin"),
+            leading: Icon(Icons.admin_panel_settings_outlined),
             selected: homeColor,
           ),
           ListTile(
@@ -185,6 +189,13 @@ class _HomePagesState extends State<HomePages> {
             onTap: () {
               //đăng xuất
               FirebaseAuth.instance.signOut();
+              //show thông báo dạng toasty
+              ToastService.showSuccessToast(context,
+                  length: ToastLength.medium,
+                  expandedHeight: 100,
+                  message: "Đăng xuất thành công");
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => WelcomePage()));
             },
             title: Text("Đăng xuất"),
             leading: Icon(Icons.exit_to_app),

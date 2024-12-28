@@ -8,10 +8,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: FirebaseOptions(
-    apiKey: 'AIzaSyAuDFtOd6roJ9BVh_8nG5DvGWWWhIpYhb0',
-    appId: '1:233984732592:android:f236edc216b9f9c4447a75',
+    apiKey: 'AIzaSyBgENRThwZlXGBqA0JW1f_wNlfrc6RVZok',
+    appId: '1:170381222062:android:77574af4745b0942d14d3f',
     messagingSenderId: 'sendid',
-    projectId: 'appbanhangflutter',
+    projectId: 'foodappflutter-d99ee',
   )); // kết nối firebase
   runApp(const MyApp());
 }
