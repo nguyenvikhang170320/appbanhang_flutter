@@ -1,50 +1,132 @@
+import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/detailpage.dart';
+import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/listproduct.dart';
-import 'package:appbanhang/widgets/singleproduct.dart';
+import 'package:appbanhang/services/database.dart';
+import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Product {
-  final String name;
-  final double price;
-  final String image;
-
-  Product({required this.name, required this.price, required this.image});
+class LoadProductHortical extends StatefulWidget {
+  @override
+  State<LoadProductHortical> createState() => _LoadProductHorticalState();
 }
 
-List<Product> products = [
-  Product(name: "Laptop", price: 600.0, image: "laptop.jpg"),
-  Product(name: "Điện thoại", price: 300.0, image: "dienthoai.jpg"),
-  Product(name: "Quần áo", price: 15.0, image: "clothes1.jpg"),
-  Product(name: "Giày", price: 10.0, image: "shoe2.jpg"),
-  Product(name: "Sửa", price: 3.0, image: "sua_khongduong.png"),
-  Product(name: "Trái cây", price: 3.0, image: "traidau.png"),
-];
+class _LoadProductHorticalState extends State<LoadProductHortical> {
+  Stream? fooditemStream;
 
-class LoadProductHortical extends StatelessWidget {
-  final String name;
-  const LoadProductHortical({super.key, required this.name});
+  ontheload() async {
+    fooditemStream = await DatabaseMethods().getProductFeatureItem();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    ontheload();
+    super.initState();
+  }
+
+  Widget _loadProduct() {
+    return StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemCount: 4,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    // lấy dữ liệu từ firebase truyền về
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    //lấy từ firebase truyền về lớp model tạo ra
+                    final Products products = Products.fromFirestore(ds);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailPage(product: products)));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: Material(
+                          elevation: 5.0,
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Image.network(
+                                    ds["Image"],
+                                    height: 60,
+                                    width: 60,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            width: 20.0,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            ds["Name"],
+                                            style: AppWidget
+                                                .semiBoolTextFeildStyle(),
+                                          )),
+                                          Container(
+                                              child: Text(
+                                            "\$" + ds["Price"].toString(),
+                                            style: AppWidget
+                                                .semiBoolTextFeildStyle(),
+                                          )),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Container(
-                  height: 70,
+                  height: 50,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        name,
+                        "Sản phẩm nổi bật",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -53,9 +135,7 @@ class LoadProductHortical extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (ctx) => ListProduct(),
-                            ),
+                            MaterialPageRoute(builder: (ctx) => ListProduct()),
                           );
                         },
                         child: Text(
@@ -69,41 +149,7 @@ class LoadProductHortical extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  height: 180,
-                  width: 400,
-                  child: GridView.count(
-                    crossAxisCount: 1,
-                    mainAxisSpacing: 10,
-                    scrollDirection: Axis.horizontal,
-                    children: List.generate(
-                      6, // Số lượng sản phẩm
-                      (index) {
-                        final product = products[
-                            index]; // Lấy thông tin sản phẩm từ danh sách
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (ctx) => DetailPage(
-                                  name: product.name,
-                                  price: product.price,
-                                  image: product.image,
-                                ),
-                              ),
-                            );
-                          },
-                          child: SingleProduct(
-                            name: product.name,
-                            price: product.price,
-                            image: product.image,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                _loadProduct(),
               ],
             ),
           ),

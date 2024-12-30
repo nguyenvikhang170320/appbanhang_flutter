@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Category {
   final String name;
   final String image;
-  final double price;
 
-  Category(this.name, this.image, this.price);
+  Category({required this.name, required this.image});
+  factory Category.fromFirestore(DocumentSnapshot doc) {
+    return Category(
+      name: doc['Name'] as String,
+      image: doc['Image'] as String,
+    );
+  }
 }

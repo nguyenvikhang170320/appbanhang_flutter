@@ -1,6 +1,10 @@
+import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/detailpage.dart';
+import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/listproduct.dart';
-import 'package:appbanhang/widgets/singleproduct.dart';
+import 'package:appbanhang/services/database.dart';
+import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Product {
@@ -22,9 +26,104 @@ List<Product> products = [
   Product(name: "Thịt", price: 5.0, image: "thit_ga.jpg"),
 ];
 
-class LoadProductVertical extends StatelessWidget {
-  final String name;
-  const LoadProductVertical({super.key, required this.name});
+class LoadProductVertical extends StatefulWidget {
+  const LoadProductVertical({super.key});
+
+  @override
+  State<LoadProductVertical> createState() => _LoadProductVerticalState();
+}
+
+class _LoadProductVerticalState extends State<LoadProductVertical> {
+  Stream? fooditemStream;
+
+  ontheload() async {
+    fooditemStream = await DatabaseMethods().getProductMoiItem();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    ontheload();
+    super.initState();
+  }
+
+  late Products products;
+  Widget _loadProduct() {
+    return StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: 4,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    // lấy dữ liệu từ firebase truyền về
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    //lấy từ firebase truyền về lớp model tạo ra
+                    final Products products = Products.fromFirestore(ds);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                      product: products,
+                                    )));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: Material(
+                          elevation: 5.0,
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
+                                  child: Image.network(
+                                    ds["Image"],
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                          ds["Name"],
+                                          style: AppWidget
+                                              .semiBoolTextFeildStyle(),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          "\$" + ds["Price"].toString(),
+                                          style: AppWidget
+                                              .semiBoolTextFeildStyle(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +143,7 @@ class LoadProductVertical extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        name,
+                        "Sản phẩm mới",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -69,41 +168,7 @@ class LoadProductVertical extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  height: 500,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                    childAspectRatio: 0.8,
-                    scrollDirection: Axis.vertical,
-                    children: List.generate(
-                      8, // Số lượng sản phẩm
-                      (index) {
-                        final product = products[
-                            index]; // Lấy thông tin sản phẩm từ danh sách
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (ctx) => DetailPage(
-                                  name: product.name,
-                                  price: product.price,
-                                  image: product.image,
-                                ),
-                              ),
-                            );
-                          },
-                          child: SingleProduct(
-                            name: product.name,
-                            price: product.price,
-                            image: product.image,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                _loadProduct(),
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/account.dart';
 import 'package:appbanhang/pages/cartpage.dart';
 import 'package:appbanhang/pages/favorites.dart';
@@ -9,9 +10,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav({
-    super.key,
-  });
+  const BottomNav({super.key});
   @override
   State<BottomNav> createState() => _BottomNavState();
 }

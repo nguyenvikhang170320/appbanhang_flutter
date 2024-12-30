@@ -1,22 +1,25 @@
 import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
+import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/services/database.dart';
 import 'package:appbanhang/widgets/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ListProduct extends StatefulWidget {
-  const ListProduct({super.key});
+class ListProductCategory extends StatefulWidget {
+  final String category;
+  const ListProductCategory({super.key, required this.category});
   @override
-  State<ListProduct> createState() => _ListProductState();
+  State<ListProductCategory> createState() => _ListProductCategoryState();
 }
 
-class _ListProductState extends State<ListProduct> {
+class _ListProductCategoryState extends State<ListProductCategory> {
   Stream? fooditemStream;
 
   ontheload() async {
-    fooditemStream = await DatabaseMethods().getProductItem();
+    fooditemStream =
+        await DatabaseMethods().getProductCategoryItem(widget.category);
     setState(() {});
   }
 
@@ -26,7 +29,6 @@ class _ListProductState extends State<ListProduct> {
     super.initState();
   }
 
-  late Products products;
   Widget _loadProduct() {
     return StreamBuilder(
         stream: fooditemStream,
@@ -108,7 +110,7 @@ class _ListProductState extends State<ListProduct> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Danh sách sản phẩm",
+          "Sản phẩm",
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -122,7 +124,7 @@ class _ListProductState extends State<ListProduct> {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (ctx) => BottomNav(),
+                builder: (ctx) => ListCategory(),
               ),
             );
           },

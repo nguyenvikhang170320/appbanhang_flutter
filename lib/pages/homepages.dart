@@ -1,24 +1,22 @@
-import 'dart:ffi';
-
 import 'package:appbanhang/admin/admin_login.dart';
+import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/pages/login.dart';
+import 'package:appbanhang/services/database.dart';
 import 'package:appbanhang/widgets/carouselview.dart';
 import 'package:appbanhang/widgets/loadproducthortical.dart';
 import 'package:appbanhang/widgets/loadproductvertical.dart';
-import 'package:appbanhang/widgets/singleproduct.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
 class HomePages extends StatefulWidget {
-  HomePages({super.key});
-
   @override
   State<HomePages> createState() => _HomePagesState();
 }
@@ -26,13 +24,20 @@ class HomePages extends StatefulWidget {
 class _HomePagesState extends State<HomePages> {
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(200),
-      child: Image.asset(
-        "assets/images/$image",
-        width: 80,
-        height: 80,
-        fit: BoxFit.fill,
+    return Container(
+      width: 30, // Set a fixed width for the images
+      height: 30, // Set a fixed height for the images
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
+      child: ClipRRect(
+        borderRadius:
+            BorderRadius.circular(60), // Adjust radius for perfect circle
+        child: Image.asset(
+          "assets/images/$image",
+          fit: BoxFit.cover, // Ensure image fills the circular area
+        ),
       ),
     );
   }
@@ -205,6 +210,57 @@ class _HomePagesState extends State<HomePages> {
     );
   }
 
+  Widget _buildHeaderDanhmuc() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "Danh mục",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          GestureDetector(
+            onTap: () {
+              //Xem danh mục
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => ListCategory(),
+                ),
+              );
+            },
+            child: Text(
+              "Xem thêm",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDanhmuc() {
+    return Container(
+      height: 50,
+      child: GridView.count(
+        crossAxisCount: 1,
+        crossAxisSpacing: 5,
+        mainAxisSpacing: 10,
+        childAspectRatio: 0.8,
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          _buildImageCategory("dienthoai.jpg"),
+          _buildImageCategory("laptop.jpg"),
+          _buildImageCategory("clothes.jpg"),
+          _buildImageCategory("shoe_dep.jpg"),
+          _buildImageCategory("shoe.jpeg"),
+        ],
+      ),
+    );
+  }
+
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   bool homeColor = true;
@@ -220,6 +276,19 @@ class _HomePagesState extends State<HomePages> {
   bool aboutColor = false;
 
   bool callColor = false;
+
+  Stream? fooditemStream;
+
+  ontheload() async {
+    fooditemStream = await DatabaseMethods().getProductFeatureItem();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    ontheload();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,67 +329,31 @@ class _HomePagesState extends State<HomePages> {
           ),
         ],
       ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
-          children: <Widget>[
-            CarouselView(),
-            Container(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Danh mục",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      //Xem danh mục
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (ctx) => ListCategory(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Xem thêm",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CarouselView(),
+              SizedBox(
+                height: 10,
               ),
-            ),
-            Container(
-              height: 60,
-              child: GridView.count(
-                crossAxisCount: 1,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.8,
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  _buildImageCategory("dienthoai.jpg"),
-                  _buildImageCategory("laptop.jpg"),
-                  _buildImageCategory("clothes.jpg"),
-                  _buildImageCategory("shoe_dep.jpg"),
-                  _buildImageCategory("shoe.jpeg"),
-                  _buildImageCategory("sanwick.jpg"),
-                  _buildImageCategory("kem.jpg"),
-                  _buildImageCategory("traidau.png"),
-                  _buildImageCategory("thit_ga.jpg"),
-                  _buildImageCategory("fish.jpg"),
-                ],
+              _buildHeaderDanhmuc(),
+              SizedBox(
+                height: 10,
               ),
-            ),
-            LoadProductHortical(name: "Sản phẩm phổ biến"),
-            LoadProductVertical(name: "Sản phẩm"),
-          ],
+              _buildDanhmuc(),
+              SizedBox(
+                height: 10,
+              ),
+              LoadProductHortical(),
+              SizedBox(
+                height: 10,
+              ),
+              LoadProductVertical(),
+            ],
+          ),
         ),
       ),
     );

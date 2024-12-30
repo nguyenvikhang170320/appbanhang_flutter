@@ -1,3 +1,4 @@
+import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,10 +1,33 @@
-import 'package:appbanhang/pages/homepages.dart';
-import 'package:appbanhang/widgets/singlecategory.dart';
-import 'package:appbanhang/widgets/singleproduct.dart';
+import 'package:appbanhang/model/products.dart';
+import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/pages/detailpage.dart';
+import 'package:appbanhang/pages/listproduct.dart';
+import 'package:appbanhang/pages/listproductcategory.dart';
+import 'package:appbanhang/services/database.dart';
+import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ListCategory extends StatelessWidget {
+class ListCategory extends StatefulWidget {
   const ListCategory({super.key});
+
+  @override
+  State<ListCategory> createState() => _ListCategoryState();
+}
+
+class _ListCategoryState extends State<ListCategory> {
+  Stream? fooditemStream;
+
+  ontheload() async {
+    fooditemStream = await DatabaseMethods().getCategoryItem();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    ontheload();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +48,7 @@ class ListCategory extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (ctx) => HomePages(),
+                builder: (ctx) => BottomNav(),
               ),
             );
           },
@@ -47,34 +70,67 @@ class ListCategory extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-          margin: EdgeInsets.fromLTRB(10, 10, 5, 5),
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 700,
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
+      body: StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 10,
+                  ),
+                  padding: EdgeInsets.zero,
+                  itemCount: snapshot.data.docs.length,
+                  shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  children: <Widget>[
-                    SingleCategory(name: "Điện thoại", image: "dienthoai.jpg"),
-                    SingleCategory(name: "Laptop", image: "laptop.jpg"),
-                    SingleCategory(name: "Bánh", image: "sanwick.jpg"),
-                    SingleCategory(name: "Kem", image: "kem.jpg"),
-                    SingleCategory(name: "Quần áo", image: "clothes.jpg"),
-                    SingleCategory(name: "Giày", image: "shoe.jpeg"),
-                    SingleCategory(name: "Dép", image: "shoe_dep.jpg"),
-                    SingleCategory(name: "Đôi guốc nữ", image: "shoe2.jpg"),
-                    SingleCategory(name: "Trái cây", image: "traidau.png"),
-                    SingleCategory(name: "Thịt", image: "thit_ga.jpg"),
-                    SingleCategory(name: "Cá", image: "fish.jpg"),
-                  ],
-                ),
-              ),
-            ],
-          )),
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    String categorys = ds["Name"];
+                    return GestureDetector(
+                      onTap: () {
+                        //chuyển trang load sản phẩm đúng danh mục
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (ctx) =>
+                                ListProductCategory(category: categorys)));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: Material(
+                          elevation: 5.0,
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
+                                  child: Image.network(
+                                    ds["Image"],
+                                    height: 120,
+                                    width: 120,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                Container(
+                                    child: Text(
+                                  ds["Name"],
+                                  style: AppWidget.semiBoolTextFeildStyle(),
+                                )),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        },
+      ),
     );
   }
 }

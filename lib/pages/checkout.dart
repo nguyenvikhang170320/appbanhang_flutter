@@ -6,12 +6,14 @@ class CheckOut extends StatefulWidget {
   final String name;
   final String image;
   final double price;
+  final String description;
 
   CheckOut(
       {super.key,
       required this.name,
       required this.image,
-      required this.price});
+      required this.price,
+      required this.description});
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -36,11 +38,7 @@ class _CheckOutState extends State<CheckOut> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   height: 140,
                   width: 140,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/${widget.image}"),
-                        fit: BoxFit.fill),
-                  ),
+                  child: Image.network(widget.image),
                 ),
                 Container(
                   height: 140,
@@ -52,19 +50,14 @@ class _CheckOutState extends State<CheckOut> {
                         Text(
                           widget.name,
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "Shop bán hàng",
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w400),
-                        ),
-                        Text(
-                          "\$${widget.price.toString()}",
+                          "Giá: \$ ${widget.price.toString()}",
                           style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                         ),
                         _buildQuantity(),
                       ],
@@ -86,7 +79,7 @@ class _CheckOutState extends State<CheckOut> {
       height: 20,
       child: Row(
         children: [
-          Text("Số lượng"),
+          Text("Số lượng:"),
           Text("1"),
         ],
       ),
@@ -160,16 +153,17 @@ class _CheckOutState extends State<CheckOut> {
           color: Colors.black,
           onPressed: () {
             // quay về trang chi tiết sản phẩm truyền dữ liệu về trang
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CartPage(
-                  name: widget.name,
-                  image: widget.image,
-                  price: widget.price,
-                ),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => CartPage(
+            //       name: widget.name,
+            //       image: widget.image,
+            //       price: widget.price,
+            //       description: widget.description,
+            //     ),
+            //   ),
+            // );
           },
         ),
         actions: <Widget>[

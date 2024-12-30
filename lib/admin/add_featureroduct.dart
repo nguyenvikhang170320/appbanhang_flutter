@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,27 +9,25 @@ import 'package:random_string/random_string.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
-class AddFood extends StatefulWidget {
-  const AddFood({super.key});
+class AddFeatureProduct extends StatefulWidget {
+  const AddFeatureProduct({super.key});
 
   @override
-  State<AddFood> createState() => _AddFoodState();
+  State<AddFeatureProduct> createState() => _AddFeatureProductState();
 }
 
-class _AddFoodState extends State<AddFood> {
+class _AddFeatureProductState extends State<AddFeatureProduct> {
   final List<String> fooditems = [
     'Đồ uống',
     'Đồ ăn',
     'Điện thoại',
     'Laptop',
-    'Bánh',
+    'Thực phẩm',
     'Kem',
     'Trái cây',
-    'Quần áo',
-    'Giày',
-    'Dép'
+    'Thời trang'
   ];
-  String? value;
+  String? valueCategory;
   TextEditingController namecontroller = new TextEditingController();
   TextEditingController pricecontroller = new TextEditingController();
   TextEditingController detailcontroller = new TextEditingController();
@@ -89,8 +87,10 @@ class _AddFoodState extends State<AddFood> {
         pricecontroller.text != "" &&
         detailcontroller.text != "") {
       String addId = randomAlphaNumeric(10);
-      Reference firebaseStorageRef =
-          FirebaseStorage.instance.ref().child("foodImages").child(addId);
+      Reference firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child("imageSanphamNoiBat")
+          .child(addId);
       final UploadTask uploadTask = firebaseStorageRef.putFile(selectedImage!);
 
       var downloadUrl = await (await uploadTask).ref.getDownloadURL();
@@ -101,11 +101,10 @@ class _AddFoodState extends State<AddFood> {
         "Price":
             double.tryParse(pricecontroller.text) ?? 0.0, // Convert to double
         "Description": detailcontroller.text,
-        "Category": value,
-        "uid": ""
+        "Category": valueCategory,
       };
 
-      await DatabaseMethods().productDetail(addItem, value!);
+      await DatabaseMethods().productFeatureDetail(addItem);
 
       ToastService.showSuccessToast(context,
           length: ToastLength.medium,
@@ -128,7 +127,7 @@ class _AddFoodState extends State<AddFood> {
             )),
         centerTitle: true,
         title: Text(
-          "Thêm sản phẩm",
+          "Thêm sản phẩm nỗi bật",
           style: AppWidget.HeadlineTextFeildStyle(),
         ),
       ),
@@ -212,7 +211,7 @@ class _AddFoodState extends State<AddFood> {
                   controller: namecontroller,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Enter Item Name",
+                      hintText: "Nhập tên sản phẩm",
                       hintStyle: AppWidget.LightTextFeildStyle()),
                 ),
               ),
@@ -236,7 +235,7 @@ class _AddFoodState extends State<AddFood> {
                   controller: pricecontroller,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Enter Item Price",
+                      hintText: "Nhập giá",
                       hintStyle: AppWidget.LightTextFeildStyle()),
                 ),
               ),
@@ -261,7 +260,7 @@ class _AddFoodState extends State<AddFood> {
                   controller: detailcontroller,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Enter Item Detail",
+                      hintText: "Nhập mô tả",
                       hintStyle: AppWidget.LightTextFeildStyle()),
                 ),
               ),
@@ -293,16 +292,17 @@ class _AddFoodState extends State<AddFood> {
                           )))
                       .toList(),
                   onChanged: ((value) => setState(() {
-                        this.value = value;
+                        this.valueCategory = value;
                       })),
                   dropdownColor: Colors.white,
-                  hint: Text("Select Category"),
+                  hint: Text("Chọn danh mục"),
                   iconSize: 36,
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,
                   ),
-                  value: value, // hiện danh mục đã chọn lên DropdownButton
+                  value:
+                      valueCategory, // hiện danh mục đã chọn lên DropdownButton
                 )),
               ),
               SizedBox(
@@ -324,7 +324,7 @@ class _AddFoodState extends State<AddFood> {
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
-                          "Add",
+                          "Thêm",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 22.0,

@@ -1,4 +1,4 @@
-import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/homepages.dart';
@@ -8,11 +8,15 @@ class CartPage extends StatefulWidget {
   final String image;
   final String name;
   final double price;
+  final String description;
+  final Products products;
   CartPage(
       {super.key,
       required this.image,
       required this.name,
-      required this.price});
+      required this.price,
+      required this.description,
+      required this.products});
   @override
   State<CartPage> createState() => _CartPageState();
 }
@@ -81,7 +85,11 @@ class _CartPageState extends State<CartPage> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (ctx) => CheckOut(
-                  name: widget.name, image: widget.image, price: widget.price),
+                name: widget.name,
+                image: widget.image,
+                price: widget.price,
+                description: widget.description,
+              ),
             ),
           );
         },
@@ -92,46 +100,46 @@ class _CartPageState extends State<CartPage> {
 
   Widget _buildSingleCartProduct() {
     return Container(
-      height: 150,
-      width: double.infinity,
+      height: 200,
       child: Card(
         child: Column(
           children: <Widget>[
             Row(
               children: [
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  height: 140,
-                  width: 140,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/${widget.image}"),
-                        fit: BoxFit.fill),
-                  ),
+                  height: 120,
+                  width: 120,
+                  child: Image.network(widget.image),
                 ),
                 Container(
-                  height: 120,
-                  width: 140,
+                  height: 160,
+                  width: 200,
+                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: ListTile(
                     title: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           widget.name,
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          "Shop bán hàng",
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w400),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "\$${widget.price.toString()}",
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w300,
-                              color: Colors.grey),
+                              color: Colors.red),
+                        ),
+                        Text(
+                          "Màu",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red),
                         ),
                         _buildQuantity(),
                       ],
@@ -172,9 +180,7 @@ class _CartPageState extends State<CartPage> {
               context,
               MaterialPageRoute(
                 builder: (context) => DetailPage(
-                  name: widget.name,
-                  image: widget.image,
-                  price: widget.price,
+                  product: widget.products,
                 ),
               ),
             );

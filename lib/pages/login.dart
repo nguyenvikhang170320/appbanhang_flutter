@@ -39,15 +39,14 @@ class _LoginState extends State<Login> {
   void validation() async {
     if (_formkey.currentState!.validate()) {
       try {
-        isChecked = false;
+        setState(() {
+          email = emailController.text;
+          password = passwordController.text;
+        });
+
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 
-        //nếu muốn lấy dữ liệu đã nhập trước đó khi đăng nhập thì mở dòng này
-        // setState(() {
-        //   email = emailController.text;
-        //   password = passwordController.text;
-        // });
         //show thông báo dạng toasty
         ToastService.showSuccessToast(context,
             length: ToastLength.medium,
@@ -81,119 +80,90 @@ class _LoginState extends State<Login> {
     }
   }
 
+  //form đăng nhập
   Widget _buildAllTextFormField() {
     return Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(30),
-        child: SingleChildScrollView(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(left: 20.0, right: 20.0),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 1.8,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
           child: Container(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 1.8,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Container(
-              height: 400,
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  EmailTextFormField(
-                    controllerUser:
-                        emailController, //liên quan đến file mytextformfield.dart
-                    name: "Nhập email",
-                    onChanged: (value) {
-                      setState(() {
-                        email = value!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Vui lòng nhập email";
-                      } else if (!emailRegExp.hasMatch(value)) {
-                        return "Vui lòng nhập email hợp lệ";
-                      }
-                      return null;
-                    },
-                  ),
-                  PasswordTextFormField(
-                    passwordController: passwordController,
-                    name: "Mật khẩu",
-                    obserText: obserText,
-                    onChanged: (value) {
-                      setState(() {
-                        password = value!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Vui lòng nhập mật khẩu";
-                      }
-                      return null;
-                    },
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      setState(() {
-                        obserText = !obserText;
-                      });
-                    },
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: isChecked,
-                          tristate: true,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value != null) {
-                                isChecked = value;
-                                ToastService.showSuccessToast(
-                                  context,
-                                  length: ToastLength.medium,
-                                  expandedHeight: 100,
-                                  message: "Cảm ơn bạn đã đồng ý. Tuyệt vời!!",
-                                );
-                              } else {
-                                isChecked = false;
-                                ToastService.showWarningToast(context,
-                                    length: ToastLength.medium,
-                                    expandedHeight: 100,
-                                    message: "Bạn chưa tích chọn");
-                              }
-                            });
-                          },
-                        ),
-                        Text(
-                          "Đồng ý, điều khoản và dịch vụ của\n chúng tôi,để bắt đầu sử dụng App,\n xin cảm ơn!!",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MyButton(
-                    name: "Đăng nhập",
-                    onPressed: () {
-                      if (isChecked == false) {
-                        ToastService.showErrorToast(
-                          context,
-                          length: ToastLength.medium,
-                          expandedHeight: 100,
-                          message:
-                              "Bạn chưa tích chọn, đồng ý với điều khoản app ạ!!",
-                        );
-                      } else {
-                        validation();
-                        print(validation);
-                      }
-                    },
-                  ),
-                ],
-              ),
+            height: 200,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Đăng nhập tài khoản",
+                  style: AppWidget.HeadlineTextFeildStyle(),
+                ),
+                SizedBox(
+                  height: 80,
+                ),
+                EmailTextFormField(
+                  controllerUser:
+                      emailController, //liên quan đến file mytextformfield.dart
+                  name: "Nhập email",
+                  onChanged: (value) {
+                    setState(() {
+                      email = value!;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Vui lòng nhập email";
+                    } else if (!emailRegExp.hasMatch(value)) {
+                      return "Vui lòng nhập email hợp lệ";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                PasswordTextFormField(
+                  passwordController: passwordController,
+                  name: "Mật khẩu",
+                  obserText: obserText,
+                  onChanged: (value) {
+                    setState(() {
+                      password = value!;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Vui lòng nhập mật khẩu";
+                    }
+                    return null;
+                  },
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    setState(() {
+                      obserText = !obserText;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 60,
+                ),
+                MyButton(
+                  name: "Đăng nhập",
+                  onPressed: () {
+                    validation();
+                  },
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildBottomPart() {
@@ -201,16 +171,12 @@ class _LoginState extends State<Login> {
       margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
       child: Column(
         children: [
-          Text(
-            "Đăng nhập tài khoản",
-            style: AppWidget.HeadlineTextFeildStyle(),
-          ),
           SizedBox(
             height: 50,
           ),
           _buildAllTextFormField(),
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           ChangeScreen(
             name: "Đăng ký",

@@ -1,17 +1,17 @@
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/cartpage.dart';
+import 'package:appbanhang/widgets/loadproductvertical.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../model/products.dart';
+
 class DetailPage extends StatefulWidget {
-  final String image;
-  final String name;
-  final double price;
-  DetailPage(
-      {super.key,
-      required this.image,
-      required this.name,
-      required this.price});
+  final Products product;
+
+  DetailPage({
+    required this.product
+  });
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -20,22 +20,7 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   int count = 1; //tăng-giảm số lượng
 
-//chọn size sản phẩm
-  Widget _buildSizeProduct(String name) {
-    return Container(
-      height: 60,
-      width: 60,
-      color: Colors.grey,
-      child: Center(
-        child: Text(
-          name,
-          style: TextStyle(fontSize: 17),
-        ),
-      ),
-    );
-  }
-
-//chọn màu sắc sản phẩm
+  //chọn màu sắc sản phẩm
   Widget _buildColorProduct({Color? color}) {
     print(color);
     return Container(
@@ -52,15 +37,9 @@ class _DetailPageState extends State<DetailPage> {
       child: Card(
         child: Container(
           padding: EdgeInsets.all(20),
-          color: Colors.white,
           child: Container(
             height: 220,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage("assets/images/${widget.image}"),
-              ),
-            ),
+            child: Image.network(widget.product.image),
           ),
         ),
       ),
@@ -70,7 +49,7 @@ class _DetailPageState extends State<DetailPage> {
   //tên sản phẩm and chữ mô tả
   Widget _buildNameAndDescription() {
     return Container(
-      height: 80,
+      height: 150,
       color: Colors.white,
       child: Row(
         children: <Widget>[
@@ -78,9 +57,17 @@ class _DetailPageState extends State<DetailPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(widget.name, style: myStyle),
               Text(
-                "\$ ${widget.price.toString()}",
+                "Sản phẩm",
+                style: myStyle,
+              ),
+              Text(widget.product.name, style: myStyle),
+              Text(
+                "Giá",
+                style: myStyle,
+              ),
+              Text(
+                "\$ ${widget.product.price.toString()}",
                 style: TextStyle(fontSize: 16, color: Colors.red),
               ),
               Text(
@@ -97,11 +84,12 @@ class _DetailPageState extends State<DetailPage> {
   //mô tả sản phẩm
   Widget _buildDescription() {
     return Container(
-      height: 160,
       child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
         children: <Widget>[
           Text(
-            "Chúng ta vẫn biết rằng, làm việc với một đoạn văn bản dễ đọc và rõ nghĩa dễ gây rối trí và cản trở việc tập trung vào yếu tố trình bày văn bản. Lorem Ipsum có ưu điểm hơn so với đoạn văn bản chỉ gồm nội dung kiểu Nội dung là nó khiến văn bản giống thật hơn, bình thường hơn. Nhiều phần mềm thiết kế giao diện web và dàn trang ngày nay đã sử dụng Lorem Ipsum làm đoạn văn bản giả, và nếu bạn thử tìm các đoạn. Lorem ipsum trên mạng thì sẽ khám phá ra nhiều trang web hiện vẫn đang trong quá trình xây dựng. Có nhiều phiên bản khác nhau đã xuất hiện, đôi khi do vô tình, nhiều khi do cố ý (xen thêm vào những câu hài hước hay thông tục).",
+            widget.product.description,
             style: TextStyle(fontSize: 14),
           ),
         ],
@@ -118,19 +106,33 @@ class _DetailPageState extends State<DetailPage> {
           "Size",
           style: myStyle,
         ),
-        Container(
-          width: 270,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _buildSizeProduct("S"),
-              _buildSizeProduct("M"),
-              _buildSizeProduct("L"),
-              _buildSizeProduct("XXL"),
-            ],
-          ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildSizeProduct("S"),
+            _buildSizeProduct("M"),
+            _buildSizeProduct("L"),
+            _buildSizeProduct("XL"),
+            _buildSizeProduct("XXL"),
+          ],
         ),
       ],
+    );
+  }
+
+//chọn size sản phẩm
+  Widget _buildSizeProduct(String name) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Text(
+        name,
+        style: TextStyle(fontSize: 16),
+      ),
     );
   }
 
@@ -143,18 +145,16 @@ class _DetailPageState extends State<DetailPage> {
           "Màu",
           style: myStyle,
         ),
-        Container(
-          width: 320,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _buildColorProduct(color: Colors.red),
-              _buildColorProduct(color: Colors.yellow),
-              _buildColorProduct(color: Colors.lightBlue),
-              _buildColorProduct(color: Colors.brown),
-              _buildColorProduct(color: Colors.grey),
-            ],
-          ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildColorProduct(color: Colors.red),
+            _buildColorProduct(color: Colors.yellow),
+            _buildColorProduct(color: Colors.lightBlue),
+            _buildColorProduct(color: Colors.brown),
+            _buildColorProduct(color: Colors.grey),
+          ],
         ),
       ],
     );
@@ -220,12 +220,13 @@ class _DetailPageState extends State<DetailPage> {
       child: ElevatedButton(
         style: raisedButtonStyle,
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (ctx) => CartPage(
-                  image: widget.image, name: widget.name, price: widget.price),
-            ),
-          );
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (ctx) => CartPage(
+
+          //     ),
+          //   ),
+          // );
         },
         child: Text('Thêm vào giỏ hàng'),
       ),
@@ -294,24 +295,28 @@ class _DetailPageState extends State<DetailPage> {
                 children: <Widget>[
                   _buildNameAndDescription(), // tên sản phẩm and chữ mô tả
                   _buildDescription(), // mô tả sản phẩm
-                  SizedBox(
-                    height: 130,
-                  ),
-                  _buildSize(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildColor(), // màu sản phẩm
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildQuantity(), // số lượng tăng giảm sản phẩm
-                  SizedBox(
-                    height: 20,
-                  ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildSize(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildColor(), // màu sản phẩm
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildQuantity(), // số lượng tăng giảm sản phẩm
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
