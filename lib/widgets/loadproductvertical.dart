@@ -68,7 +68,7 @@ class _LoadProductVerticalState extends State<LoadProductVertical> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailPage(
-                                      product: products,
+                                  products: products,
                                     )));
                       },
                       child: Container(

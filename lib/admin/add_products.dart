@@ -104,8 +104,13 @@ class _AddProductsState extends State<AddProducts> {
         "Description": detailcontroller.text,
         "Category": valueCategory,
       };
+      DocumentReference docRef =
+      await DatabaseMethods().productMoiDetail(addItem);
+      String documentId = docRef.id;
 
-      await DatabaseMethods().productDetail(addItem);
+      addItem['idProduct'] = documentId;
+
+      await docRef.update({'idProduct': documentId});
 
       ToastService.showSuccessToast(context,
           length: ToastLength.medium,

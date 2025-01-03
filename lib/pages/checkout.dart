@@ -1,19 +1,19 @@
-import 'package:appbanhang/pages/cartpage.dart';
+import 'package:appbanhang/model/productdetail.dart';
+import 'package:appbanhang/model/products.dart';
+import 'package:appbanhang/model/cartitem.dart';
+import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/homepages.dart';
+import 'package:appbanhang/pages/listproduct.dart';
+import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/widgets/loadproductvertical.dart';
+import 'package:appbanhang/widgets/singlecartproduct.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class CheckOut extends StatefulWidget {
-  final String name;
-  final String image;
-  final double price;
-  final String description;
-
-  CheckOut(
-      {super.key,
-      required this.name,
-      required this.image,
-      required this.price,
-      required this.description});
+  CheckOut({super.key});
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -22,69 +22,8 @@ class CheckOut extends StatefulWidget {
 class _CheckOutState extends State<CheckOut> {
   //text style
   final TextStyle myStyle = TextStyle(fontSize: 18);
-  int count = 1;
-  //build widget tất cả cart
-  Widget _buildSingleCartProduct() {
-    return Container(
-      height: 150,
-      width: double.infinity,
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  height: 140,
-                  width: 140,
-                  child: Image.network(widget.image),
-                ),
-                Container(
-                  height: 140,
-                  width: 140,
-                  child: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.name,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "Giá: \$ ${widget.price.toString()}",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                        _buildQuantity(),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  //số lượng
-  Widget _buildQuantity() {
-    return Container(
-      width: 120,
-      height: 20,
-      child: Row(
-        children: [
-          Text("Số lượng:"),
-          Text("1"),
-        ],
-      ),
-    );
-  }
+
 
   //build bottom giá
   Widget _buildBottomDetail(String name, String priceName) {
@@ -133,6 +72,7 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       bottomNavigationBar: Container(
         height: 60,
@@ -148,24 +88,41 @@ class _CheckOutState extends State<CheckOut> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.black,
+        leading:  IconButton(
           onPressed: () {
-            // quay về trang chi tiết sản phẩm truyền dữ liệu về trang
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => CartPage(
-            //       name: widget.name,
-            //       image: widget.image,
-            //       price: widget.price,
-            //       description: widget.description,
-            //     ),
-            //   ),
-            // );
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      title: Text('Trang chủ'),
+                      onTap: () {
+                        Navigator.pop(context); // Đóng dialog
+                        //chuyển về trang chủ
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>HomePages()));
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Thêm sản phẩm mới'),
+                      onTap: () {
+                        Navigator.pop(context);// Đóng dialog
+                        //chuyển trang danh sách sản phẩm
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ListProduct()));
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
+
         actions: <Widget>[
           IconButton(
             onPressed: () {},
@@ -176,35 +133,115 @@ class _CheckOutState extends State<CheckOut> {
           ),
         ],
       ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      body: Consumer<CartProvider>(builder: (context, cart, child) {
+        // print(2);
+        return ListView.builder(
+          itemCount: cart.items.length,
+          itemBuilder: (context, index) {
+            final item = cart.items[index];
+            return Container(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _buildSingleCartProduct(),
-                  _buildSingleCartProduct(),
-                  _buildSingleCartProduct(),
-                  Container(
-                    height: 150,
+                  Card(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        _buildBottomDetail("Giá:", "\$ 60.00"),
-                        _buildBottomDetail("Giảm %:", "3%"),
-                        _buildBottomDetail("Giá ship code:", "\$ 30.00"),
-                        _buildBottomDetail("Tổng cộng:", "\$ 90.00"),
+                        Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              height: 120,
+                              width: 120,
+                              child: Image.network(item.products.image),
+                            ),
+
+                            Container(
+                              height: 120,
+                              width: 200,
+                              child: ListTile(
+                                title: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.products.name,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "Size:  ${item.size}",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                    Container(
+                                      width: 120,
+                                      height: 20,
+                                      child: Row(
+                                        children: [
+                                          Text("Số lượng: "),
+                                          Text("${item.quantity}"),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      "Giá: \$ ${item.products.price}",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                print("delete");
+                                cart.removeItem(item);
+                              },
+                              icon: Icon(
+                                Icons.delete_forever,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                  )
+                  ),
+
+
                 ],
               ),
-            ),
+            );
+          },
+        );
+      }),
+      bottomSheet: Consumer<CartProvider>(builder: (context, cart, child) {
+      return Container(
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10),
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _buildBottomDetail(
+                "Tổng cộng:", '\$' + cart.subTotalPrice.toString()),
+            _buildBottomDetail(
+                "Giảm giá:", cart.discount.toString()+"\%"),
+            _buildBottomDetail(
+                "Phí vận chuyển:",
+                '\$' + cart.shipCode(cart.subTotalPrice).toString()),
+            _buildBottomDetail("Thành tiền:",
+                '\$' + cart.totalPrice.toString()),
           ],
         ),
-      ),
+      );
+    }),
     );
   }
 }

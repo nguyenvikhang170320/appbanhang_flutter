@@ -1,17 +1,17 @@
 import 'package:appbanhang/pages/bottomnav.dart';
-import 'package:appbanhang/pages/cartpage.dart';
-import 'package:appbanhang/widgets/loadproductvertical.dart';
+import 'package:appbanhang/pages/checkout.dart';
+import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../model/products.dart';
 
 class DetailPage extends StatefulWidget {
-  final Products product;
+  final Products products;
 
-  DetailPage({
-    required this.product
-  });
+  DetailPage({required this.products});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -19,18 +19,135 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   int count = 1; //tăng-giảm số lượng
-
-  //chọn màu sắc sản phẩm
-  Widget _buildColorProduct({Color? color}) {
-    print(color);
-    return Container(
-      height: 60,
-      width: 60,
-      color: color ?? Colors.black,
+  Color _selectedColor = Colors.white;
+  String _selectedSize = ""; // Selected size
+  //text style
+  final TextStyle myStyle = TextStyle(fontSize: 18);
+  double selectedDiscountRate = 0.0;
+  //chọn giảm giá
+  Widget _buildDiscountSelector() {
+    return DropdownButton<double>(
+      value: selectedDiscountRate,
+      onChanged: (value) {
+        setState(() {
+          selectedDiscountRate = value!;
+          Provider.of<CartProvider>(context, listen: false).discountRate =
+              value;
+        });
+        // Cập nhật mức giảm giá cho CartProvider
+      },
+      items: [
+        DropdownMenuItem(value: 0.0, child: Text('0%')),
+        DropdownMenuItem(value: 0.05, child: Text('5%')),
+        DropdownMenuItem(value: 0.1, child: Text('10%')),
+        DropdownMenuItem(value: 0.15, child: Text('15%')),
+        DropdownMenuItem(value: 0.2, child: Text('20%')),
+        DropdownMenuItem(value: 0.5, child: Text('50%')),
+      ],
     );
   }
 
-  //image
+  //chọn màu sắc sản phẩm
+  Widget buildColorProduct(Color color) {
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedColor = color;
+          });
+        },
+        child: Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: color,
+            shape:
+                _selectedColor == color ? BoxShape.circle : BoxShape.rectangle,
+            border:
+                _selectedColor == color ? null : Border.all(color: Colors.grey),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColor() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Màu",
+          style: myStyle,
+        ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            buildColorProduct(Colors.black),
+            buildColorProduct(Colors.yellow),
+            buildColorProduct(Colors.lightBlue),
+            buildColorProduct(Colors.brown),
+            buildColorProduct(Colors.grey),
+          ],
+        ),
+      ],
+    );
+  }
+
+  //chọn size
+  Widget _buildSize() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Size",
+          style: myStyle,
+        ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildSizeProduct("S",
+                onTap: () => setState(() => _selectedSize = "S")),
+            _buildSizeProduct("M",
+                onTap: () => setState(() => _selectedSize = "M")),
+            _buildSizeProduct("L",
+                onTap: () => setState(() => _selectedSize = "L")),
+            _buildSizeProduct("XL",
+                onTap: () => setState(() => _selectedSize = "XL")),
+            _buildSizeProduct("XXL",
+                onTap: () => setState(() => _selectedSize = "XXL")),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSizeProduct(String size, {VoidCallback? onTap}) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: _selectedSize == size
+            ? Colors.blue
+            : null, // Highlight selected size
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Container(
+        width: 60,
+        height: 30,
+        child: TextButton(
+          onPressed: onTap,
+          child: Text(
+            size,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //load hình ảnh
   Widget _buildImage() {
     return Container(
       width: 320,
@@ -39,7 +156,7 @@ class _DetailPageState extends State<DetailPage> {
           padding: EdgeInsets.all(20),
           child: Container(
             height: 220,
-            child: Image.network(widget.product.image),
+            child: Image.network(widget.products.image),
           ),
         ),
       ),
@@ -61,13 +178,13 @@ class _DetailPageState extends State<DetailPage> {
                 "Sản phẩm",
                 style: myStyle,
               ),
-              Text(widget.product.name, style: myStyle),
+              Text(widget.products.name, style: myStyle),
               Text(
                 "Giá",
                 style: myStyle,
               ),
               Text(
-                "\$ ${widget.product.price.toString()}",
+                "\$ ${widget.products.price.toString()}",
                 style: TextStyle(fontSize: 16, color: Colors.red),
               ),
               Text(
@@ -89,74 +206,11 @@ class _DetailPageState extends State<DetailPage> {
         runSpacing: 8,
         children: <Widget>[
           Text(
-            widget.product.description,
+            widget.products.description,
             style: TextStyle(fontSize: 14),
           ),
         ],
       ),
-    );
-  }
-
-  //chọn size sản phẩm
-  Widget _buildSize() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Size",
-          style: myStyle,
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _buildSizeProduct("S"),
-            _buildSizeProduct("M"),
-            _buildSizeProduct("L"),
-            _buildSizeProduct("XL"),
-            _buildSizeProduct("XXL"),
-          ],
-        ),
-      ],
-    );
-  }
-
-//chọn size sản phẩm
-  Widget _buildSizeProduct(String name) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Text(
-        name,
-        style: TextStyle(fontSize: 16),
-      ),
-    );
-  }
-
-  //màu
-  Widget _buildColor() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Màu",
-          style: myStyle,
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _buildColorProduct(color: Colors.red),
-            _buildColorProduct(color: Colors.yellow),
-            _buildColorProduct(color: Colors.lightBlue),
-            _buildColorProduct(color: Colors.brown),
-            _buildColorProduct(color: Colors.grey),
-          ],
-        ),
-      ],
     );
   }
 
@@ -211,28 +265,6 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  //button thêm vào giỏ hàng
-  Widget _buildAddToCart() {
-    return Container(
-      height: 60,
-      width: 150,
-      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-      child: ElevatedButton(
-        style: raisedButtonStyle,
-        onPressed: () {
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(
-          //     builder: (ctx) => CartPage(
-
-          //     ),
-          //   ),
-          // );
-        },
-        child: Text('Thêm vào giỏ hàng'),
-      ),
-    );
-  }
-
   //style button
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     foregroundColor: Colors.black87,
@@ -243,18 +275,40 @@ class _DetailPageState extends State<DetailPage> {
     ),
   );
 
-  //text style
-  final TextStyle myStyle = TextStyle(fontSize: 18);
-
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       bottomNavigationBar: Container(
         height: 60,
         width: 100,
         padding: EdgeInsets.only(bottom: 10),
         margin: EdgeInsets.symmetric(horizontal: 10),
-        child: _buildAddToCart(),
+        child: Container(
+          height: 60,
+          width: 100,
+          padding: EdgeInsets.only(bottom: 10),
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          child: Container(
+            height: 60,
+            width: 150,
+            margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+            child: ElevatedButton(
+              style: raisedButtonStyle,
+              onPressed: () {
+                // print(1);
+                cart.addItem(widget.products, _selectedSize, count,
+                    _selectedColor.toString());
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => CheckOut(),
+                  ),
+                );
+              },
+              child: Text('Thêm vào giỏ hàng'),
+            ),
+          ),
+        ),
       ),
       appBar: AppBar(
         title: Text(
@@ -295,7 +349,6 @@ class _DetailPageState extends State<DetailPage> {
                 children: <Widget>[
                   _buildNameAndDescription(), // tên sản phẩm and chữ mô tả
                   _buildDescription(), // mô tả sản phẩm
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -308,6 +361,7 @@ class _DetailPageState extends State<DetailPage> {
                       SizedBox(
                         height: 10,
                       ),
+                      _buildDiscountSelector(),
                       SizedBox(
                         height: 10,
                       ),

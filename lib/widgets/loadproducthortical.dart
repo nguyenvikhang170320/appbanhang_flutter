@@ -50,7 +50,7 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    DetailPage(product: products)));
+                                    DetailPage(products: products,)));
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),

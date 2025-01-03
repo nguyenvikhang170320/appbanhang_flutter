@@ -1,9 +1,11 @@
-import 'package:appbanhang/model/products.dart';
+import 'package:appbanhang/model/cartitem.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,13 +25,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => CartProvider()),
+      ],
+      child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (ctx, snapShot) =>
-            snapShot.hasData ? BottomNav() : WelcomePage(),
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapShot) =>
+              snapShot.hasData ? BottomNav() : WelcomePage(),
+        ),
       ),
     );
   }

@@ -51,7 +51,7 @@ class _ListProductCategoryState extends State<ListProductCategory> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailPage(
-                                      product: products,
+                                  products: products,
                                     )));
                       },
                       child: Container(

@@ -102,10 +102,17 @@ class _AddProductState extends State<AddProduct> {
         "Price":
             double.tryParse(pricecontroller.text) ?? 0.0, // Convert to double
         "Description": detailcontroller.text,
-        "Category": valueCategory,
+        "Category": valueCategory
       };
 
-      await DatabaseMethods().productMoiDetail(addItem);
+      DocumentReference docRef =
+          await DatabaseMethods().productMoiDetail(addItem);
+      String documentId = docRef.id;
+
+      addItem['idProduct'] = documentId;
+
+      await docRef.update({'idProduct': documentId});
+
 
       ToastService.showSuccessToast(context,
           length: ToastLength.medium,

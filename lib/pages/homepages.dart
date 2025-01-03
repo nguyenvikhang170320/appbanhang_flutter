@@ -17,6 +17,7 @@ import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
 class HomePages extends StatefulWidget {
+
   @override
   State<HomePages> createState() => _HomePagesState();
 }

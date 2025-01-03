@@ -11,16 +11,17 @@ class DatabaseMethods {
 
   String idProduct = "ZaVWCFmxoVVRyj51jaRC";
   //Đẩy sản phẩm mới lên firebase cloud firestore
-  Future productMoiDetail(Map<String, dynamic> userInfoMap) async {
+  Future<DocumentReference> productMoiDetail(
+      Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
-        .doc(idProduct)
+        .doc(idProduct) // Assuming idProduct is available
         .collection("sanphammoi")
         .add(userInfoMap);
   }
 
   //Đẩy sản phẩm nổi bật lên firebase cloud firestore
-  Future productFeatureDetail(Map<String, dynamic> userInfoMap) async {
+  Future<DocumentReference> productFeatureDetail(Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
         .doc(idProduct)
@@ -29,7 +30,7 @@ class DatabaseMethods {
   }
 
   //Đẩy tất cả sản phẩm lên firebase cloud firestore
-  Future productDetail(Map<String, dynamic> userInfoMap) async {
+  Future<DocumentReference> productDetail(Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
         .doc(idProduct)
@@ -45,6 +46,19 @@ class DatabaseMethods {
         .collection("danhmuc")
         .add(userInfoMap);
   }
+
+  //đẩy dữ liệu sản phẩm khi người dùng bấm thêm lên firebase cloud firestore
+  Future addProductDetail(
+      Map<String, dynamic> userInfoMap, String userId) async {
+    return await FirebaseFirestore.instance
+        .collection("sanpham")
+        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .set(userInfoMap);
+  }
+//   Future addProductDetail(Map<String, dynamic> userInfoMap, String id) async {
+//     return await FirebaseFirestore.instance.collection('giohang').doc(userId).set({
+//       'products': products
+// })};
 
   //lấy tất cả sản phẩm nổi bật
   Future<Stream<QuerySnapshot>> getProductFeatureItem() async {

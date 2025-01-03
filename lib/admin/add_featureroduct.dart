@@ -104,7 +104,15 @@ class _AddFeatureProductState extends State<AddFeatureProduct> {
         "Category": valueCategory,
       };
 
-      await DatabaseMethods().productFeatureDetail(addItem);
+
+      DocumentReference docRef =
+      await DatabaseMethods().productMoiDetail(addItem);
+      String documentId = docRef.id;
+
+      addItem['idProduct'] = documentId;
+
+      await docRef.update({'idProduct': documentId});
+
 
       ToastService.showSuccessToast(context,
           length: ToastLength.medium,
