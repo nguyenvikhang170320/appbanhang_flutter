@@ -19,57 +19,36 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   int count = 1; //tăng-giảm số lượng
-  Color _selectedColor = Colors.white;
   String _selectedSize = ""; // Selected size
   //text style
   final TextStyle myStyle = TextStyle(fontSize: 18);
-  double selectedDiscountRate = 0.0;
+  String selectedColor = '';
   //chọn giảm giá
-  Widget _buildDiscountSelector() {
-    return DropdownButton<double>(
-      value: selectedDiscountRate,
+  Widget buildColorProduct() {
+    return DropdownButton<String>(
+      value: selectedColor,
       onChanged: (value) {
         setState(() {
-          selectedDiscountRate = value!;
-          Provider.of<CartProvider>(context, listen: false).discountRate =
+          selectedColor = value!;
+          Provider.of<CartProvider>(context, listen: false).discountColor =
               value;
         });
         // Cập nhật mức giảm giá cho CartProvider
       },
       items: [
-        DropdownMenuItem(value: 0.0, child: Text('0%')),
-        DropdownMenuItem(value: 0.05, child: Text('5%')),
-        DropdownMenuItem(value: 0.1, child: Text('10%')),
-        DropdownMenuItem(value: 0.15, child: Text('15%')),
-        DropdownMenuItem(value: 0.2, child: Text('20%')),
-        DropdownMenuItem(value: 0.5, child: Text('50%')),
+        DropdownMenuItem(value: '', child: Text('không có màu')),
+        DropdownMenuItem(value: 'trắng', child: Text('Màu trắng')),
+        DropdownMenuItem(value: 'đen', child: Text('Màu đen')),
+        DropdownMenuItem(value: 'đỏ', child: Text('Màu đỏ')),
+        DropdownMenuItem(value: 'vàng', child: Text('Màu vàng')),
+        DropdownMenuItem(value: 'tím', child: Text('Màu tím')),
+        DropdownMenuItem(value: 'xanh', child: Text('Màu xanh')),
+        DropdownMenuItem(value: 'nâu', child: Text('Màu nâu')),
       ],
     );
   }
 
-  //chọn màu sắc sản phẩm
-  Widget buildColorProduct(Color color) {
-    return Container(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedColor = color;
-          });
-        },
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: color,
-            shape:
-                _selectedColor == color ? BoxShape.circle : BoxShape.rectangle,
-            border:
-                _selectedColor == color ? null : Border.all(color: Colors.grey),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildColor() {
     return Column(
@@ -79,17 +58,7 @@ class _DetailPageState extends State<DetailPage> {
           "Màu",
           style: myStyle,
         ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            buildColorProduct(Colors.black),
-            buildColorProduct(Colors.yellow),
-            buildColorProduct(Colors.lightBlue),
-            buildColorProduct(Colors.brown),
-            buildColorProduct(Colors.grey),
-          ],
-        ),
+        buildColorProduct(),
       ],
     );
   }
@@ -298,7 +267,7 @@ class _DetailPageState extends State<DetailPage> {
               onPressed: () {
                 // print(1);
                 cart.addItem(widget.products, _selectedSize, count,
-                    _selectedColor.toString());
+                    selectedColor);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => CheckOut(),
@@ -358,10 +327,6 @@ class _DetailPageState extends State<DetailPage> {
                         height: 10,
                       ),
                       _buildColor(), // màu sản phẩm
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildDiscountSelector(),
                       SizedBox(
                         height: 10,
                       ),

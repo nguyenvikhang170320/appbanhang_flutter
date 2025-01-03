@@ -1,6 +1,7 @@
 import 'package:appbanhang/model/cartitem.dart';
 import 'package:appbanhang/model/products.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CartProvider extends ChangeNotifier {
   List<CartItem> _items = [];
@@ -23,22 +24,38 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+//format tổng tiền ban đầu về VNĐ
+  String get formattedPrice {
+    final locale = 'vi_VN';
+    final formatter = NumberFormat.currency(locale: locale);
+    return formatter.format(subTotalPrice);
+  }
+  //format tong tien về VNĐ
+  String get formattedTotalPrice {
+    final locale = 'vi_VN';
+    final formatter = NumberFormat.currency(locale: locale);
+    return formatter.format(totalPrice);
+  }
+
   //tổng tiền ban đầu
   double get subTotalPrice {
     return _items.fold(
         0, (total, item) => total + item.products.price * item.quantity);
   }
+  String _discountColor = ""; // Mặc định là 0% (không giảm giá)
 
+  String get discountColor => _discountColor;
+
+  set discountColor(String newRate) {
+    _discountColor = newRate;
+    notifyListeners();
+  }
+
+  //giảm giá %
   double _discountRate = 0.0; // Mặc định là 0% (không giảm giá)
 
   double get discountRate => _discountRate;
 
-  set discountRate(double newRate) {
-    _discountRate = newRate;
-    notifyListeners();
-  }
-
-  //giảm %
   double get discount {
     return subTotalPrice * _discountRate;
   }
@@ -67,9 +84,9 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
-  //shipcode cách 2 ngắn hơn
-  double get shippingFee {
-    // Giả sử phí vận chuyển cố định là 1.5$ khi có sản phẩm trong giỏ hàng
-    return _items.isNotEmpty ? 1.5 : 0.0;
-  }
+  // //shipcode cách 2 ngắn hơn
+  // double get shipCode {
+  //   // Giả sử phí vận chuyển cố định là 1.5$ khi có sản phẩm trong giỏ hàng
+  //   return _items.isNotEmpty ? 1.5 : 0.0;
+  // }
 }

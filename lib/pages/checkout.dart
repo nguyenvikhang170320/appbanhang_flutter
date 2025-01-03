@@ -72,7 +72,6 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       bottomNavigationBar: Container(
         height: 60,
@@ -154,10 +153,10 @@ class _CheckOutState extends State<CheckOut> {
                               width: 120,
                               child: Image.network(item.products.image),
                             ),
-
                             Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
                               height: 120,
-                              width: 200,
+                              width: 160,
                               child: ListTile(
                                 title: Column(
                                   crossAxisAlignment:
@@ -181,11 +180,22 @@ class _CheckOutState extends State<CheckOut> {
                                       height: 20,
                                       child: Row(
                                         children: [
+                                          Text("Màu: "),
+                                          Text("${item.color}"),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 120,
+                                      height: 20,
+                                      child: Row(
+                                        children: [
                                           Text("Số lượng: "),
                                           Text("${item.quantity}"),
                                         ],
                                       ),
                                     ),
+
                                     Text(
                                       "Giá: \$ ${item.products.price}",
                                       style: TextStyle(
@@ -230,14 +240,14 @@ class _CheckOutState extends State<CheckOut> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _buildBottomDetail(
-                "Tổng cộng:", '\$' + cart.subTotalPrice.toString()),
+                "Tổng cộng:", cart.formattedPrice.toString()),
             _buildBottomDetail(
                 "Giảm giá:", cart.discount.toString()+"\%"),
             _buildBottomDetail(
                 "Phí vận chuyển:",
-                '\$' + cart.shipCode(cart.subTotalPrice).toString()),
+                cart.shipCode(cart.subTotalPrice).toString()),
             _buildBottomDetail("Thành tiền:",
-                '\$' + cart.totalPrice.toString()),
+                cart.formattedTotalPrice.toString()),
           ],
         ),
       );
