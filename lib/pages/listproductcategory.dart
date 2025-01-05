@@ -2,7 +2,7 @@ import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
-import 'package:appbanhang/services/database.dart';
+import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

@@ -14,6 +14,8 @@ import 'package:flutter/widgets.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
+import '../services/sharedpreferences/userpreferences.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -43,7 +45,15 @@ class _LoginState extends State<Login> {
           email = emailController.text;
           password = passwordController.text;
         });
-
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((userCredential) async {
+          // Lấy userId từ userCredential
+          String userId = userCredential.user!.uid;
+          // Lưu userId vào SharedPreferences
+          await UserPreferences.setUid(userId);
+          print("UserID đã được lưu: $userId");
+        });
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 

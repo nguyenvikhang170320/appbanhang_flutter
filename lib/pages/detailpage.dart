@@ -270,7 +270,7 @@ class _DetailPageState extends State<DetailPage> {
                     selectedColor);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => CheckOut(),
+                    builder: (context) => CheckOut(products: widget.products,),
                   ),
                 );
               },

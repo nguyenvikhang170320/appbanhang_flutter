@@ -5,7 +5,7 @@ import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/pages/login.dart';
-import 'package:appbanhang/services/database.dart';
+import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/carouselview.dart';
 import 'package:appbanhang/widgets/loadproducthortical.dart';
 import 'package:appbanhang/widgets/loadproductvertical.dart';

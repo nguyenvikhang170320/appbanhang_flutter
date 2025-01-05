@@ -1,6 +1,6 @@
 import 'package:appbanhang/pages/login.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
-import 'package:appbanhang/services/database.dart';
+import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/changescreen.dart';
 import 'package:appbanhang/widgets/mybutton.dart';
 import 'package:appbanhang/widgets/emailtextformfield.dart';

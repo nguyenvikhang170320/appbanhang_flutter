@@ -13,4 +13,5 @@ class CartItem {
     required this.color,
     required this.quantity,
   });
+
 }

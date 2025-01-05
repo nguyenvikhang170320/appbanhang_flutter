@@ -1,19 +1,20 @@
-import 'package:appbanhang/model/productdetail.dart';
 import 'package:appbanhang/model/products.dart';
-import 'package:appbanhang/model/cartitem.dart';
-import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:appbanhang/widgets/loadproductvertical.dart';
-import 'package:appbanhang/widgets/singlecartproduct.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
 
 class CheckOut extends StatefulWidget {
-  CheckOut({super.key});
+  final Products products;
+  CheckOut({super.key, required this.products});
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -57,13 +58,22 @@ class _CheckOutState extends State<CheckOut> {
       margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: ElevatedButton(
         style: raisedButtonStyle,
-        onPressed: () {
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(
-          //     builder: (ctx) => CheckOut(
-          //         name: widget.name, image: widget.image, price: widget.price),
-          //   ),
-          // );
+        onPressed: () async {
+          // List<Products> listProducts = [widget.products];
+          // print(listProducts);
+          final cartProvider = Provider.of<CartProvider>(context, listen: false);
+          double totalPrice = cartProvider.calculateTotalPrice();
+          try {
+            await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice);
+            print('Thêm đơn hàng thành công');
+            ToastService.showSuccessToast(context,
+                length: ToastLength.medium,
+                expandedHeight: 100,
+                message: "Thanh toán thành công");
+          } catch (e) {
+            print('Lỗi khi thêm đơn hàng: $e');
+          }
+
         },
         child: Text('Thanh toán'),
       ),
@@ -254,4 +264,6 @@ class _CheckOutState extends State<CheckOut> {
     }),
     );
   }
+
+
 }

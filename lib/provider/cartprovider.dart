@@ -83,10 +83,13 @@ class CartProvider extends ChangeNotifier {
       return 2;
     }
   }
-
-  // //shipcode cách 2 ngắn hơn
+  //shipcode cách 2 ngắn hơn
   // double get shipCode {
   //   // Giả sử phí vận chuyển cố định là 1.5$ khi có sản phẩm trong giỏ hàng
   //   return _items.isNotEmpty ? 1.5 : 0.0;
   // }
+  double calculateTotalPrice() {
+    return subTotalPrice - discount + shipCode(subTotalPrice);
+  }
+
 }
