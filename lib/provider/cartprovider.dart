@@ -23,6 +23,11 @@ class CartProvider extends ChangeNotifier {
     _items.removeWhere((cartItem) => cartItem == item);
     notifyListeners();
   }
+  //làm sạch giỏ hàng
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
 
 //format tổng tiền ban đầu về VNĐ
   String get formattedPrice {

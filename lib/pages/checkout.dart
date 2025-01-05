@@ -13,8 +13,7 @@ import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
 class CheckOut extends StatefulWidget {
-  final Products products;
-  CheckOut({super.key, required this.products});
+  CheckOut({super.key});
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -70,6 +69,9 @@ class _CheckOutState extends State<CheckOut> {
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "Thanh toán thành công");
+
+            cartProvider.clearCart(); //xóa sạch đơn hàng sau khi thanh toán thành công
+
           } catch (e) {
             print('Lỗi khi thêm đơn hàng: $e');
           }

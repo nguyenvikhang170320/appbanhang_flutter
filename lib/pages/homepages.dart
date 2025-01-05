@@ -1,5 +1,6 @@
 import 'package:appbanhang/admin/admin_login.dart';
 import 'package:appbanhang/model/products.dart';
+import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/pages/listcategory.dart';
@@ -101,6 +102,11 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => CheckOut(),
+                ),
+              );
             },
             title: Text("Giỏ hàng"),
             leading: Icon(Icons.shopping_cart),
