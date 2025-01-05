@@ -1,11 +1,9 @@
-import 'package:appbanhang/model/products.dart';
+import 'package:appbanhang/model/colorsize.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
-import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
-import 'package:appbanhang/widgets/loadproductvertical.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +11,7 @@ import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
 class CheckOut extends StatefulWidget {
+
   CheckOut({super.key});
 
   @override
@@ -22,7 +21,6 @@ class CheckOut extends StatefulWidget {
 class _CheckOutState extends State<CheckOut> {
   //text style
   final TextStyle myStyle = TextStyle(fontSize: 18);
-
 
 
   //build bottom giá
@@ -62,18 +60,23 @@ class _CheckOutState extends State<CheckOut> {
           // print(listProducts);
           final cartProvider = Provider.of<CartProvider>(context, listen: false);
           double totalPrice = cartProvider.calculateTotalPrice();
+          print(totalPrice);
+          int quantitys = cartProvider.quantitys;
+          print(quantitys);
+
+
           try {
-            await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice);
+            await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice, quantitys);
             print('Thêm đơn hàng thành công');
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "Thanh toán thành công");
 
-            cartProvider.clearCart(); //xóa sạch đơn hàng sau khi thanh toán thành công
+            cartProvider.clearCart();//xóa sạch đơn hàng sau khi thanh toán thành công
 
           } catch (e) {
-            print('Lỗi khi thêm đơn hàng: $e');
+            print('Lỗi khi thanh toán đơn hàng: $e');
           }
 
         },
@@ -180,23 +183,6 @@ class _CheckOutState extends State<CheckOut> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      "Size:  ${item.size}",
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                    ),
-                                    Container(
-                                      width: 120,
-                                      height: 20,
-                                      child: Row(
-                                        children: [
-                                          Text("Màu: "),
-                                          Text("${item.color}"),
-                                        ],
-                                      ),
-                                    ),
                                     Container(
                                       width: 120,
                                       height: 20,
@@ -207,7 +193,6 @@ class _CheckOutState extends State<CheckOut> {
                                         ],
                                       ),
                                     ),
-
                                     Text(
                                       "Giá: \$ ${item.products.price}",
                                       style: TextStyle(
@@ -266,6 +251,4 @@ class _CheckOutState extends State<CheckOut> {
     }),
     );
   }
-
-
 }

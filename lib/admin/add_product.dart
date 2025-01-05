@@ -111,7 +111,7 @@ class _AddProductState extends State<AddProduct> {
 
       addItem['idProduct'] = documentId;
 
-      await docRef.update({'idProduct': documentId});
+      await docRef.update({'idProduct': documentId,});
 
 
       ToastService.showSuccessToast(context,
@@ -313,6 +313,7 @@ class _AddProductState extends State<AddProduct> {
                       valueCategory, // hiện danh mục đã chọn lên DropdownButton
                 )),
               ),
+
               SizedBox(
                 height: 30.0,
               ),

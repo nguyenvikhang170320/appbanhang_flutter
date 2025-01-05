@@ -99,7 +99,7 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  Future<void> addOrder(List<Products> products, double totalPrice) async {
+  Future<void> addOrder(List<Products> products, double totalPrice, int quantitys) async {
     final uid = await UserPreferences.getUid();
     try {
 
@@ -108,10 +108,12 @@ class DatabaseMethods {
           .collection('orders')
           .add({
         'userId': uid,
-        'totalAmount': totalPrice, // Tính tổng tiền
+        'totalAmount': totalPrice,// Tính tổng tiền
+        'soluongdadat': quantitys,// số lượng đã đặt tất cả sản phẩm
         'createdAt': FieldValue.serverTimestamp(),
         'status': 'pending',
-        'products': [], // Khởi tạo mảng products
+        'products': [],// Khởi tạo mảng products
+        'thanhtoan':''
       });
       // id tự sinh ra khi tạo cơ sở dữ liệu
       String idCart = orderRef.id;
@@ -131,10 +133,36 @@ class DatabaseMethods {
       await orderRef.update({
         'products': FieldValue.arrayUnion(productsData)
       });
-      print('Đơn hàng đã được thêm thành công');
+      print('Đơn hàng đã thanh toán thành công');
     } catch (e) {
-      print('Lỗi khi thêm đơn hàng: $e');
+      print('Lỗi khi thanh toán đơn hàng: $e');
     }
   }
 
+  //cây lưu trữ giá trị màu, size, và sản phẩm
+  Future<void> addColorSizeProduct(Products products, String size, String color, categoryRequiresSizeColor ) async {
+    final uid = await UserPreferences.getUid();
+    try {
+      DocumentReference variantRef = await FirebaseFirestore.instance
+          .collection('colorsize').add({
+        'uidUser': uid,
+        'size': size,
+        'color': color,
+        'categoryRequiresSizeColor':categoryRequiresSizeColor,
+        'productId': products.idProduct,
+        'productName': products.name,
+        'productPrice': products.price,
+
+      });
+      String idVariant = variantRef.id;
+      variantRef.update({'id': idVariant});
+
+      print('Đơn hàng đã được thêm thành công');
+      // id tự sinh ra khi tạo cơ sở dữ liệu
+
+    }
+    catch (e) {
+      print('Lỗi khi thêm đơn hàng: $e');
+    }
+  }
 }

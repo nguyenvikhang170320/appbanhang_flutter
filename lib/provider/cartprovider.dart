@@ -1,4 +1,5 @@
 import 'package:appbanhang/model/cartitem.dart';
+import 'package:appbanhang/model/colorsize.dart';
 import 'package:appbanhang/model/products.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +7,7 @@ import 'package:intl/intl.dart';
 class CartProvider extends ChangeNotifier {
   List<CartItem> _items = [];
 
-  void addItem(Products product, String size, int quantity, String color) {
+  void addItem(Products product, String size,String color, int quantity) {
     notifyListeners();
     _items.add(CartItem(
       products: product,
@@ -15,6 +16,7 @@ class CartProvider extends ChangeNotifier {
       color: color,
     ));
   }
+
 
   List<CartItem> get items => _items;
 
@@ -47,10 +49,12 @@ class CartProvider extends ChangeNotifier {
     return _items.fold(
         0, (total, item) => total + item.products.price * item.quantity);
   }
+
+
   String _discountColor = ""; // Mặc định là 0% (không giảm giá)
 
   String get discountColor => _discountColor;
-
+  // lấy giảm giá
   set discountColor(String newRate) {
     _discountColor = newRate;
     notifyListeners();
@@ -63,6 +67,11 @@ class CartProvider extends ChangeNotifier {
 
   double get discount {
     return subTotalPrice * _discountRate;
+  }
+  //số lượng đã đặt tất cả sản phẩm
+  int get quantitys {
+    return _items.fold(
+        0, (total, item) => total + item.quantity);
   }
 
   //tổng tiền

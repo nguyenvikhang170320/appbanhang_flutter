@@ -1,18 +1,18 @@
-import 'package:appbanhang/model/colorsize.dart';
 import 'package:appbanhang/model/products.dart';
-import 'package:flutter/material.dart';
 
-class CartItem {
+class ColorSize {
   final Products products;
+  final String id;
   final String size;
   final String color;
-  int quantity;
+  final bool categoryRequiresSizeColor;
 
-  CartItem({
+  ColorSize({
     required this.products,
+    required this.id,
     required this.size,
     required this.color,
-    required this.quantity,
+    required this.categoryRequiresSizeColor,
   });
 
 }

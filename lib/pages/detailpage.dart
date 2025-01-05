@@ -1,10 +1,14 @@
+import 'package:appbanhang/model/colorsize.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/services/databasemethod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
 
 import '../model/products.dart';
 
@@ -23,9 +27,15 @@ class _DetailPageState extends State<DetailPage> {
   //text style
   final TextStyle myStyle = TextStyle(fontSize: 18);
   String selectedColor = '';
-  //chọn giảm giá
+  bool get showVariantOptions =>
+      !["đồ ăn", "đồ uống", "trái cây", "thực phẩm", "kem", "laptop","điện thoại","sách","thú cưng"].contains(widget.products.category);
+
+  bool categoryRequiresSizeColor = false;
+
+
+  //chọn màu
   Widget buildColorProduct() {
-    return DropdownButton<String>(
+    return  DropdownButton<String>(
       value: selectedColor,
       onChanged: (value) {
         setState(() {
@@ -48,50 +58,69 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-
-
+  //chọn màu
   Widget _buildColor() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Màu",
-          style: myStyle,
-        ),
-        buildColorProduct(),
-      ],
-    );
+    if(showVariantOptions){
+      print('showVariantOptions: $showVariantOptions');
+      print('widget.products.category: ${widget.products.category}');
+      categoryRequiresSizeColor = true;
+    // Giả sử bạn đã có một danh sách các danh mục cần chọn size và màu sắc
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Màu",
+            style: myStyle,
+          ),
+          buildColorProduct(),
+        ],
+      );
+    }else{
+      print('showVariantOptions: $showVariantOptions');
+      categoryRequiresSizeColor = false;
+      return SizedBox();
+    }
   }
 
   //chọn size
   Widget _buildSize() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Size",
-          style: myStyle,
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _buildSizeProduct("S",
-                onTap: () => setState(() => _selectedSize = "S")),
-            _buildSizeProduct("M",
-                onTap: () => setState(() => _selectedSize = "M")),
-            _buildSizeProduct("L",
-                onTap: () => setState(() => _selectedSize = "L")),
-            _buildSizeProduct("XL",
-                onTap: () => setState(() => _selectedSize = "XL")),
-            _buildSizeProduct("XXL",
-                onTap: () => setState(() => _selectedSize = "XXL")),
-          ],
-        ),
-      ],
-    );
+
+    if (showVariantOptions) {
+      print('showVariantOptions: $showVariantOptions');
+      categoryRequiresSizeColor = true;//ko cho hiển thị size, màu sắc
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Size",
+            style: myStyle,
+          ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildSizeProduct("S",
+                  onTap: () => setState(() => _selectedSize = "S")),
+              _buildSizeProduct("M",
+                  onTap: () => setState(() => _selectedSize = "M")),
+              _buildSizeProduct("L",
+                  onTap: () => setState(() => _selectedSize = "L")),
+              _buildSizeProduct("XL",
+                  onTap: () => setState(() => _selectedSize = "XL")),
+              _buildSizeProduct("XXL",
+                  onTap: () => setState(() => _selectedSize = "XXL")),
+            ],
+          ),
+        ],
+      );
+    } else {
+      print('showVariantOptions: $showVariantOptions');
+      categoryRequiresSizeColor = false; // cho hiển thị size, màu sắc
+      return SizedBox();
+    }
   }
 
+  //chọn size
   Widget _buildSizeProduct(String size, {VoidCallback? onTap}) {
     return Container(
       padding: EdgeInsets.all(8),
@@ -264,10 +293,24 @@ class _DetailPageState extends State<DetailPage> {
             margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
             child: ElevatedButton(
               style: raisedButtonStyle,
-              onPressed: () {
+              onPressed: () async {
                 // print(1);
-                cart.addItem(widget.products, _selectedSize, count,
-                    selectedColor);
+                final ColorSize colorSize;
+
+                cart.addItem(widget.products, _selectedSize,selectedColor, count);
+                final cartProvider = Provider.of<CartProvider>(context, listen: false);
+                try {
+                  await DatabaseMethods().addColorSizeProduct(widget.products, selectedColor,_selectedSize, categoryRequiresSizeColor);
+                  print('Thêm đơn hàng thành công');
+                  ToastService.showSuccessToast(context,
+                      length: ToastLength.medium,
+                      expandedHeight: 100,
+                      message: "Thêm sản phẩm vào giỏ hàng thành công");
+
+                } catch (e) {
+                  print('Lỗi khi thêm sản phẩm: $e');
+                }
+
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => CheckOut(),

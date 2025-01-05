@@ -1,7 +1,7 @@
-import 'package:appbanhang/model/cartitem.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/provider/productprovider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => CartProvider()),
+        ChangeNotifierProvider(create: (ctx) => ProductProvider()),
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
