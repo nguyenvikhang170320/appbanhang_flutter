@@ -1,24 +1,23 @@
 import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/detailpage.dart';
-import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/services/databasemethod.dart';
-import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class LoadProductHortical extends StatefulWidget {
+
+class LoadProductVertical extends StatefulWidget {
+  const LoadProductVertical({super.key});
   @override
-  State<LoadProductHortical> createState() => _LoadProductHorticalState();
+  State<LoadProductVertical> createState() => _LoadProductVerticalState();
 }
 
-class _LoadProductHorticalState extends State<LoadProductHortical> {
+class _LoadProductVerticalState extends State<LoadProductVertical> {
   Stream? fooditemStream;
 
   ontheload() async {
-    fooditemStream = await DatabaseMethods().getProductFeatureItem();
+    fooditemStream = await DatabaseMethods().getProductMoiItem();
     setState(() {});
   }
 
@@ -28,14 +27,13 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
     super.initState();
   }
 
+  late Products products;
   Widget _loadProduct() {
     return StreamBuilder(
         stream: fooditemStream,
         builder: (context, AsyncSnapshot snapshot) {
           return snapshot.hasData
-              ? GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
+              ? ListView.builder(
                   itemCount: 4,
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
@@ -49,8 +47,9 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailPage(products: products,)));
+                                builder: (context) => DetailPage(
+                                  products: products,
+                                    )));
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),
@@ -59,40 +58,38 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
                             padding: EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(60),
                                   child: Image.network(
                                     ds["Image"],
-                                    height: 60,
-                                    width: 60,
+                                    height: 90,
+                                    width: 90,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                                 Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 15),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Column(
-                                        children: [
-                                          SizedBox(
-                                            width: 20.0,
-                                          ),
-                                          Container(
-                                              child: Text(
-                                            ds["Name"],
-                                            style: AppWidget
-                                                .semiBoolTextFeildStyle(),
-                                          )),
-                                          Container(
-                                              child: Text(
-                                            "\$" + ds["Price"].toString(),
-                                            style: AppWidget
-                                                .semiBoolTextFeildStyle(),
-                                          )),
-                                        ],
+                                      Container(
+                                        child: Text(
+                                          ds["Name"],
+                                          style: AppWidget
+                                              .semiBoolTextFeildStyle(),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          "\$" + ds["Price"].toString(),
+                                          style: AppWidget
+                                              .semiBoolTextFeildStyle(),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -114,19 +111,19 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
       child: Column(
         children: [
           SizedBox(
-            height: 10,
+            height: 20,
           ),
           Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Container(
-                  height: 50,
+                  height: 70,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Sản phẩm nổi bật",
+                        "Sản phẩm mới",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -135,7 +132,9 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (ctx) => ListProduct()),
+                            MaterialPageRoute(
+                              builder: (ctx) => ListProduct(),
+                            ),
                           );
                         },
                         child: Text(

@@ -1,4 +1,5 @@
 import 'package:appbanhang/admin/home_admin.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -42,8 +43,9 @@ class _AdminLoginState extends State<AdminLogin> {
                   key: _formkey,
                   child: Column(
                     children: [
+
                       Text(
-                        "Hãy bắt đầu với Admin!",
+                        "Người dùng quản trị",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 25.0,
@@ -121,6 +123,7 @@ class _AdminLoginState extends State<AdminLogin> {
                                   ),
                                 ),
                               ),
+
                               SizedBox(
                                 height: 40.0,
                               ),
@@ -146,7 +149,7 @@ class _AdminLoginState extends State<AdminLogin> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -167,7 +170,7 @@ class _AdminLoginState extends State<AdminLogin> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.orangeAccent,
               content: Text(
-                "Your id is not correct",
+                "Id của bạn không đúng",
                 style: TextStyle(fontSize: 18.0),
               )));
         } else if (result.data()['password'] !=
@@ -175,7 +178,7 @@ class _AdminLoginState extends State<AdminLogin> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.orangeAccent,
               content: Text(
-                "Your password is not correct",
+                "Mật khẩu của bạn không đúng",
                 style: TextStyle(fontSize: 18.0),
               )));
         } else {

@@ -2,7 +2,6 @@ import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class DatabaseMethods {
   //đẩy dữ liệu users lên firebase cloud firestore
   Future addUserDetail(Map<String, dynamic> userInfoMap, String id) async {

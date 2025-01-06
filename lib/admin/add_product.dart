@@ -3,7 +3,7 @@ import 'package:appbanhang/services/databasemethod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
 import 'package:toasty_box/toast_enums.dart';

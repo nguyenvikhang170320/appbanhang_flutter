@@ -3,6 +3,7 @@ import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -341,13 +342,7 @@ class _DetailPageState extends State<DetailPage> {
           },
         ),
         actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
+         NotificationButton(),
         ],
       ),
       body: Container(

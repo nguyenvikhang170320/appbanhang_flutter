@@ -1,4 +1,5 @@
 import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/pages/profile.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';

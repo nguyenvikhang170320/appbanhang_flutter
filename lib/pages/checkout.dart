@@ -1,11 +1,10 @@
-import 'package:appbanhang/model/colorsize.dart';
-import 'package:appbanhang/pages/homepages.dart';
+import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
@@ -59,6 +58,7 @@ class _CheckOutState extends State<CheckOut> {
           // List<Products> listProducts = [widget.products];
           // print(listProducts);
           final cartProvider = Provider.of<CartProvider>(context, listen: false);
+          final productProvider = Provider.of<ProductProvider>(context, listen: false);
           double totalPrice = cartProvider.calculateTotalPrice();
           print(totalPrice);
           int quantitys = cartProvider.quantitys;
@@ -72,7 +72,7 @@ class _CheckOutState extends State<CheckOut> {
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "Thanh toán thành công");
-
+            productProvider.addNotification("Notification");
             cartProvider.clearCart();//xóa sạch đơn hàng sau khi thanh toán thành công
 
           } catch (e) {
@@ -115,7 +115,7 @@ class _CheckOutState extends State<CheckOut> {
                       onTap: () {
                         Navigator.pop(context); // Đóng dialog
                         //chuyển về trang chủ
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>HomePages()));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>BottomNav()));
                       },
                     ),
                     ListTile(
@@ -138,13 +138,7 @@ class _CheckOutState extends State<CheckOut> {
         ),
 
         actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
+         NotificationButton(),
         ],
       ),
       body: Consumer<CartProvider>(builder: (context, cart, child) {

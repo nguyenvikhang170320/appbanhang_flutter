@@ -1,12 +1,12 @@
-import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:flutter/material.dart';
 
-class EmailTextFormField extends StatelessWidget {
+class PhoneTextFormField extends StatelessWidget {
   final String? Function(String?) validator;
   final bool? Function(String?) onChanged;
   final String name;
   TextEditingController controllerUser = new TextEditingController();
-  EmailTextFormField(
+  PhoneTextFormField(
       {super.key,
       required this.onChanged,
       required this.name,
@@ -22,7 +22,7 @@ class EmailTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: name,
         hintStyle: AppWidget.semiBoolTextFeildStyle(),
-        prefixIcon: Icon(Icons.email),
+        prefixIcon: Icon(Icons.phone),
         border: OutlineInputBorder(),
       ),
     );

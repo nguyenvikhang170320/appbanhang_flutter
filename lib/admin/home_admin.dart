@@ -2,7 +2,7 @@ import 'package:appbanhang/admin/add_featureroduct.dart';
 import 'package:appbanhang/admin/add_product.dart';
 import 'package:appbanhang/admin/add_category.dart';
 import 'package:appbanhang/admin/add_products.dart';
-import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:flutter/material.dart';
 
 class HomeAdmin extends StatefulWidget {
@@ -17,7 +17,7 @@ class _HomeAdminState extends State<HomeAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
+        margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
         child: Column(
           children: [
             Center(

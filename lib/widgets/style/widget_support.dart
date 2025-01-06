@@ -8,6 +8,13 @@ class AppWidget {
         fontWeight: FontWeight.bold,
         fontFamily: 'Poppins');
   }
+  static TextStyle adminTextFeildStyle() {
+    return TextStyle(
+        color: Colors.redAccent,
+        fontSize: 30.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Poppins');
+  }
 
   static TextStyle HeadlineTextFeildStyle() {
     return TextStyle(

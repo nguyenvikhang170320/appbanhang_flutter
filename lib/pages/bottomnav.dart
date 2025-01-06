@@ -1,8 +1,9 @@
 import 'package:appbanhang/pages/account.dart';
+import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/bill.dart';
-import 'package:appbanhang/pages/postproduct.dart';
+import 'package:appbanhang/pages/profile.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -18,19 +19,19 @@ class _BottomNavState extends State<BottomNav> {
   late List<Widget> pages;
   late Widget currentPage;
   late HomePages home;
-  late Account account;
+  late Profile profile;
   late Favorites favorites;
-  late PostProduct postProduct;
+  late CheckOut checkOut;
   late Bill bill;
 
   @override
   void initState() {
     home = HomePages();
-    account = Account();
+    profile = Profile();
     favorites = Favorites();
-    postProduct = PostProduct();
+    checkOut = CheckOut();
     bill = Bill();
-    pages = [home, postProduct, bill, favorites, account];
+    pages = [home, checkOut, bill, favorites, profile];
     super.initState();
   }
 
@@ -55,17 +56,17 @@ class _BottomNavState extends State<BottomNav> {
               color: Colors.black,
             ),
             Icon(
-              Icons.add_a_photo_outlined,
-              size: 30,
-              color: Colors.black,
-            ),
-            Icon(
-              Icons.wallet_giftcard_outlined,
+              Icons.shopping_cart_checkout,
               size: 30,
               color: Colors.black,
             ),
             Icon(
               Icons.favorite_border_outlined,
+              size: 30,
+              color: Colors.black,
+            ),
+            Icon(
+              Icons.add_alert_sharp,
               size: 30,
               color: Colors.black,
             ),

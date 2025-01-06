@@ -1,19 +1,17 @@
 import 'package:appbanhang/admin/admin_login.dart';
-import 'package:appbanhang/model/products.dart';
+import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
-import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/pages/listcategory.dart';
-import 'package:appbanhang/pages/listproduct.dart';
-import 'package:appbanhang/pages/login.dart';
+import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/services/databasemethod.dart';
-import 'package:appbanhang/widgets/carouselview.dart';
-import 'package:appbanhang/widgets/loadproducthortical.dart';
-import 'package:appbanhang/widgets/loadproductvertical.dart';
+import 'package:appbanhang/widgets/slidebar/carouselview.dart';
+import 'package:appbanhang/widgets/products/loadproducthortical.dart';
+import 'package:appbanhang/widgets/products/loadproductvertical.dart';
+import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
@@ -24,6 +22,8 @@ class HomePages extends StatefulWidget {
 }
 
 class _HomePagesState extends State<HomePages> {
+  final AuthMethods authMethods = AuthMethods();
+
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
     return Container(
@@ -80,14 +80,14 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (ctx) => AdminLogin(),
-                ),
-              );
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (ctx) => BottomNav(),
+                  ),
+                );
             },
-            title: Text("Admin"),
-            leading: Icon(Icons.admin_panel_settings_outlined),
+            title: Text("Trang chủ"),
+            leading: Icon(Icons.home),
             selected: homeColor,
           ),
           ListTile(
@@ -193,14 +193,14 @@ class _HomePagesState extends State<HomePages> {
                 callColor = true;
               });
             },
-            title: Text("Gọi điện"),
-            leading: Icon(Icons.phone),
+            title: Text("Liên hệ chúng tôi"),
+            leading: Icon(Icons.contact_emergency),
             selected: callColor,
           ),
           ListTile(
-            onTap: () {
+            onTap: (){
               //đăng xuất
-              FirebaseAuth.instance.signOut();
+              authMethods.SignOut();
               //show thông báo dạng toasty
               ToastService.showSuccessToast(context,
                   length: ToastLength.medium,
@@ -284,18 +284,6 @@ class _HomePagesState extends State<HomePages> {
 
   bool callColor = false;
 
-  Stream? fooditemStream;
-
-  ontheload() async {
-    fooditemStream = await DatabaseMethods().getProductFeatureItem();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    ontheload();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -327,13 +315,7 @@ class _HomePagesState extends State<HomePages> {
               color: Colors.black,
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
+          NotificationButton(),
         ],
       ),
       body: SingleChildScrollView(

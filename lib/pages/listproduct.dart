@@ -2,7 +2,8 @@ import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/services/databasemethod.dart';
-import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -135,13 +136,7 @@ class _ListProductState extends State<ListProduct> {
               color: Colors.black,
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none,
-              color: Colors.black,
-            ),
-          ),
+          NotificationButton(),
         ],
       ),
       body: _loadProduct(),

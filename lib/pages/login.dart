@@ -1,11 +1,11 @@
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/signup.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
-import 'package:appbanhang/widgets/changescreen.dart';
-import 'package:appbanhang/widgets/mybutton.dart';
-import 'package:appbanhang/widgets/emailtextformfield.dart';
-import 'package:appbanhang/widgets/passwordTextformfield.dart';
-import 'package:appbanhang/widgets/widget_support.dart';
+import 'package:appbanhang/widgets/users/changescreen.dart';
+import 'package:appbanhang/widgets/users/mybuttonuser.dart';
+import 'package:appbanhang/widgets/users/emailtextformfield.dart';
+import 'package:appbanhang/widgets/users/passwordTextformfield.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +162,7 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   height: 60,
                 ),
-                MyButton(
+                MyButtonUser(
                   name: "Đăng nhập",
                   onPressed: () {
                     validation();
