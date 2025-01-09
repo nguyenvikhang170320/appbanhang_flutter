@@ -33,6 +33,7 @@ class _ProfileState extends State<Profile> {
   late TextEditingController address;
   late TextEditingController userName;
   bool isMale = false;
+  bool isEditImage = false;
 
   void vaildation() async {
     if (userName.text.isEmpty && phoneNumber.text.isEmpty) {
@@ -56,49 +57,11 @@ class _ProfileState extends State<Profile> {
           expandedHeight: 100,
           message: "Vui lòng nhập SĐT mới");
     } else {
-
       uploadUserDetail();
     }
   }
-  String? image;
-  void uploadUserDetail() async {
-    final uid = await UserPreferences.getUid();
-    // Kiểm tra UID
-    if (uid == null) {
-      // Hiển thị thông báo lỗi: UID không hợp lệ
-      ToastService.showErrorToast(context,
-          length: ToastLength.medium,
-          expandedHeight: 100,
-          message: "Thất bại, không có uid");
-      return;
-    }
 
-    // Cập nhật dữ liệu
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .update({
-        'name': userName.text,
-        'isMale': isMale ? 'Nam' : 'Nữ',
-        'phone': phoneNumber.text,
-        'image': imageUrl,
-        'address': address.text,
-      });
 
-      // Cập nhật thành công
-      ToastService.showSuccessToast(context,
-          length: ToastLength.medium,
-          expandedHeight: 100,
-          message: "Cập nhật thành công");
-    } catch (e) {
-      // Xử lý lỗi
-      print('Error updating user data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Cập nhật dữ liệu thất bại')),
-      );
-    }
-  }
   Widget _buildContainerPart() {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
@@ -111,30 +74,27 @@ class _ProfileState extends State<Profile> {
       isMale = false;
     }
     return Container(
-      height: 300,
+      height: double.infinity,
       width: double.infinity,
-      child: Column(
-        children: <Widget>[
+      child:
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildSingleProfile(
-                  name: "Tên", value: userProvider.getNameData()),
+                  name: "Tên: ", value: userProvider.getNameData()),
               _buildSingleProfile(
-                  name: "Email", value: userProvider.getEmailData()),
+                  name: "Email: ", value: userProvider.getEmailData()),
               _buildSingleProfile(
-                  name: "SĐT", value: userProvider.getPhoneData()),
+                  name: "SĐT: ", value: userProvider.getPhoneData()),
               _buildSingleProfile(
-                  name: "Giới tính", value: userProvider.getIsMaleData()),
+                  name: "Giới tính: ", value: userProvider.getIsMaleData()),
               _buildSingleProfile(
-                  name: "Địa chỉ", value: userProvider.getAddressData()),
+                  name: "Địa chỉ: ", value: userProvider.getAddressData()),
               _buildSingleProfile(
-                  name: "Trạng thái tài khoản",
+                  name: "Trạng thái tài khoản: ",
                   value: userProvider.getAccountStatusData()),
             ],
           )
-        ],
-      ),
     );
   }
 
@@ -142,38 +102,37 @@ class _ProfileState extends State<Profile> {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     return Container(
-      height: 300,
+      height: double.infinity,
       width: double.infinity,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              MyTextFormField(name: "Tên", controllerUser: userName),
-              SizedBox(
-                height: 5,
-              ),
-              _buildTextFormField(name: userProvider.getEmailData()),
-              SizedBox(
-                height: 5,
-              ),
-              MyTextFormField(name: "SĐT", controllerUser: phoneNumber),
-              SizedBox(
-                height: 5,
-              ),
-              _buildTextFormField(name: userProvider.getIsMaleData()),
-              SizedBox(
-                height: 5,
-              ),
-              MyTextFormField(name: "Địa chỉ", controllerUser: address),
-              SizedBox(
-                height: 5,
-              ),
-              _buildTextFormField(name: userProvider.getAccountStatusData()),
-            ],
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          MyTextFormField(
+            name: "UserName",
+            controllerUser: userName,
+          ),
+          _buildSingleProfile(
+            value: userProvider.getEmailData(),
+            name: "Email",
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isMale = !isMale;
+              });
+            },
+            child: _buildSingleProfile(
+              value: isMale == true ? "Nam" : "Nữ",
+              name: "Giới tính",
+            ),
+          ),
+          MyTextFormField(
+            name: "Phone Number",
+            controllerUser: phoneNumber,
+          ),
+          MyTextFormField(
+            name: "Address",
+            controllerUser: address,
           ),
         ],
       ),
@@ -218,10 +177,11 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  bool edit = false;
+
   //hình ảnh
   // ImagePicker _pickerImage = ImagePicker();
   //hình ảnh
+
   final ImagePicker _picker = ImagePicker();
   File? selectedImage;
   Future<void> getImage({required ImageSource imageSource}) async {
@@ -233,6 +193,67 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  // bool centerCircle = false;
+  bool edit = false;
+  bool isImageUpdated = false;
+  void uploadUserDetail() async {
+
+    final uid = await UserPreferences.getUid();
+    // Kiểm tra UID
+    if (uid == null) {
+      // Hiển thị thông báo lỗi: UID không hợp lệ
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Thất bại, không có uid");
+      return;
+    }
+
+    // Cập nhật dữ liệu
+    try {
+      // Tạo một biến để lưu trữ URL ảnh mới (nếu có)
+      String? newImageUrl;
+      String? imageUrl = "";
+      // Chỉ upload ảnh mới nếu có ảnh được chọn
+      if (selectedImage != null) {
+        newImageUrl = await _uploadImage(image: selectedImage!);
+        await FirebaseFirestore.instance.collection('users').doc(uid).update({
+          'name': userName.text,
+          'isMale': isMale ? 'Nam' : 'Nữ',
+          'phone': phoneNumber.text,
+          'image': newImageUrl ?? imageUrl,
+          'address': address.text,
+        });
+      }
+      // selectedImage != null
+      //     ? imageUrl = await _uploadImage(image: selectedImage!)
+      //     : Container();
+      newImageUrl = await _uploadImage(image: selectedImage!);
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'name': userName.text,
+        'isMale': isMale ? 'Nam' : 'Nữ',
+        'phone': phoneNumber.text,
+        'image': newImageUrl,
+        'address': address.text,
+      });
+
+    // Cập nhật thành công
+    ToastService.showSuccessToast(context,
+    length: ToastLength.medium,
+    expandedHeight: 100,
+    message: "Cập nhật thành công");
+    } catch (e) {
+    // Xử lý lỗi
+    print('Error updating user data: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('Cập nhật dữ liệu thất bại')),
+    );
+    }
+    setState(() {
+      isImageUpdated = false;
+      edit = false;
+    });
+  }
   //tùy chọn camera hay thư viện ảnh
   Future<void> myDialogBox(context) {
     return showDialog<void>(
@@ -267,22 +288,26 @@ class _ProfileState extends State<Profile> {
   }
 
   //upload lên firebase storage
-  String? imageUrl;
-  void uploadImage({required File image}) async {
-    final uid = await UserPreferences.getUid();
-    print(uid);
-    Reference firebaseStorageRef = FirebaseStorage.instance
-        .ref()
-        .child("ImageUserProfile/${uid}");
-    final UploadTask uploadTask = firebaseStorageRef.putFile(image);
+  String? imageUri;
 
-    imageUrl = await (await uploadTask).ref.getDownloadURL();
-    print(imageUrl);
+  Future<String?> _uploadImage({required File image}) async {
+    UserProvider userProvider =
+    Provider.of<UserProvider>(context, listen: false);
+    final uid = UserPreferences.setUid(userProvider.getUidData());
+    print(uid);
+    Reference storageReference =
+    FirebaseStorage.instance.ref().child("UserImage/$uid");
+    UploadTask uploadTask = storageReference.putFile(image);
+
+    imageUri = await (await uploadTask).ref.getDownloadURL();
+    print(imageUri);
+    return imageUri;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.lightGreen,
       appBar: AppBar(
         leading: edit == true
@@ -331,100 +356,121 @@ class _ProfileState extends State<Profile> {
                   ))
         ],
       ),
-      body: Container(
-        height: 720,
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Stack(children: <Widget>[
-              Container(
-                height: 150,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 65,
-                      backgroundImage: selectedImage == null
-                          ? AssetImage("assets/images/users.jpg")
-                          : FileImage(selectedImage!) as ImageProvider,
-                    )
-                  ],
-                ),
-              ),
-              edit == true
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 220, top: 100, right: 2),
-                      child: GestureDetector(
-                        onTap: () {
-                          myDialogBox(context);
-                        },
-                        child: CircleAvatar(
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            color: Colors.red,
+      body: ListView(
+        children: [
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                UserProvider userProvider =
+                Provider.of<UserProvider>(context, listen: false);
+                userProvider.getUserData();
+                return Container(
+                  height: 800,
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            height: 230,
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                    maxRadius: 65,
+                                    backgroundImage: selectedImage == null
+                                        ? userProvider.getImageData() == null
+                                        ? AssetImage(
+                                        "assets/images/users.jpg") as ImageProvider
+                                        : NetworkImage(userProvider.getImageData())
+                                        : FileImage(selectedImage!)),
+                              ],
+                            ),
                           ),
+                          edit == true
+                              ?  Padding(
+                            padding: EdgeInsets.only(left: 220, top: 100, right: 2),
+                            child: GestureDetector(
+                              onTap: () {
+                                myDialogBox(context);
+                              },
+                              child: CircleAvatar(
+                                child: Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ): Container(),
+                        ],
+                      ),
+                      Container(
+                        height: 350,
+                        width: double.infinity,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                child: edit == true
+                                    ? _buildTextFormPart()
+                                    : _buildContainerPart(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                  : Container(),
-            ]),
-            Container(
-              height: 440,
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              color: Colors.grey,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                      child: Container(
-                    child: edit == true
-                        ? _buildTextFormPart()
-                        : _buildContainerPart(),
-                  )),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            //chỉnh sửa
-            edit == false
-                ? MyButtonProfile(
-                    onPressed: () {
-                      setState(() {
-                        edit = true;
-                      });
-                    },
-                    name: "Chỉnh sửa hồ sơ",
-                  )
-                : SizedBox(),
-            SizedBox(
-              height: 10,
-            ),
-            //xác minh tài khoản
-            edit == true
-                ? MyButtonProfile(
-                    onPressed: () {},
-                    name: "Xác minh tài khoản",
-                  )
-                : SizedBox(),
-            SizedBox(
-              height: 10,
-            ),
-            //xoá tài khoản
-            edit == true
-                ? MyButtonProfile(
-                    onPressed: () {},
-                    name: "Xóa tài khoản",
-                  )
-                : SizedBox(),
-          ],
-        ),
-      ),
+                      SizedBox(height: 50,),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: edit == false
+                            ? MyButtonProfile(
+                          name: "Chỉnh sửa",
+                          onPressed: () {
+                            setState(() {
+                              edit = true;
+                            });
+                          },
+                        )
+                            : Container(),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      edit == false
+                          ? MyButtonProfile(
+                        onPressed: () {},
+                        name: "Xác minh tài khoản",
+                      )
+                          : SizedBox(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      //xoá tài khoản
+                      edit == false
+                          ? MyButtonProfile(
+                        onPressed: () {},
+                        name: "Xóa tài khoản",
+                      )
+                          : SizedBox(),
+                    ],
+                  ),
+                );
+              }),
+        ],
+      )
+
     );
   }
-
-
 }

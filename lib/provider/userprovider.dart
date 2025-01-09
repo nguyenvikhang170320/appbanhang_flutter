@@ -54,6 +54,12 @@ class UserProvider extends ChangeNotifier {
     }
     return _items.fold("", (total, item) => item.name); // Get all names
   }
+  String getImageData() {
+    if (_items.isEmpty) {
+      return ""; // Handle empty list case
+    }
+    return _items.fold("", (total, item) => item.image); // Get all names
+  }
   String getUidData() {
     if (_items.isEmpty) {
       return ""; // Handle empty list case

@@ -4,7 +4,7 @@ class AppWidget {
   static TextStyle boldTextFeildStyle() {
     return TextStyle(
         color: Colors.black,
-        fontSize: 20.0,
+        fontSize: 16.0,
         fontWeight: FontWeight.bold,
         fontFamily: 'Poppins');
   }

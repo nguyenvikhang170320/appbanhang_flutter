@@ -106,22 +106,21 @@ class _LoginState extends State<Login> {
         child: Container(
           padding: EdgeInsets.only(left: 20.0, right: 20.0),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 1.8,
+          height: 300,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20)),
           child: Container(
-            height: 200,
+            height: 100,
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             width: double.infinity,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Đăng nhập tài khoản",
                   style: AppWidget.HeadlineTextFeildStyle(),
                 ),
                 SizedBox(
-                  height: 80,
+                  height: 20,
                 ),
                 EmailTextFormField(
                   controllerUser:
@@ -141,9 +140,7 @@ class _LoginState extends State<Login> {
                     return null;
                   },
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 10,),
                 PasswordTextFormField(
                   passwordController: passwordController,
                   name: "Mật khẩu",
@@ -166,15 +163,6 @@ class _LoginState extends State<Login> {
                     });
                   },
                 ),
-                SizedBox(
-                  height: 60,
-                ),
-                MyButtonUser(
-                  name: "Đăng nhập",
-                  onPressed: () {
-                    validation();
-                  },
-                ),
               ],
             ),
           ),
@@ -185,15 +173,22 @@ class _LoginState extends State<Login> {
 
   Widget _buildBottomPart() {
     return Container(
-      margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+      margin: EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
-            height: 50,
+            height: 20,
           ),
           _buildAllTextFormField(),
           SizedBox(
-            height: 10,
+            height: 20,
+          ),
+          MyButtonUser(
+            name: "Đăng nhập",
+            onPressed: () {
+              validation();
+            },
           ),
           ChangeScreen(
             name: "Đăng ký",

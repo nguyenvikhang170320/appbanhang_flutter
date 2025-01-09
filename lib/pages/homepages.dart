@@ -60,7 +60,9 @@ class _HomePagesState extends State<HomePages> {
       UserAccountsDrawerHeader(
       decoration: BoxDecoration(color: Colors.white),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: AssetImage("assets/images/shop1.jpg"),
+        backgroundImage: userProvider.getImageData() == null
+            ? AssetImage("images/userImage.png") as ImageProvider
+            : NetworkImage(userProvider.getImageData()),
         radius: 30,
       ),
       accountName: Text(
