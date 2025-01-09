@@ -1,6 +1,7 @@
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/signup.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:appbanhang/widgets/users/mybuttonuser.dart';
 import 'package:appbanhang/widgets/users/emailtextformfield.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
@@ -37,13 +39,18 @@ bool isChecked = false;
 TextEditingController emailController = new TextEditingController();
 TextEditingController passwordController = new TextEditingController();
 
+
+
 class _LoginState extends State<Login> {
+
   void validation() async {
     if (_formkey.currentState!.validate()) {
       try {
         setState(() {
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
           email = emailController.text;
           password = passwordController.text;
+          userProvider.getUserData();
         });
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password)

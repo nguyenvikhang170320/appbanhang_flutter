@@ -1,5 +1,4 @@
 import 'package:appbanhang/pages/login.dart';
-import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:appbanhang/widgets/users/mybuttonuser.dart';
@@ -8,12 +7,10 @@ import 'package:appbanhang/widgets/users/nametextformfield.dart';
 import 'package:appbanhang/widgets/users/passwordTextformfield.dart';
 import 'package:appbanhang/widgets/users/phonetextformfield.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:random_string/random_string.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
@@ -35,10 +32,13 @@ class _SignUpState extends State<SignUp> {
   String password = "";
   String name = "";
   String sdt = "";
+  String address = "";
+  bool isMale = true;
   TextEditingController nameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController phoneController = new TextEditingController();
+  TextEditingController addressController = new TextEditingController();
 
   final GlobalKey<FormState> formState = GlobalKey<FormState>();
   validation() async {
@@ -55,8 +55,10 @@ class _SignUpState extends State<SignUp> {
           "email": emailController.text,
           "password": passwordController.text,
           "phone": phoneController.text,
-          "sex": "",
-          "accountstatus": "",
+          "isMale": isMale == true ? "Nam" : "Nữ",
+          "accountstatus": "chưa xác minh",
+          "address": addressController.text,
+          "image": "",
           "uid": IdUser,
         };
         // Lưu uid vào Cloud Firestore
@@ -117,116 +119,144 @@ class _SignUpState extends State<SignUp> {
   }
 
   Widget _buildAllTextFormField() {
-    return Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(30),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 1.8,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Container(
-              height: 400,
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  NameTextFormField(
-                    controllerUser:
-                        nameController, //liên quan đến file mytextformfield.dart
-                    name: "Nhập tên hoặc họ và tên",
-                    onChanged: (value) {
-                      setState(() {
-                        name = value!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Vui lòng nhập tên, không được bỏ trống";
-                      } else if (value.length < 3) {
-                        return "Vui lòng nhập tên, tên bạn quá ngắn";
-                      }
-                      return null;
-                    },
-                  ),
-                  EmailTextFormField(
-                    controllerUser:
-                        emailController, //liên quan đến file mytextformfield.dart
-                    name: "Nhập email",
-                    onChanged: (value) {
-                      setState(() {
-                        email = value!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Vui lòng nhập email";
-                      } else if (!emailRegExp.hasMatch(value)) {
-                        return "Vui lòng nhập email hợp lệ";
-                      }
-                      return null;
-                    },
-                  ),
-                  PasswordTextFormField(
-                    passwordController: passwordController,
-                    name: "Mật khẩu",
-                    obserText: obserText,
-                    onChanged: (value) {
-                      setState(() {
-                        password = value!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Vui lòng nhập mật khẩu";
-                      }
-                      return null;
-                    },
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      setState(() {
-                        obserText = !obserText;
-                      });
-                    },
-                  ),
-                  PhoneTextFormField(
-                    controllerUser:
-                        phoneController, //liên quan đến file mytextformfield.dart
-                    name: "Nhập SĐT",
-                    onChanged: (value) {
-                      setState(() {
-                        sdt = value!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Vui lòng nhập số điện thoại";
-                      } else if (value.length < 10) {
-                        return "Số điện thoại phải 10 số";
-                      }
-                      return null;
-                    },
-                  ),
-                  MyButtonUser(
-                    name: "Đăng ký",
-                    onPressed: () {
-                      validation();
-                      print(validation);
-                    },
-                  ),
-                ],
-              ),
+    return Container(
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      width: MediaQuery.of(context).size.width,
+      height: 560,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            NameTextFormField(
+              controllerUser:
+              nameController, //liên quan đến file mytextformfield.dart
+              name: "Nhập tên hoặc họ và tên",
+              onChanged: (value) {
+                setState(() {
+                  name = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Vui lòng nhập tên, không được bỏ trống";
+                } else if (value.length < 3) {
+                  return "Vui lòng nhập tên, tên bạn quá ngắn";
+                }
+                return null;
+              },
             ),
-          ),
-        ));
+            EmailTextFormField(
+              controllerUser:
+              emailController, //liên quan đến file mytextformfield.dart
+              name: "Nhập email",
+              onChanged: (value) {
+                setState(() {
+                  email = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Vui lòng nhập email";
+                } else if (!emailRegExp.hasMatch(value)) {
+                  return "Vui lòng nhập email hợp lệ";
+                }
+                return null;
+              },
+            ),
+            PasswordTextFormField(
+              passwordController: passwordController,
+              name: "Mật khẩu",
+              obserText: obserText,
+              onChanged: (value) {
+                setState(() {
+                  password = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Vui lòng nhập mật khẩu";
+                }
+                return null;
+              },
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  obserText = !obserText;
+                });
+              },
+            ),
+            PhoneTextFormField(
+              controllerUser:
+              phoneController, //liên quan đến file mytextformfield.dart
+              name: "Nhập SĐT",
+              onChanged: (value) {
+                setState(() {
+                  sdt = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Vui lòng nhập số điện thoại";
+                } else if (value.length < 10) {
+                  return "Số điện thoại phải 10 số";
+                }
+                return null;
+              },
+            ),
+            PhoneTextFormField(
+              controllerUser:
+              addressController, //liên quan đến file mytextformfield.dart
+              name: "Nhập địa chỉ huyện-tỉnh",
+              onChanged: (value) {
+                setState(() {
+                  address = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Vui lòng nhập địa chỉ huyện/tỉnh";
+                } else if (value.length > 20) {
+                  return "Địa chỉ quá dài";
+                }
+                return null;
+              },
+            ),
+            Container(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Giới tính",
+                        style: AppWidget.semiBoolTextFeildStyle(),
+                      ),
+                      DropdownButton<bool>(
+                        value: isMale,
+                        onChanged: (value) {
+                          setState(() {
+                            isMale = value!;
+                          });
+                          // Cập nhật mức giảm giá cho CartProvider
+                        },
+                        items: [
+                          DropdownMenuItem(value: true, child: Text('Nam')),
+                          DropdownMenuItem(value: false, child: Text('Nữ')),
+                        ],
+                      ),
+                    ])),
+
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildBottomPart() {
     return Container(
-      margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+      margin: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
       child: Column(
         children: [
           Text(
@@ -234,11 +264,21 @@ class _SignUpState extends State<SignUp> {
             style: AppWidget.HeadlineTextFeildStyle(),
           ),
           SizedBox(
-            height: 50,
+            height: 10,
           ),
           _buildAllTextFormField(),
           SizedBox(
             height: 20,
+          ),
+          MyButtonUser(
+            name: "Đăng ký",
+            onPressed: () {
+              validation();
+              print(validation);
+            },
+          ),
+          SizedBox(
+            height: 10,
           ),
           ChangeScreen(
             name: "Đăng nhập",
@@ -286,7 +326,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       _buildBottomPart(),
                     ],

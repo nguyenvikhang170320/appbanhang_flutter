@@ -276,7 +276,7 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context, listen: false);
+    final cart = Provider.of<CartProvider>(context, listen: true);
     return Scaffold(
       bottomNavigationBar: Container(
         height: 60,
@@ -299,7 +299,6 @@ class _DetailPageState extends State<DetailPage> {
                 final ColorSize colorSize;
 
                 cart.addItem(widget.products, _selectedSize,selectedColor, count);
-                final cartProvider = Provider.of<CartProvider>(context, listen: false);
                 try {
                   await DatabaseMethods().addColorSizeProduct(widget.products, selectedColor,_selectedSize, categoryRequiresSizeColor);
                   print('Thêm đơn hàng thành công');

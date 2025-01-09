@@ -3,6 +3,7 @@ import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
+import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/services/auth.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/slidebar/carouselview.dart';
@@ -12,6 +13,7 @@ import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
@@ -24,6 +26,11 @@ class HomePages extends StatefulWidget {
 class _HomePagesState extends State<HomePages> {
   final AuthMethods authMethods = AuthMethods();
 
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<UserProvider>(context, listen: false).getUserData(); //được gọi trước khi build widget
+  }
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
     return Container(
@@ -45,30 +52,32 @@ class _HomePagesState extends State<HomePages> {
   }
 
   Widget _buildMyDrawer() {
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    print(userProvider);
     return Drawer(
       child: ListView(
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Colors.white),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage("assets/images/shop1.jpg"),
-              radius: 30,
-            ),
-            accountName: Text(
-              "Ken",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
-            ),
-            accountEmail: Text(
-              "ken@gmail.com",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
+      UserAccountsDrawerHeader(
+      decoration: BoxDecoration(color: Colors.white),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: AssetImage("assets/images/shop1.jpg"),
+        radius: 30,
+      ),
+      accountName: Text(
+        userProvider.getNameData(),
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold),
+      ),
+      accountEmail: Text(
+        userProvider.getEmailData(),
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold),
+      ),
+    ),
           ListTile(
             onTap: () {
               setState(() {
@@ -200,7 +209,10 @@ class _HomePagesState extends State<HomePages> {
           ListTile(
             onTap: (){
               //đăng xuất
-              authMethods.SignOut();
+              setState(() {
+                authMethods.SignOut();
+                userProvider.signOut();
+              });
               //show thông báo dạng toasty
               ToastService.showSuccessToast(context,
                   length: ToastLength.medium,

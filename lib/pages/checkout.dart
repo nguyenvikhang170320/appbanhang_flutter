@@ -57,7 +57,7 @@ class _CheckOutState extends State<CheckOut> {
         onPressed: () async {
           // List<Products> listProducts = [widget.products];
           // print(listProducts);
-          final cartProvider = Provider.of<CartProvider>(context, listen: false);
+          final cartProvider = Provider.of<CartProvider>(context, listen: true);
           final productProvider = Provider.of<ProductProvider>(context, listen: false);
           double totalPrice = cartProvider.calculateTotalPrice();
           print(totalPrice);
