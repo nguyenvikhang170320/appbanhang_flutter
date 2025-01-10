@@ -5,6 +5,7 @@ import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ void main() async {
     messagingSenderId: 'sendid',
     projectId: 'foodappflutter-d99ee',
   )); // kết nối firebase
+  await FirebaseAppCheck.instance.activate(); //bảo mật firebase app_check
   runApp(const MyApp());
 }
 

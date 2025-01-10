@@ -12,7 +12,8 @@ class UserProvider extends ChangeNotifier {
     // Fetch data from Firestore (assuming a collection named 'users')
     QuerySnapshot<Map<String, dynamic>> userSnapShot =
     await FirebaseFirestore.instance.collection('users').get();
-
+    // Xóa danh sách trước khi cập nhật
+    _items.clear();
     // Process each document in the snapshot
     userSnapShot.docs.forEach((doc) {
       // Extract data from the document
@@ -21,7 +22,7 @@ class UserProvider extends ChangeNotifier {
 
         // Create a Users object (assuming appropriate constructor)
         Users user = Users(
-            userId: userData['uid'],
+            uid: userData['uid'],
             name: userData['name'],
             image: userData['image'],
             email: userData['email'],
@@ -52,48 +53,48 @@ class UserProvider extends ChangeNotifier {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.name); // Get all names
+    return _items.first.name;; // Get all names
   }
   String getImageData() {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.image); // Get all names
+    return _items.first.image; // Get all names
   }
   String getUidData() {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.userId); // Get all names
+    return _items.first.uid; // Get all names
   }
   String getEmailData() {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.email); // Get all emails
+    return _items.first.email; // Get all emails
   }
   String getPhoneData() {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.phone); // Get all emails
+    return _items.first.phone; // Get all emails
   }
   String getAddressData() {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.address); // Get all names
+    return _items.first.address; // Get all names
   }
   String getIsMaleData () {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.isMale); // Get all emails
+    return _items.first.isMale; // Get all emails
   }
   String getAccountStatusData () {
     if (_items.isEmpty) {
       return ""; // Handle empty list case
     }
-    return _items.fold("", (total, item) => item.accountstatus); // Get all emails
+    return _items.first.accountstatus;// Get all emails
   }
 }

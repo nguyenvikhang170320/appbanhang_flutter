@@ -1,17 +1,14 @@
 import 'dart:io';
 
-import 'package:appbanhang/model/users.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
-import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:appbanhang/widgets/profile/mybuttonprofile.dart';
 import 'package:appbanhang/widgets/profile/mytextformfield.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
-import 'package:appbanhang/widgets/users/mybuttonuser.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +54,16 @@ class _ProfileState extends State<Profile> {
           expandedHeight: 100,
           message: "Vui lòng nhập SĐT mới");
     } else {
-      uploadUserDetail();
+
+      if(imageUri == null){
+        print("null");
+        uploadImageDetail();
+        uploadUserDetail();
+      }else if(imageUri != null){
+        print("not null");
+        uploadImageDetail();
+        uploadUserDetail();
+      }
     }
   }
 
@@ -197,8 +203,50 @@ class _ProfileState extends State<Profile> {
   bool edit = false;
   bool isImageUpdated = false;
   void uploadUserDetail() async {
-
+    print("users");
     final uid = await UserPreferences.getUid();
+    print("uid: $uid");
+    // Kiểm tra UID
+    if (uid == null) {
+      // Hiển thị thông báo lỗi: UID không hợp lệ
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Thất bại, lỗi hệ thống");
+      return;
+    }
+
+    // Cập nhật dữ liệu
+    try {
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'name': userName.text,
+        'isMale': isMale ? 'Nam' : 'Nữ',
+        'phone': phoneNumber.text,
+        'address': address.text,
+      });
+
+      // Cập nhật thành công
+      ToastService.showSuccessToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Cập nhật thông tin thành công");
+    } catch (e) {
+      // Xử lý lỗi
+      print('Error updating user data: $e');
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Cập nhật thất bại");
+    }
+    setState(() {
+      edit = false;
+    });
+  }
+  void uploadImageDetail() async {
+    print("image");
+    final uid = await UserPreferences.getUid();
+    print("uid_uploadImage: $uid");
     // Kiểm tra UID
     if (uid == null) {
       // Hiển thị thông báo lỗi: UID không hợp lệ
@@ -217,40 +265,28 @@ class _ProfileState extends State<Profile> {
       // Chỉ upload ảnh mới nếu có ảnh được chọn
       if (selectedImage != null) {
         newImageUrl = await _uploadImage(image: selectedImage!);
-        await FirebaseFirestore.instance.collection('users').doc(uid).update({
-          'name': userName.text,
-          'isMale': isMale ? 'Nam' : 'Nữ',
-          'phone': phoneNumber.text,
-          'image': newImageUrl ?? imageUrl,
-          'address': address.text,
-        });
       }
       // selectedImage != null
       //     ? imageUrl = await _uploadImage(image: selectedImage!)
       //     : Container();
-      newImageUrl = await _uploadImage(image: selectedImage!);
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
-        'name': userName.text,
-        'isMale': isMale ? 'Nam' : 'Nữ',
-        'phone': phoneNumber.text,
-        'image': newImageUrl,
-        'address': address.text,
+        'image': newImageUrl ?? imageUrl,
       });
 
     // Cập nhật thành công
     ToastService.showSuccessToast(context,
     length: ToastLength.medium,
     expandedHeight: 100,
-    message: "Cập nhật thành công");
+    message: "Cập nhật hình ảnh thành công");
     } catch (e) {
     // Xử lý lỗi
-    print('Error updating user data: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('Cập nhật dữ liệu thất bại')),
-    );
+      print('Error updating user data: $e');
+      ToastService.showErrorToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Cập nhật thất bại");
     }
     setState(() {
-      isImageUpdated = false;
       edit = false;
     });
   }
@@ -289,18 +325,17 @@ class _ProfileState extends State<Profile> {
 
   //upload lên firebase storage
   String? imageUri;
-
   Future<String?> _uploadImage({required File image}) async {
-    UserProvider userProvider =
-    Provider.of<UserProvider>(context, listen: false);
-    final uid = UserPreferences.setUid(userProvider.getUidData());
-    print(uid);
+    final uid = await UserPreferences.getUid();
+    print("uid_uploadImage: $uid");
+    // Generate a unique file name
+    final photoName = "${DateTime.now().millisecondsSinceEpoch}-${uid}.jpg";
     Reference storageReference =
-    FirebaseStorage.instance.ref().child("UserImage/$uid");
+    FirebaseStorage.instance.ref().child("userImageProfile/$photoName");
     UploadTask uploadTask = storageReference.putFile(image);
-
-    imageUri = await (await uploadTask).ref.getDownloadURL();
-    print(imageUri);
+    TaskSnapshot snapshot = await uploadTask;
+    imageUri = await snapshot.ref.getDownloadURL();
+    print("hình ảnh $imageUri");
     return imageUri;
   }
 
@@ -392,7 +427,7 @@ class _ProfileState extends State<Profile> {
                                         ? userProvider.getImageData() == null
                                         ? AssetImage(
                                         "assets/images/users.jpg") as ImageProvider
-                                        : NetworkImage(userProvider.getImageData())
+                                        : NetworkImage(userProvider.getImageData()) as ImageProvider
                                         : FileImage(selectedImage!)),
                               ],
                             ),

@@ -38,6 +38,7 @@ dependencies:
   firebase_storage: ^12.0.1
   firebase_core: ^3.4.0
   carousel_slider: ^5.0.0
+  firebase_app_check: ^0.3.1
   #thông báo dạng toast
   toasty_box: ^1.0.4
   #hình ảnh
@@ -50,6 +51,8 @@ dependencies:
   shared_preferences: ^2.2.3
   #notification
   badges: ^3.1.2
+  #image network
+  cached_network_image: ^3.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

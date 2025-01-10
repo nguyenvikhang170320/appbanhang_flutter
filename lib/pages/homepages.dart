@@ -1,17 +1,14 @@
-import 'package:appbanhang/admin/admin_login.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/services/auth.dart';
-import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/slidebar/carouselview.dart';
 import 'package:appbanhang/widgets/products/loadproducthortical.dart';
 import 'package:appbanhang/widgets/products/loadproductvertical.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
@@ -53,16 +50,16 @@ class _HomePagesState extends State<HomePages> {
 
   Widget _buildMyDrawer() {
     UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
-    print(userProvider);
+    print(userProvider.toString());
     return Drawer(
       child: ListView(
         children: <Widget>[
       UserAccountsDrawerHeader(
       decoration: BoxDecoration(color: Colors.white),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: userProvider.getImageData() == null
-            ? AssetImage("images/userImage.png") as ImageProvider
-            : NetworkImage(userProvider.getImageData()),
+        backgroundImage: userProvider.getImageData() != null
+            ? NetworkImage(userProvider.getImageData()) as ImageProvider// Sử dụng NetworkImage khi có URL
+            : AssetImage('assets/images/users.jpg') as ImageProvider, // Sử dụng AssetImage cho hình ảnh local
         radius: 30,
       ),
       accountName: Text(
@@ -211,9 +208,11 @@ class _HomePagesState extends State<HomePages> {
           ListTile(
             onTap: (){
               //đăng xuất
+              authMethods.SignOut();
+              //xóa sạch provider
+              userProvider.signOut();
               setState(() {
-                authMethods.SignOut();
-                userProvider.signOut();
+
               });
               //show thông báo dạng toasty
               ToastService.showSuccessToast(context,

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Users {
-  final String userId;
+  final String uid;
   final String name;
   final String email;
   final String password;
@@ -12,7 +12,7 @@ class Users {
   final String address;
 
   Users(
-      {required this.userId,
+      {required this.uid,
       required this.name,
       required this.image,
       required this.email,
@@ -21,15 +21,4 @@ class Users {
       required this.accountstatus,
       required this.isMale,
       required this.address});
-  // factory Users.fromFirestore(DocumentSnapshot doc) {
-  //   return Users(
-  //     userId: doc["Id"] as String,
-  //     name: doc['name'] as String,
-  //     image: doc['image'] as String,
-  //     email: doc['email'] as String,
-  //     password: doc['password'] as String,
-  //     phone: doc['phone'] as String,
-  //     isMale: doc['isMale'] as bool,
-  //   );
-  // }
 }
