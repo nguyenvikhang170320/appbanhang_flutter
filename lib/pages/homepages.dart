@@ -16,7 +16,6 @@ import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
 class HomePages extends StatefulWidget {
-
   @override
   State<HomePages> createState() => _HomePagesState();
 }
@@ -30,6 +29,7 @@ class _HomePagesState extends State<HomePages> {
     Provider.of<UserProvider>(context, listen: false).getUserData();
     //được gọi trước khi build widget
   }
+
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
     return Container(
@@ -49,46 +49,33 @@ class _HomePagesState extends State<HomePages> {
       ),
     );
   }
+
   //load hình ảnh và tên profile
   Widget _buildUserAccountsDrawerHeader() {
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
-    List<Users> userModel = userProvider!.userModelList;
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
     // Handle empty user list gracefully
-    String userImage = userModel.isEmpty ? '' : userModel.first.image;
-    if (userModel.isEmpty) {
-      return UserAccountsDrawerHeader(
-        accountName: Text(
-          "User data không có",
-          style: TextStyle(color: Colors.black),
-        ),
-        currentAccountPicture: CircleAvatar(
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage("assets/images/users_profile.png"),
-        ),
-        decoration: BoxDecoration(color: Color(0xfff2f2f2)), accountEmail: Text(
-        "User data không có",
-        style: TextStyle(color: Colors.black),
-      ),
-      );
-    }
-
     return UserAccountsDrawerHeader(
       accountName: Text(
-        userModel.first.name,
+        userProvider.getNameData(),
         style: TextStyle(color: Colors.black),
       ),
       currentAccountPicture: CircleAvatar(
         backgroundColor: Colors.white,
-        backgroundImage: userImage.isEmpty
+        backgroundImage: userProvider.getImageData() == null ||
+                userProvider.getImageData().isEmpty
             ? AssetImage("assets/images/users_profile.png") as ImageProvider
-            : NetworkImage(userImage),
+            : NetworkImage(userProvider.getImageData()),
       ),
       decoration: BoxDecoration(color: Color(0xfff2f2f2)),
-      accountEmail: Text(userModel.first.email, style: TextStyle(color: Colors.black)),
+      accountEmail: Text(userProvider.getEmailData(),
+          style: TextStyle(color: Colors.black)),
     );
   }
+
   Widget _buildMyDrawer() {
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
     print(userProvider.toString());
     return Drawer(
       child: ListView(
@@ -105,11 +92,11 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (ctx) => BottomNav(),
-                  ),
-                );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => BottomNav(),
+                ),
+              );
             },
             title: Text("Trang chủ"),
             leading: Icon(Icons.home),
@@ -223,14 +210,12 @@ class _HomePagesState extends State<HomePages> {
             selected: callColor,
           ),
           ListTile(
-            onTap: (){
+            onTap: () {
               //đăng xuất
               authMethods.SignOut();
               //xóa sạch provider
               userProvider.signOut();
-              setState(() {
-
-              });
+              setState(() {});
               //show thông báo dạng toasty
               ToastService.showSuccessToast(context,
                   length: ToastLength.medium,
@@ -313,7 +298,6 @@ class _HomePagesState extends State<HomePages> {
   bool aboutColor = false;
 
   bool callColor = false;
-
 
   @override
   Widget build(BuildContext context) {
