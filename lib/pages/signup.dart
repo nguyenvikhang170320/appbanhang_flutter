@@ -34,6 +34,7 @@ class _SignUpState extends State<SignUp> {
   String sdt = "";
   String address = "";
   bool isMale = true;
+  String image = "";
   TextEditingController nameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
@@ -53,13 +54,12 @@ class _SignUpState extends State<SignUp> {
         Map<String, dynamic> addUserInfo = {
           "name": nameController.text,
           "email": emailController.text,
-          "password": passwordController.text,
           "phone": phoneController.text,
           "isMale": isMale == true ? "Nam" : "Nữ",
           "accountstatus": "chưa xác minh",
           "address": addressController.text,
-          "image": "",
           "uid": IdUser,
+          "image": image,
         };
         // Lưu uid vào Cloud Firestore
         await DatabaseMethods().addUserDetail(addUserInfo, IdUser);

@@ -47,10 +47,10 @@ class _LoginState extends State<Login> {
     if (_formkey.currentState!.validate()) {
       try {
         setState(() {
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          // final userProvider = Provider.of<UserProvider>(context, listen: false);
           email = emailController.text;
           password = passwordController.text;
-          userProvider.getUserData();
+          // userProvider.getUserData();
         });
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password)

@@ -70,7 +70,7 @@ class _ProfileState extends State<Profile> {
 
   Widget _buildContainerPart() {
     UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
+    Provider.of<UserProvider>(context, listen: false);
     address = TextEditingController(text: userProvider.getAddressData());
     userName = TextEditingController(text: userProvider.getNameData());
     phoneNumber = TextEditingController(text: userProvider.getPhoneData());
@@ -80,33 +80,33 @@ class _ProfileState extends State<Profile> {
       isMale = false;
     }
     return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child:
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildSingleProfile(
-                  name: "Tên: ", value: userProvider.getNameData()),
-              _buildSingleProfile(
-                  name: "Email: ", value: userProvider.getEmailData()),
-              _buildSingleProfile(
-                  name: "SĐT: ", value: userProvider.getPhoneData()),
-              _buildSingleProfile(
-                  name: "Giới tính: ", value: userProvider.getIsMaleData()),
-              _buildSingleProfile(
-                  name: "Địa chỉ: ", value: userProvider.getAddressData()),
-              _buildSingleProfile(
-                  name: "Trạng thái tài khoản: ",
-                  value: userProvider.getAccountStatusData()),
-            ],
-          )
+        height: double.infinity,
+        width: double.infinity,
+        child:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSingleProfile(
+                name: "Tên: ", value: userProvider.getNameData()),
+            _buildSingleProfile(
+                name: "Email: ", value: userProvider.getEmailData()),
+            _buildSingleProfile(
+                name: "SĐT: ", value: userProvider.getPhoneData()),
+            _buildSingleProfile(
+                name: "Giới tính: ", value: userProvider.getIsMaleData()),
+            _buildSingleProfile(
+                name: "Địa chỉ: ", value: userProvider.getAddressData()),
+            _buildSingleProfile(
+                name: "Trạng thái tài khoản: ",
+                value: userProvider.getAccountStatusData()),
+          ],
+        )
     );
   }
 
   Widget _buildTextFormPart() {
     UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
+    Provider.of<UserProvider>(context, listen: false);
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -172,17 +172,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
-  Widget _buildTextFormField({required String name}) {
-    return TextFormField(
-      decoration: InputDecoration(
-          hintText: name,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          )),
-    );
-  }
-
 
   //hình ảnh
   // ImagePicker _pickerImage = ImagePicker();
@@ -273,13 +262,13 @@ class _ProfileState extends State<Profile> {
         'image': newImageUrl ?? imageUrl,
       });
 
-    // Cập nhật thành công
-    ToastService.showSuccessToast(context,
-    length: ToastLength.medium,
-    expandedHeight: 100,
-    message: "Cập nhật hình ảnh thành công");
+      // Cập nhật thành công
+      ToastService.showSuccessToast(context,
+          length: ToastLength.medium,
+          expandedHeight: 100,
+          message: "Cập nhật hình ảnh thành công");
     } catch (e) {
-    // Xử lý lỗi
+      // Xử lý lỗi
       print('Error updating user data: $e');
       ToastService.showErrorToast(context,
           length: ToastLength.medium,
@@ -342,169 +331,172 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.lightGreen,
-      appBar: AppBar(
-        leading: edit == true
-            ? IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.amber,
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    edit = false;
-                  });
-                },
-              )
-            : IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black45,
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (ctx) => BottomNav(),
-                      ),
-                    );
-                  });
-                },
-              ),
-        actions: [
-          edit == false
-              ? NotificationButton()
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.lightGreen,
+        appBar: AppBar(
+          leading: edit == true
+              ? IconButton(
+            icon: Icon(
+              Icons.close,
+              color: Colors.amber,
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                edit = false;
+              });
+            },
+          )
               : IconButton(
-                  onPressed: () {
-                    vaildation();
-                    setState(() {
-                      edit = false;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.check,
-                    size: 30,
-                    color: Colors.cyanAccent,
-                  ))
-        ],
-      ),
-      body: ListView(
-        children: [
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("users")
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                UserProvider userProvider =
-                Provider.of<UserProvider>(context, listen: false);
-                userProvider.getUserData();
-                return Container(
-                  height: 800,
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            height: 230,
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                    maxRadius: 65,
-                                    backgroundImage: selectedImage == null
-                                        ? userProvider.getImageData() == null
-                                        ? AssetImage(
-                                        "assets/images/users.jpg") as ImageProvider
-                                        : NetworkImage(userProvider.getImageData()) as ImageProvider
-                                        : FileImage(selectedImage!)),
-                              ],
-                            ),
-                          ),
-                          edit == true
-                              ?  Padding(
-                            padding: EdgeInsets.only(left: 220, top: 100, right: 2),
-                            child: GestureDetector(
-                              onTap: () {
-                                myDialogBox(context);
-                              },
-                              child: CircleAvatar(
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ): Container(),
-                        ],
-                      ),
-                      Container(
-                        height: 350,
-                        width: double.infinity,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                child: edit == true
-                                    ? _buildTextFormPart()
-                                    : _buildContainerPart(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 50,),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: edit == false
-                            ? MyButtonProfile(
-                          name: "Chỉnh sửa",
-                          onPressed: () {
-                            setState(() {
-                              edit = true;
-                            });
-                          },
-                        )
-                            : Container(),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      edit == false
-                          ? MyButtonProfile(
-                        onPressed: () {},
-                        name: "Xác minh tài khoản",
-                      )
-                          : SizedBox(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      //xoá tài khoản
-                      edit == false
-                          ? MyButtonProfile(
-                        onPressed: () {},
-                        name: "Xóa tài khoản",
-                      )
-                          : SizedBox(),
-                    ],
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black45,
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (ctx) => BottomNav(),
                   ),
                 );
-              }),
-        ],
-      )
+              });
+            },
+          ),
+          actions: [
+            edit == false
+                ? NotificationButton()
+                : IconButton(
+                onPressed: () {
+                  vaildation();
+                },
+                icon: Icon(
+                  Icons.check,
+                  size: 30,
+                  color: Colors.cyanAccent,
+                ))
+          ],
+        ),
+        body: ListView(
+          children: [
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  UserProvider userProvider =
+                  Provider.of<UserProvider>(context, listen: false);
+                  userProvider.getUserData();
+                  return Container(
+                    height: 800,
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              height: 230,
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    maxRadius: 65,
+                                    backgroundImage: selectedImage == null
+                                        ? userProvider.getImageData() == null ||
+                                        userProvider
+                                            .getImageData()
+                                            .isEmpty
+                                        ? AssetImage(
+                                        "assets/images/users.jpg")
+                                    as ImageProvider
+                                        : NetworkImage(
+                                        userProvider.getImageData())
+                                        : FileImage(selectedImage!),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            edit == true
+                                ?  Padding(
+                              padding: EdgeInsets.only(left: 220, top: 100, right: 2),
+                              child: GestureDetector(
+                                onTap: () {
+                                  myDialogBox(context);
+                                },
+                                child: CircleAvatar(
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ): Container(),
+                          ],
+                        ),
+                        Container(
+                          height: 350,
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  child: edit == true
+                                      ? _buildTextFormPart()
+                                      : _buildContainerPart(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 50,),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: edit == false
+                              ? MyButtonProfile(
+                            name: "Chỉnh sửa",
+                            onPressed: () {
+                              setState(() {
+                                edit = true;
+                              });
+                            },
+                          )
+                              : Container(),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        edit == false
+                            ? MyButtonProfile(
+                          onPressed: () {},
+                          name: "Xác minh tài khoản",
+                        )
+                            : SizedBox(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        //xoá tài khoản
+                        edit == false
+                            ? MyButtonProfile(
+                          onPressed: () {},
+                          name: "Xóa tài khoản",
+                        )
+                            : SizedBox(),
+                      ],
+                    ),
+                  );
+                }),
+          ],
+        )
 
     );
   }

@@ -1,3 +1,4 @@
+import 'package:appbanhang/model/users.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
@@ -26,7 +27,8 @@ class _HomePagesState extends State<HomePages> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserProvider>(context, listen: false).getUserData(); //được gọi trước khi build widget
+    Provider.of<UserProvider>(context, listen: false).getUserData();
+    //được gọi trước khi build widget
   }
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
@@ -47,36 +49,51 @@ class _HomePagesState extends State<HomePages> {
       ),
     );
   }
+  //load hình ảnh và tên profile
+  Widget _buildUserAccountsDrawerHeader() {
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    List<Users> userModel = userProvider!.userModelList;
+    // Handle empty user list gracefully
+    String userImage = userModel.isEmpty ? '' : userModel.first.image;
+    if (userModel.isEmpty) {
+      return UserAccountsDrawerHeader(
+        accountName: Text(
+          "User data không có",
+          style: TextStyle(color: Colors.black),
+        ),
+        currentAccountPicture: CircleAvatar(
+          backgroundColor: Colors.white,
+          backgroundImage: AssetImage("assets/images/users_profile.png"),
+        ),
+        decoration: BoxDecoration(color: Color(0xfff2f2f2)), accountEmail: Text(
+        "User data không có",
+        style: TextStyle(color: Colors.black),
+      ),
+      );
+    }
 
+    return UserAccountsDrawerHeader(
+      accountName: Text(
+        userModel.first.name,
+        style: TextStyle(color: Colors.black),
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundColor: Colors.white,
+        backgroundImage: userImage.isEmpty
+            ? AssetImage("assets/images/users_profile.png") as ImageProvider
+            : NetworkImage(userImage),
+      ),
+      decoration: BoxDecoration(color: Color(0xfff2f2f2)),
+      accountEmail: Text(userModel.first.email, style: TextStyle(color: Colors.black)),
+    );
+  }
   Widget _buildMyDrawer() {
     UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
     print(userProvider.toString());
     return Drawer(
       child: ListView(
         children: <Widget>[
-      UserAccountsDrawerHeader(
-      decoration: BoxDecoration(color: Colors.white),
-      currentAccountPicture: CircleAvatar(
-        backgroundImage: userProvider.getImageData() != null
-            ? NetworkImage(userProvider.getImageData()) as ImageProvider// Sử dụng NetworkImage khi có URL
-            : AssetImage('assets/images/users.jpg') as ImageProvider, // Sử dụng AssetImage cho hình ảnh local
-        radius: 30,
-      ),
-      accountName: Text(
-        userProvider.getNameData(),
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold),
-      ),
-      accountEmail: Text(
-        userProvider.getEmailData(),
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold),
-      ),
-    ),
+          _buildUserAccountsDrawerHeader(),
           ListTile(
             onTap: () {
               setState(() {
