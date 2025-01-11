@@ -235,7 +235,7 @@ class _ProfileState extends State<Profile> {
   void uploadImageDetail() async {
     print("image");
     final uid = await UserPreferences.getUid();
-    print("uid_uploadImage: $uid");
+    print("image_uid: $uid");
     // Kiểm tra UID
     if (uid == null) {
       // Hiển thị thông báo lỗi: UID không hợp lệ
@@ -316,7 +316,7 @@ class _ProfileState extends State<Profile> {
   String? imageUri;
   Future<String?> _uploadImage({required File image}) async {
     final uid = await UserPreferences.getUid();
-    print("uid_uploadImage: $uid");
+    print("uid load ảnh: $uid");
     // Generate a unique file name
     final photoName = "${DateTime.now().millisecondsSinceEpoch}-${uid}.jpg";
     Reference storageReference =

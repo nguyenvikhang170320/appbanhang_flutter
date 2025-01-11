@@ -64,7 +64,7 @@ class _HomePagesState extends State<HomePages> {
         backgroundColor: Colors.white,
         backgroundImage: userProvider.getImageData() == null ||
                 userProvider.getImageData().isEmpty
-            ? AssetImage("assets/images/users_profile.png") as ImageProvider
+            ? AssetImage("assets/images/users.jpg") as ImageProvider
             : NetworkImage(userProvider.getImageData()),
       ),
       decoration: BoxDecoration(color: Color(0xfff2f2f2)),

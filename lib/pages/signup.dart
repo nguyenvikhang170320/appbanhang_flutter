@@ -210,7 +210,7 @@ class _SignUpState extends State<SignUp> {
             PhoneTextFormField(
               controllerUser:
               addressController, //liên quan đến file mytextformfield.dart
-              name: "Nhập địa chỉ huyện-tỉnh",
+              name: "Nhập địa chỉ",
               onChanged: (value) {
                 setState(() {
                   address = value!;
@@ -219,7 +219,7 @@ class _SignUpState extends State<SignUp> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "Vui lòng nhập địa chỉ huyện/tỉnh";
-                } else if (value.length > 20) {
+                } else if (value.length > 25) {
                   return "Địa chỉ quá dài";
                 }
                 return null;
