@@ -1,3 +1,4 @@
+import 'package:appbanhang/model/category.dart';
 import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,7 +24,8 @@ class DatabaseMethods {
   }
 
   //Đẩy danh sách sản phẩm nổi bật lên firebase cloud firestore
-  Future<DocumentReference> productFeatureDetail(Map<String, dynamic> userInfoMap) async {
+  Future<DocumentReference> productFeatureDetail(
+      Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
         .doc(idProduct)
@@ -32,7 +34,8 @@ class DatabaseMethods {
   }
 
   //Đẩy danh sách sản phẩm lên firebase cloud firestore
-  Future<DocumentReference> productDetail(Map<String, dynamic> userInfoMap) async {
+  Future<DocumentReference> productDetail(
+      Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
         .doc(idProduct)
@@ -48,7 +51,6 @@ class DatabaseMethods {
         .collection("danhmuc")
         .add(userInfoMap);
   }
-
 
   //lấy tất cả sản phẩm nổi bật
   Future<Stream<QuerySnapshot>> getProductFeatureItem() async {
@@ -98,70 +100,94 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  Future<void> addOrder(List<Products> products, double totalPrice, int quantitys) async {
+  Future<void> addOrder(
+      List<Products> products, double totalPrice, int quantitys) async {
     final uid = await UserPreferences.getUid();
     try {
-
       // Tạo một tài liệu mới trong collection "orders"
-      DocumentReference orderRef = await FirebaseFirestore.instance
-          .collection('orders')
-          .add({
+      DocumentReference orderRef =
+          await FirebaseFirestore.instance.collection('orders').add({
         'userId': uid,
-        'totalAmount': totalPrice,// Tính tổng tiền
-        'soluongdadat': quantitys,// số lượng đã đặt tất cả sản phẩm
+        'totalAmount': totalPrice, // Tính tổng tiền
+        'soluongdadat': quantitys, // số lượng đã đặt tất cả sản phẩm
         'createdAt': FieldValue.serverTimestamp(),
         'status': 'pending',
-        'products': [],// Khởi tạo mảng products
-        'thanhtoan':''
+        'products': [], // Khởi tạo mảng products
+        'thanhtoan': ''
       });
       // id tự sinh ra khi tạo cơ sở dữ liệu
       String idCart = orderRef.id;
       orderRef.update({'idCart': idCart});
 
-
       // Tạo danh sách các phần tử cần thêm vào mảng products
-      List<Map<String, dynamic>> productsData = products.map((product) => {
-        'productId': product.idProduct,
-        'productName': product.name,
-        'productImage': product.image,
-        'productCategory': product.category,
-        'productDescription': product.description,
-        'productPrice': product.price,
-      }).toList();
+      List<Map<String, dynamic>> productsData = products
+          .map((product) => {
+                'productId': product.idProduct,
+                'productName': product.name,
+                'productImage': product.image,
+                'productCategory': product.category,
+                'productDescription': product.description,
+                'productPrice': product.price,
+              })
+          .toList();
       // Thêm tất cả các phần tử vào mảng products một lần
-      await orderRef.update({
-        'products': FieldValue.arrayUnion(productsData)
-      });
+      await orderRef.update({'products': FieldValue.arrayUnion(productsData)});
       print('Đơn hàng đã thanh toán thành công');
     } catch (e) {
       print('Lỗi khi thanh toán đơn hàng: $e');
     }
   }
 
-  //cây lưu trữ giá trị màu, size, và sản phẩm
-  Future<void> addColorSizeProduct(Products products, String size, String color, categoryRequiresSizeColor ) async {
+  //cây lưu trữ giá trị màu, size, và thông tin sản phẩm
+  Future<void> addColorSizeProduct(Products products, String size, String color,
+      categoryRequiresSizeColor) async {
     final uid = await UserPreferences.getUid();
     try {
-      DocumentReference variantRef = await FirebaseFirestore.instance
-          .collection('colorsize').add({
+      DocumentReference variantRef =
+          await FirebaseFirestore.instance.collection('colorsize').add({
         'uidUser': uid,
         'size': size,
         'color': color,
-        'categoryRequiresSizeColor':categoryRequiresSizeColor,
+        'categoryRequiresSizeColor': categoryRequiresSizeColor,
         'productId': products.idProduct,
         'productName': products.name,
         'productPrice': products.price,
-
       });
       String idVariant = variantRef.id;
       variantRef.update({'id': idVariant});
 
       print('Đơn hàng đã được thêm thành công');
       // id tự sinh ra khi tạo cơ sở dữ liệu
-
-    }
-    catch (e) {
+    } catch (e) {
       print('Lỗi khi thêm đơn hàng: $e');
     }
+  }
+
+  // Giả sử bạn đã có một hàm để fetch dữ liệu danh mục từ Firestore
+  Future<List<Category>> fetchCategories() async {
+    print("fetchCategories");
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('categorys')
+        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .collection("danhmuc")
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => Category.fromFirestore(doc))
+        .toList();
+  }
+
+  //Giả sử bạn đã có một hàm để fetch dữ liệu sản phẩm từ Firestore
+  Future<List<Products>> fetchProducts() async {
+    print("fetchProducts");
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .collection("sanpham")
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => Products.fromFirestore(doc))
+        .toList();
   }
 }

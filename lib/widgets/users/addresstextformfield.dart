@@ -1,24 +1,28 @@
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:flutter/material.dart';
 
-class MyTextFormField extends StatelessWidget {
+class AddressTextFormField extends StatelessWidget {
+  final String? Function(String?) validator;
+  final bool? Function(String?) onChanged;
   final String name;
-  final Icon icon;
   TextEditingController controllerUser = new TextEditingController();
-  MyTextFormField(
+  AddressTextFormField(
       {super.key,
+      required this.onChanged,
       required this.name,
-      required this.icon,
+      required this.validator,
       required this.controllerUser});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controllerUser,
+      validator: validator,
+      onChanged: onChanged,
       decoration: InputDecoration(
         hintText: name,
         hintStyle: AppWidget.semiBoolTextFeildStyle(),
-        prefixIcon: icon,
+        prefixIcon: Icon(Icons.person_pin_circle),
         border: OutlineInputBorder(),
       ),
     );

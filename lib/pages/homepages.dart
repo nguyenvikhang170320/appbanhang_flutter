@@ -1,6 +1,9 @@
-import 'package:appbanhang/model/users.dart';
+import 'package:appbanhang/pages/about.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/pages/chats.dart';
 import 'package:appbanhang/pages/checkout.dart';
+import 'package:appbanhang/pages/contactus.dart';
+import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/provider/userprovider.dart';
@@ -9,7 +12,6 @@ import 'package:appbanhang/widgets/slidebar/carouselview.dart';
 import 'package:appbanhang/widgets/products/loadproducthortical.dart';
 import 'package:appbanhang/widgets/products/loadproductvertical.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
@@ -32,19 +34,25 @@ class _HomePagesState extends State<HomePages> {
 
   //UI load hình ảnh danh mục
   Widget _buildImageCategory(String image) {
-    return Container(
-      width: 30, // Set a fixed width for the images
-      height: 30, // Set a fixed height for the images
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.grey, width: 1),
-      ),
-      child: ClipRRect(
-        borderRadius:
-            BorderRadius.circular(60), // Adjust radius for perfect circle
-        child: Image.asset(
-          "assets/images/$image",
-          fit: BoxFit.cover, // Ensure image fills the circular area
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (ctx) => ListCategory()));
+      },
+      child: Container(
+        width: 30, // Set a fixed width for the images
+        height: 30, // Set a fixed height for the images
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.grey, width: 1),
+        ),
+        child: ClipRRect(
+          borderRadius:
+              BorderRadius.circular(60), // Adjust radius for perfect circle
+          child: Image.asset(
+            "assets/images/$image",
+            fit: BoxFit.cover, // Ensure image fills the circular area
+          ),
         ),
       ),
     );
@@ -104,7 +112,7 @@ class _HomePagesState extends State<HomePages> {
           ),
           ListTile(
             onTap: () {
-              //giỏ hàng
+              //mục yêu thích
               setState(() {
                 homeColor = false;
                 cartColor = true;
@@ -114,19 +122,23 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (ctx) => CheckOut(),
-                ),
-              );
+              // Navigator.of(context).pushReplacement(
+              //   MaterialPageRoute(
+              //     builder: (ctx) => Favorites(),
+              //   ),
+              // );
+              ToastService.showToast(context,
+                  length: ToastLength.medium,
+                  expandedHeight: 100,
+                  message: "Chức năng đang phát triển");
             },
-            title: Text("Giỏ hàng"),
-            leading: Icon(Icons.shopping_cart),
+            title: Text("Mục yêu thích"),
+            leading: Icon(Icons.favorite_border_outlined),
             selected: cartColor,
           ),
           ListTile(
             onTap: () {
-              //hóa đơn
+              //chat
               setState(() {
                 homeColor = false;
                 cartColor = false;
@@ -136,9 +148,18 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
+              // Navigator.of(context).pushReplacement(
+              //   MaterialPageRoute(
+              //     builder: (ctx) => Chats(),
+              //   ),
+              // );
+              ToastService.showToast(context,
+                  length: ToastLength.medium,
+                  expandedHeight: 100,
+                  message: "Chức năng đang phát triển");
             },
-            title: Text("Hóa đơn"),
-            leading: Icon(Icons.wallet_giftcard_outlined),
+            title: Text("Chats"),
+            leading: Icon(Icons.chat_outlined),
             selected: billColor,
           ),
           ListTile(
@@ -153,6 +174,10 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
+              ToastService.showToast(context,
+                  length: ToastLength.medium,
+                  expandedHeight: 100,
+                  message: "Chức năng đang phát triển");
             },
             title: Text("Doanh thu"),
             leading: Icon(Icons.insert_chart),
@@ -170,6 +195,10 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = false;
               });
+              ToastService.showToast(context,
+                  length: ToastLength.medium,
+                  expandedHeight: 100,
+                  message: "Chức năng đang phát triển");
             },
             title: Text("Thẻ ngân hàng"),
             leading: Icon(Icons.add_card),
@@ -187,8 +216,14 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = true;
                 callColor = false;
               });
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => About(),
+                ),
+              );
             },
-            title: Text("Thông tin"),
+            title: Text(
+                "Điều khoản sử dụng ứng dụng và dịch vụ và Chính sách bảo mật"),
             leading: Icon(Icons.info),
             selected: aboutColor,
           ),
@@ -204,8 +239,10 @@ class _HomePagesState extends State<HomePages> {
                 aboutColor = false;
                 callColor = true;
               });
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => ContactUs()));
             },
-            title: Text("Liên hệ chúng tôi"),
+            title: Text("Liên hệ"),
             leading: Icon(Icons.contact_emergency),
             selected: callColor,
           ),

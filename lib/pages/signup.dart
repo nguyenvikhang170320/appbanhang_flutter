@@ -1,5 +1,6 @@
 import 'package:appbanhang/pages/login.dart';
 import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/widgets/users/addresstextformfield.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:appbanhang/widgets/users/mybuttonuser.dart';
 import 'package:appbanhang/widgets/users/emailtextformfield.dart';
@@ -207,7 +208,7 @@ class _SignUpState extends State<SignUp> {
                 return null;
               },
             ),
-            PhoneTextFormField(
+            AddressTextFormField(
               controllerUser:
               addressController, //liên quan đến file mytextformfield.dart
               name: "Nhập địa chỉ",

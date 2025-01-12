@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 class CartProvider extends ChangeNotifier {
   List<CartItem> _items = [];
 
-  void addItem(Products product, String size,String color, int quantity) {
+  void addItem(Products product, String size, String color, int quantity) {
     notifyListeners();
     _items.add(CartItem(
       products: product,
@@ -17,18 +17,35 @@ class CartProvider extends ChangeNotifier {
     ));
   }
 
-
   List<CartItem> get items => _items;
+  Products _products = Products(
+      idProduct: "",
+      name: "",
+      price: 0.0,
+      image: "",
+      category: "",
+      description: "");
+
+  Products get selectedItem => _products;
+  set selectedItem(Products product) {
+    _products = product;
+    notifyListeners();
+  }
 
   //xóa giỏ hàng
   void removeItem(CartItem item) {
     _items.removeWhere((cartItem) => cartItem == item);
     notifyListeners();
   }
+
   //làm sạch giỏ hàng
   void clearCart() {
     _items.clear();
     notifyListeners();
+  }
+
+  String get product {
+    return _items.fold("", (total, item) => item.products.toString());
   }
 
 //format tổng tiền ban đầu về VNĐ
@@ -37,6 +54,7 @@ class CartProvider extends ChangeNotifier {
     final formatter = NumberFormat.currency(locale: locale);
     return formatter.format(subTotalPrice);
   }
+
   //format tong tien về VNĐ
   String get formattedTotalPrice {
     final locale = 'vi_VN';
@@ -49,7 +67,6 @@ class CartProvider extends ChangeNotifier {
     return _items.fold(
         0, (total, item) => total + item.products.price * item.quantity);
   }
-
 
   String _discountColor = ""; // Mặc định là 0% (không giảm giá)
 
@@ -68,10 +85,10 @@ class CartProvider extends ChangeNotifier {
   double get discount {
     return subTotalPrice * _discountRate;
   }
+
   //số lượng đã đặt tất cả sản phẩm
   int get quantitys {
-    return _items.fold(
-        0, (total, item) => total + item.quantity);
+    return _items.fold(0, (total, item) => total + item.quantity);
   }
 
   //tổng tiền
@@ -97,6 +114,7 @@ class CartProvider extends ChangeNotifier {
       return 2;
     }
   }
+
   //shipcode cách 2 ngắn hơn
   // double get shipCode {
   //   // Giả sử phí vận chuyển cố định là 1.5$ khi có sản phẩm trong giỏ hàng
@@ -105,5 +123,4 @@ class CartProvider extends ChangeNotifier {
   double calculateTotalPrice() {
     return subTotalPrice - discount + shipCode(subTotalPrice);
   }
-
 }

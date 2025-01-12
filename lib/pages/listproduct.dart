@@ -1,11 +1,14 @@
 import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
+import 'package:appbanhang/pages/search_product.dart';
+import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListProduct extends StatefulWidget {
   const ListProduct({super.key});
@@ -130,7 +133,18 @@ class _ListProductState extends State<ListProduct> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              try {
+                final productProvider = Provider.of<ProductProvider>(context,listen: false);
+                final categories = await DatabaseMethods().fetchProducts();
+                await productProvider.getSearchListProduct(listproduct: categories);
+                showSearch(context: context, delegate: SearchProduct());
+                print("0n");
+              } catch (e) {
+                // Xử lý lỗi khi fetch dữ liệu
+                print('Lỗi load sản phẩm: $e');
+              }
+            },
             icon: Icon(
               Icons.search,
               color: Colors.black,

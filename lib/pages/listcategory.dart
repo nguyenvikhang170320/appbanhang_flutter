@@ -1,15 +1,20 @@
+import 'package:appbanhang/model/category.dart';
 import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/pages/listproductcategory.dart';
+import 'package:appbanhang/pages/search_category.dart';
+import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListCategory extends StatefulWidget {
+
   const ListCategory({super.key});
 
   @override
@@ -56,7 +61,19 @@ class _ListCategoryState extends State<ListCategory> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+
+              try {
+                final productProvider = Provider.of<ProductProvider>(context,listen: false);
+                final categories = await DatabaseMethods().fetchCategories();
+                await productProvider.getSearchList(list: categories);
+                showSearch(context: context, delegate: SearchCategory());
+                print("0n");
+              } catch (e) {
+                // Xử lý lỗi khi fetch dữ liệu
+                print('Error fetching categories: $e');
+              }
+            },
             icon: Icon(
               Icons.search,
               color: Colors.black,

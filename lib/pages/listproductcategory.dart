@@ -1,11 +1,12 @@
 import 'package:appbanhang/model/products.dart';
-import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
+import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 
 class ListProductCategory extends StatefulWidget {
   final String category;
@@ -130,13 +131,7 @@ class _ListProductCategoryState extends State<ListProductCategory> {
           },
         ),
         actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.search,
-              color: Colors.black,
-            ),
-          ),
+          NotificationButton(),
         ],
       ),
       body: _loadProduct(),

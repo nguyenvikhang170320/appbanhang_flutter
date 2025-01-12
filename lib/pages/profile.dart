@@ -7,7 +7,6 @@ import 'package:appbanhang/widgets/profile/mybuttonprofile.dart';
 import 'package:appbanhang/widgets/profile/mytextformfield.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,12 +53,11 @@ class _ProfileState extends State<Profile> {
           expandedHeight: 100,
           message: "Vui lòng nhập SĐT mới");
     } else {
-
-      if(imageUri == null){
+      if (imageUri == null) {
         print("null");
         uploadImageDetail();
         uploadUserDetail();
-      }else if(imageUri != null){
+      } else if (imageUri != null) {
         print("not null");
         uploadImageDetail();
         uploadUserDetail();
@@ -67,10 +65,9 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-
   Widget _buildContainerPart() {
     UserProvider userProvider =
-    Provider.of<UserProvider>(context, listen: false);
+        Provider.of<UserProvider>(context, listen: false);
     address = TextEditingController(text: userProvider.getAddressData());
     userName = TextEditingController(text: userProvider.getNameData());
     phoneNumber = TextEditingController(text: userProvider.getPhoneData());
@@ -82,8 +79,7 @@ class _ProfileState extends State<Profile> {
     return Container(
         height: double.infinity,
         width: double.infinity,
-        child:
-        Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildSingleProfile(
@@ -100,13 +96,12 @@ class _ProfileState extends State<Profile> {
                 name: "Trạng thái tài khoản: ",
                 value: userProvider.getAccountStatusData()),
           ],
-        )
-    );
+        ));
   }
 
   Widget _buildTextFormPart() {
     UserProvider userProvider =
-    Provider.of<UserProvider>(context, listen: false);
+        Provider.of<UserProvider>(context, listen: false);
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -116,6 +111,7 @@ class _ProfileState extends State<Profile> {
           MyTextFormField(
             name: "UserName",
             controllerUser: userName,
+            icon: Icon(Icons.person),
           ),
           _buildSingleProfile(
             value: userProvider.getEmailData(),
@@ -135,10 +131,12 @@ class _ProfileState extends State<Profile> {
           MyTextFormField(
             name: "Phone Number",
             controllerUser: phoneNumber,
+            icon: Icon(Icons.phone),
           ),
           MyTextFormField(
             name: "Address",
             controllerUser: address,
+            icon: Icon(Icons.person_pin_circle_sharp),
           ),
         ],
       ),
@@ -207,7 +205,6 @@ class _ProfileState extends State<Profile> {
 
     // Cập nhật dữ liệu
     try {
-
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'name': userName.text,
         'isMale': isMale ? 'Nam' : 'Nữ',
@@ -232,6 +229,7 @@ class _ProfileState extends State<Profile> {
       edit = false;
     });
   }
+
   void uploadImageDetail() async {
     print("image");
     final uid = await UserPreferences.getUid();
@@ -279,6 +277,7 @@ class _ProfileState extends State<Profile> {
       edit = false;
     });
   }
+
   //tùy chọn camera hay thư viện ảnh
   Future<void> myDialogBox(context) {
     return showDialog<void>(
@@ -320,7 +319,7 @@ class _ProfileState extends State<Profile> {
     // Generate a unique file name
     final photoName = "${DateTime.now().millisecondsSinceEpoch}-${uid}.jpg";
     Reference storageReference =
-    FirebaseStorage.instance.ref().child("userImageProfile/$photoName");
+        FirebaseStorage.instance.ref().child("userImageProfile/$photoName");
     UploadTask uploadTask = storageReference.putFile(image);
     TaskSnapshot snapshot = await uploadTask;
     imageUri = await snapshot.ref.getDownloadURL();
@@ -336,53 +335,52 @@ class _ProfileState extends State<Profile> {
         appBar: AppBar(
           leading: edit == true
               ? IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.amber,
-              size: 30,
-            ),
-            onPressed: () {
-              setState(() {
-                edit = false;
-              });
-            },
-          )
-              : IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black45,
-              size: 30,
-            ),
-            onPressed: () {
-              setState(() {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (ctx) => BottomNav(),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.amber,
+                    size: 30,
                   ),
-                );
-              });
-            },
-          ),
+                  onPressed: () {
+                    setState(() {
+                      edit = false;
+                    });
+                  },
+                )
+              : IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black45,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (ctx) => BottomNav(),
+                        ),
+                      );
+                    });
+                  },
+                ),
           actions: [
             edit == false
                 ? NotificationButton()
                 : IconButton(
-                onPressed: () {
-                  vaildation();
-                },
-                icon: Icon(
-                  Icons.check,
-                  size: 30,
-                  color: Colors.cyanAccent,
-                ))
+                    onPressed: () {
+                      vaildation();
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      size: 30,
+                      color: Colors.cyanAccent,
+                    ))
           ],
         ),
         body: ListView(
           children: [
             StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("users")
-                    .snapshots(),
+                stream:
+                    FirebaseFirestore.instance.collection("users").snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -390,19 +388,18 @@ class _ProfileState extends State<Profile> {
                     );
                   }
                   UserProvider userProvider =
-                  Provider.of<UserProvider>(context, listen: false);
+                      Provider.of<UserProvider>(context, listen: false);
                   userProvider.getUserData();
                   return Container(
                     height: 800,
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Stack(
                           children: [
                             Container(
-                              height: 230,
+                              height: 150,
                               width: double.infinity,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -411,34 +408,36 @@ class _ProfileState extends State<Profile> {
                                     maxRadius: 65,
                                     backgroundImage: selectedImage == null
                                         ? userProvider.getImageData() == null ||
-                                        userProvider
-                                            .getImageData()
-                                            .isEmpty
-                                        ? AssetImage(
-                                        "assets/images/users.jpg")
-                                    as ImageProvider
-                                        : NetworkImage(
-                                        userProvider.getImageData())
+                                                userProvider
+                                                    .getImageData()
+                                                    .isEmpty
+                                            ? AssetImage(
+                                                    "assets/images/users.jpg")
+                                                as ImageProvider
+                                            : NetworkImage(
+                                                userProvider.getImageData())
                                         : FileImage(selectedImage!),
                                   ),
                                 ],
                               ),
                             ),
                             edit == true
-                                ?  Padding(
-                              padding: EdgeInsets.only(left: 220, top: 100, right: 2),
-                              child: GestureDetector(
-                                onTap: () {
-                                  myDialogBox(context);
-                                },
-                                child: CircleAvatar(
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ): Container(),
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 220, top: 100, right: 2),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        myDialogBox(context);
+                                      },
+                                      child: CircleAvatar(
+                                        child: Icon(
+                                          Icons.camera_alt_outlined,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                         Container(
@@ -457,47 +456,42 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 50,),
+                        SizedBox(height: 10,),
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20)),
                           child: edit == false
                               ? MyButtonProfile(
-                            name: "Chỉnh sửa",
-                            onPressed: () {
-                              setState(() {
-                                edit = true;
-                              });
-                            },
-                          )
+                                  name: "Chỉnh sửa",
+                                  onPressed: () {
+                                    setState(() {
+                                      edit = true;
+                                    });
+                                  },
+                                )
                               : Container(),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        edit == false
+                        SizedBox(height: 10,),
+                        //xác minh tài khoản
+                        edit == true
                             ? MyButtonProfile(
-                          onPressed: () {},
-                          name: "Xác minh tài khoản",
-                        )
+                                onPressed: () {},
+                                name: "Xác minh tài khoản",
+                              )
                             : SizedBox(),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        SizedBox(height: 10,),
                         //xoá tài khoản
                         edit == false
                             ? MyButtonProfile(
-                          onPressed: () {},
-                          name: "Xóa tài khoản",
-                        )
+                                onPressed: () {},
+                                name: "Xóa tài khoản",
+                              )
                             : SizedBox(),
                       ],
                     ),
                   );
                 }),
           ],
-        )
-
-    );
+        ));
   }
 }

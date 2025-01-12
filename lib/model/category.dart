@@ -5,6 +5,7 @@ class Category {
   final String image;
 
   Category({required this.name, required this.image});
+
   factory Category.fromFirestore(DocumentSnapshot doc) {
     return Category(
       name: doc['Name'] as String,

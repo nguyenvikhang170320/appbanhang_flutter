@@ -1,4 +1,3 @@
-import 'package:appbanhang/pages/account.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/homepages.dart';
@@ -56,17 +55,17 @@ class _BottomNavState extends State<BottomNav> {
               color: Colors.black,
             ),
             Icon(
-              Icons.shopping_cart_checkout,
+              Icons.shopping_cart,
+              size: 30,
+              color: Colors.black,
+            ),
+            Icon(
+              Icons.wallet_giftcard_outlined,
               size: 30,
               color: Colors.black,
             ),
             Icon(
               Icons.favorite_border_outlined,
-              size: 30,
-              color: Colors.black,
-            ),
-            Icon(
-              Icons.add_alert_sharp,
               size: 30,
               color: Colors.black,
             ),

@@ -4,7 +4,6 @@ import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +46,7 @@ class _DetailPageState extends State<DetailPage> {
         // Cập nhật mức giảm giá cho CartProvider
       },
       items: [
-        DropdownMenuItem(value: '', child: Text('không có màu')),
+        DropdownMenuItem(value: '', child: Text('chọn màu')),
         DropdownMenuItem(value: 'trắng', child: Text('Màu trắng')),
         DropdownMenuItem(value: 'đen', child: Text('Màu đen')),
         DropdownMenuItem(value: 'đỏ', child: Text('Màu đỏ')),
@@ -276,7 +275,7 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context, listen: true);
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       bottomNavigationBar: Container(
         height: 60,
