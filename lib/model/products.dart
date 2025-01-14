@@ -27,4 +27,14 @@ class Products {
       description: doc['Description'] as String,
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': idProduct,
+      'name': name,
+      'price': price,
+      'image': image,
+      'category': category,
+      'description': description,
+    };
+  }
 }

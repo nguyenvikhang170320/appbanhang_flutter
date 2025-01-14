@@ -182,7 +182,7 @@ class _DetailPageState extends State<DetailPage> {
                 style: myStyle,
               ),
               Text(
-                "\$ ${widget.products.price.toString()}",
+                "Giá: "+ widget.products.price.toString()+" đ",
                 style: TextStyle(fontSize: 16, color: Colors.red),
               ),
               Text(
@@ -299,7 +299,7 @@ class _DetailPageState extends State<DetailPage> {
 
                 cart.addItem(widget.products, _selectedSize,selectedColor, count);
                 try {
-                  await DatabaseMethods().addColorSizeProduct(widget.products, selectedColor,_selectedSize, categoryRequiresSizeColor);
+                  await DatabaseMethods().addColorSizeProduct(widget.products, _selectedSize, selectedColor,categoryRequiresSizeColor);
                   print('Thêm đơn hàng thành công');
                   ToastService.showSuccessToast(context,
                       length: ToastLength.medium,

@@ -2,12 +2,14 @@ import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/search_product.dart';
+import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ListProduct extends StatefulWidget {
@@ -30,8 +32,8 @@ class _ListProductState extends State<ListProduct> {
     super.initState();
   }
 
-
   Widget _loadProduct() {
+
     return StreamBuilder(
         stream: fooditemStream,
         builder: (context, AsyncSnapshot snapshot) {
@@ -47,6 +49,11 @@ class _ListProductState extends State<ListProduct> {
                     DocumentSnapshot ds = snapshot.data.docs[index];
                     //lấy từ firebase truyền về lớp model tạo ra
                     final Products products = Products.fromFirestore(ds);
+                    //chuyển đổi giá trị tiền tệ
+                    final locale = 'vi_VN';
+                    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+                    formatter.maximumFractionDigits = 0;
+                    String price = formatter.format(ds["Price"]);
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -88,7 +95,7 @@ class _ListProductState extends State<ListProduct> {
                                         )),
                                         Container(
                                             child: Text(
-                                          ds["Price"].toString(), //giá
+                                                price.toString(), //giá
                                           style: AppWidget
                                               .semiBoolTextFeildStyle(),
                                         )),
@@ -135,11 +142,13 @@ class _ListProductState extends State<ListProduct> {
           IconButton(
             onPressed: () async {
               try {
-                final productProvider = Provider.of<ProductProvider>(context,listen: false);
+                final productProvider =
+                    Provider.of<ProductProvider>(context, listen: false);
                 final categories = await DatabaseMethods().fetchProducts();
-                await productProvider.getSearchListProduct(listproduct: categories);
+                await productProvider.getSearchListProduct(
+                    listproduct: categories);
                 showSearch(context: context, delegate: SearchProduct());
-                print("0n");
+                print("SearchProduct");
               } catch (e) {
                 // Xử lý lỗi khi fetch dữ liệu
                 print('Lỗi load sản phẩm: $e');

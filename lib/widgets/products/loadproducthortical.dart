@@ -5,6 +5,7 @@ import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class LoadProductHortical extends StatefulWidget {
   @override
@@ -41,13 +42,19 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
                     DocumentSnapshot ds = snapshot.data.docs[index];
                     //lấy từ firebase truyền về lớp model tạo ra
                     final Products products = Products.fromFirestore(ds);
+                    //chuyển đổi giá trị tiền tệ
+                    final locale = 'vi_VN';
+                    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+                    formatter.maximumFractionDigits = 0;
+                    String price = formatter.format(ds["Price"]);
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailPage(products: products,)));
+                                builder: (context) => DetailPage(
+                                      products: products,
+                                    )));
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),
@@ -85,7 +92,7 @@ class _LoadProductHorticalState extends State<LoadProductHortical> {
                                           )),
                                           Container(
                                               child: Text(
-                                            "\$" + ds["Price"].toString(),
+                                                  price.toString(),
                                             style: AppWidget
                                                 .semiBoolTextFeildStyle(),
                                           )),

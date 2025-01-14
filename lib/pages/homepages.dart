@@ -7,7 +7,7 @@ import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/provider/userprovider.dart';
-import 'package:appbanhang/services/auth.dart';
+import 'package:appbanhang/services/auth/auth.dart';
 import 'package:appbanhang/widgets/slidebar/carouselview.dart';
 import 'package:appbanhang/widgets/products/loadproducthortical.dart';
 import 'package:appbanhang/widgets/products/loadproductvertical.dart';

@@ -9,23 +9,26 @@ import 'package:random_string/random_string.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
-class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
+class AddProductMoi extends StatefulWidget {
+  const AddProductMoi({super.key});
 
   @override
-  State<AddProduct> createState() => _AddProductState();
+  State<AddProductMoi> createState() => _AddProductState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _AddProductState extends State<AddProductMoi> {
   final List<String> fooditems = [
-    'Đồ uống',
-    'Đồ ăn',
-    'Điện thoại',
-    'Laptop',
-    'Thực phẩm',
-    'Kem',
-    'Trái cây',
-    'Thời trang'
+    'đồ uống',
+    'kem',
+    'đồ ăn',
+    'thực phẩm',
+    'điện thoại',
+    'sách',
+    'laptop',
+    'quần áo',
+    'giày dép',
+    'thú cưng',
+    'trái cây',
   ];
   String? valueCategory;
   TextEditingController namecontroller = new TextEditingController();
@@ -111,8 +114,9 @@ class _AddProductState extends State<AddProduct> {
 
       addItem['idProduct'] = documentId;
 
-      await docRef.update({'idProduct': documentId,});
-
+      await docRef.update({
+        'idProduct': documentId,
+      });
 
       ToastService.showSuccessToast(context,
           length: ToastLength.medium,
@@ -313,7 +317,6 @@ class _AddProductState extends State<AddProduct> {
                       valueCategory, // hiện danh mục đã chọn lên DropdownButton
                 )),
               ),
-
               SizedBox(
                 height: 30.0,
               ),

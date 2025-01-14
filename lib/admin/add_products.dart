@@ -18,14 +18,17 @@ class AddProducts extends StatefulWidget {
 
 class _AddProductsState extends State<AddProducts> {
   final List<String> fooditems = [
-    'Đồ uống',
-    'Đồ ăn',
-    'Điện thoại',
-    'Laptop',
-    'Thực phẩm',
-    'Kem',
-    'Trái cây',
-    'Thời trang'
+    'đồ uống',
+    'kem',
+    'đồ ăn',
+    'thực phẩm',
+    'điện thoại',
+    'sách',
+    'laptop',
+    'quần áo',
+    'giày dép',
+    'thú cưng',
+    'trái cây',
   ];
   String? valueCategory;
   TextEditingController namecontroller = new TextEditingController();
@@ -104,8 +107,7 @@ class _AddProductsState extends State<AddProducts> {
         "Description": detailcontroller.text,
         "Category": valueCategory,
       };
-      DocumentReference docRef =
-      await DatabaseMethods().productMoiDetail(addItem);
+      DocumentReference docRef = await DatabaseMethods().productDetail(addItem);
       String documentId = docRef.id;
 
       addItem['idProduct'] = documentId;

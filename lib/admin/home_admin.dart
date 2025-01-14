@@ -1,5 +1,5 @@
 import 'package:appbanhang/admin/add_featureroduct.dart';
-import 'package:appbanhang/admin/add_product.dart';
+import 'package:appbanhang/admin/add_productmoi.dart';
 import 'package:appbanhang/admin/add_category.dart';
 import 'package:appbanhang/admin/add_products.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
@@ -122,7 +122,7 @@ class _HomeAdminState extends State<HomeAdmin> {
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddProduct()));
+                    MaterialPageRoute(builder: (context) => AddProductMoi()));
               },
               child: Material(
                 elevation: 10.0,

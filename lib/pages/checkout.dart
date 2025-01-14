@@ -1,10 +1,13 @@
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
@@ -20,6 +23,10 @@ class CheckOut extends StatefulWidget {
 class _CheckOutState extends State<CheckOut> {
   //text style
   final TextStyle myStyle = TextStyle(fontSize: 18);
+  bool orderConfirmed = false;
+  String confirmedOrderId = '';
+  Map<String, dynamic> confirmedOrderData = {};
+  DocumentReference? orderRef;
 
 
   //build bottom giá
@@ -147,6 +154,11 @@ class _CheckOutState extends State<CheckOut> {
           itemCount: cart.items.length,
           itemBuilder: (context, index) {
             final item = cart.items[index];
+            //chuyển đổi giá trị tiền tệ
+            final locale = 'vi_VN';
+            final formatter = NumberFormat.currency(name:"đ",locale: locale);
+            formatter.maximumFractionDigits = 0;
+            String price = formatter.format(item.products.price);
             return Container(
               child: Column(
                 children: <Widget>[
@@ -188,7 +200,7 @@ class _CheckOutState extends State<CheckOut> {
                                       ),
                                     ),
                                     Text(
-                                      "Giá: \$ ${item.products.price}",
+                                      price.toString(),
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -233,10 +245,10 @@ class _CheckOutState extends State<CheckOut> {
             _buildBottomDetail(
                 "Tổng cộng:", cart.formattedPrice.toString()),
             _buildBottomDetail(
-                "Giảm giá:", cart.discount.toString()+"\%"),
+                "Giảm %: ", cart.discountPercentage),
             _buildBottomDetail(
                 "Phí vận chuyển:",
-                cart.shipCode(cart.subTotalPrice).toString()),
+                cart.formattedShip.toString()),
             _buildBottomDetail("Thành tiền:",
                 cart.formattedTotalPrice.toString()),
           ],

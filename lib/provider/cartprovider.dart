@@ -18,19 +18,6 @@ class CartProvider extends ChangeNotifier {
   }
 
   List<CartItem> get items => _items;
-  Products _products = Products(
-      idProduct: "",
-      name: "",
-      price: 0.0,
-      image: "",
-      category: "",
-      description: "");
-
-  Products get selectedItem => _products;
-  set selectedItem(Products product) {
-    _products = product;
-    notifyListeners();
-  }
 
   //xóa giỏ hàng
   void removeItem(CartItem item) {
@@ -51,39 +38,58 @@ class CartProvider extends ChangeNotifier {
 //format tổng tiền ban đầu về VNĐ
   String get formattedPrice {
     final locale = 'vi_VN';
-    final formatter = NumberFormat.currency(locale: locale);
+    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    formatter.maximumFractionDigits = 0;
     return formatter.format(subTotalPrice);
   }
 
   //format tong tien về VNĐ
   String get formattedTotalPrice {
     final locale = 'vi_VN';
-    final formatter = NumberFormat.currency(locale: locale);
+    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    formatter.maximumFractionDigits = 0;
     return formatter.format(totalPrice);
   }
 
+  String get formattedShip{
+    final locale = 'vi_VN';
+    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    formatter.maximumFractionDigits = 0;
+    return formatter.format(shipCode);
+  }
   //tổng tiền ban đầu
   double get subTotalPrice {
     return _items.fold(
         0, (total, item) => total + item.products.price * item.quantity);
   }
-
+  //màu sắc
   String _discountColor = ""; // Mặc định là 0% (không giảm giá)
 
   String get discountColor => _discountColor;
-  // lấy giảm giá
+
   set discountColor(String newRate) {
     _discountColor = newRate;
     notifyListeners();
   }
-
-  //giảm giá %
-  double _discountRate = 0.0; // Mặc định là 0% (không giảm giá)
-
-  double get discountRate => _discountRate;
-
+  // lấy giảm giá bao nhiêu %
   double get discount {
-    return subTotalPrice * _discountRate;
+    if (subTotalPrice <= 50000) {
+      return 0;
+    } else if (subTotalPrice > 50000 && subTotalPrice <= 100000) {
+      return subTotalPrice * 0.02; // Giảm 2%
+    } else if (subTotalPrice> 100000 && subTotalPrice <= 1000000) {
+      return subTotalPrice * 0.05; // Giảm 5%
+    } else {
+      return subTotalPrice * 0.1; // Giảm 10%
+    }
+  }
+  String get discountPercentage {
+    if (subTotalPrice <= 50000) {
+      return '0%'; // No discount
+    } else {
+      NumberFormat percentFormat = NumberFormat.percentPattern();
+      return percentFormat.format(discount / subTotalPrice);
+    }
   }
 
   //số lượng đã đặt tất cả sản phẩm
@@ -91,36 +97,28 @@ class CartProvider extends ChangeNotifier {
     return _items.fold(0, (total, item) => total + item.quantity);
   }
 
-  //tổng tiền
+  //tính tổng tiền tất cả sản phẩm
   double get totalPrice {
     final subTotal = this.subTotalPrice;
     final discount = this.discount;
-    return subTotal - discount + shipCode(subTotal);
+    return subTotal - discount + shipCode;
+  }
+  //tổng tiền để truyền giá trị qua trang hóa đơn
+  double calculateTotalPrice() {
+    return subTotalPrice - discount + shipCode;
   }
 
-  //shipcode
-  double shipCode(double subTotal) {
-    // Thay đổi đơn vị tiền tệ thành USD
-    const double usdPerVND =
-        25.429; // Tỷ giá USD/VND (bạn có thể thay đổi giá trị này)
-    // Chuyển đổi tổng tiền sang USD
-    double subTotalUSD = subTotal * usdPerVND;
-    // Logic tính phí vận chuyển theo USD
-    if (subTotalUSD <= 2) {
-      return 0; // Miễn phí ship nếu đơn hàng trên 10 USD
-    } else if (subTotalUSD > 2 && subTotalUSD < 10) {
-      return 1.5; // Phí ship 1.5 USD
+  //phí vận chuyển
+  double get shipCode {
+    if (subTotalPrice == 0){
+      return 0;
+    }else if (subTotalPrice <= 50000) {
+      return 5000;
+    }else if (subTotalPrice > 50000 && subTotalPrice <= 200000) {
+      return 10000;
     } else {
-      return 2;
+      return 20000;
     }
   }
 
-  //shipcode cách 2 ngắn hơn
-  // double get shipCode {
-  //   // Giả sử phí vận chuyển cố định là 1.5$ khi có sản phẩm trong giỏ hàng
-  //   return _items.isNotEmpty ? 1.5 : 0.0;
-  // }
-  double calculateTotalPrice() {
-    return subTotalPrice - discount + shipCode(subTotalPrice);
-  }
 }

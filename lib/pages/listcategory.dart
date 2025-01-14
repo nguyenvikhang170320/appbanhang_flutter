@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ListCategory extends StatefulWidget {
-
   const ListCategory({super.key});
 
   @override
@@ -62,13 +61,13 @@ class _ListCategoryState extends State<ListCategory> {
         actions: <Widget>[
           IconButton(
             onPressed: () async {
-
               try {
-                final productProvider = Provider.of<ProductProvider>(context,listen: false);
+                final productProvider =
+                    Provider.of<ProductProvider>(context, listen: false);
                 final categories = await DatabaseMethods().fetchCategories();
                 await productProvider.getSearchList(list: categories);
                 showSearch(context: context, delegate: SearchCategory());
-                print("0n");
+                print("SearchCategory");
               } catch (e) {
                 // Xử lý lỗi khi fetch dữ liệu
                 print('Error fetching categories: $e');

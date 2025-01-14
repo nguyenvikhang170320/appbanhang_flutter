@@ -5,7 +5,7 @@ import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 
 class LoadProductVertical extends StatefulWidget {
   const LoadProductVertical({super.key});
@@ -42,13 +42,18 @@ class _LoadProductVerticalState extends State<LoadProductVertical> {
                     DocumentSnapshot ds = snapshot.data.docs[index];
                     //lấy từ firebase truyền về lớp model tạo ra
                     final Products products = Products.fromFirestore(ds);
+                    //chuyển đổi giá trị tiền tệ
+                    final locale = 'vi_VN';
+                    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+                    formatter.maximumFractionDigits = 0;
+                    String price = formatter.format(ds["Price"]);
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailPage(
-                                  products: products,
+                                      products: products,
                                     )));
                       },
                       child: Container(
@@ -70,28 +75,31 @@ class _LoadProductVerticalState extends State<LoadProductVertical> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 15),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                          ds["Name"],
-                                          style: AppWidget
-                                              .semiBoolTextFeildStyle(),
+                                Expanded(
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 5),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            ds["Name"],
+                                            style: AppWidget
+                                                .semiBoolTextFeildStyle(),
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          "\$" + ds["Price"].toString(),
-                                          style: AppWidget
-                                              .semiBoolTextFeildStyle(),
+                                        SizedBox(
+                                          width: 5,
                                         ),
-                                      ),
-                                    ],
+                                        Container(
+                                          child: Text(
+                                            price.toString(),
+                                            style: AppWidget
+                                                .semiBoolTextFeildStyle(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

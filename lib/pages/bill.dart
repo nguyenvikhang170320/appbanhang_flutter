@@ -1,4 +1,8 @@
+import 'package:appbanhang/pages/bottomnav.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
+import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:flutter/material.dart';
+
 class Bill extends StatefulWidget {
   const Bill({super.key});
 
@@ -9,10 +13,30 @@ class Bill extends StatefulWidget {
 class _BillState extends State<Bill> {
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      padding: EdgeInsets.all(20.0),
-      margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 20.0, bottom: 20.0),
-      child: Text("Hóa đơn",),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Hóa đơn",
+          style: AppWidget.boldTextFeildStyle(),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (ctx) => BottomNav(),
+              ),
+            );
+          },
+        ),
+        actions: <Widget>[
+          NotificationButton(),
+        ],
+      ),
+      body: Container(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
+import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => CartProvider()),
         ChangeNotifierProvider(create: (ctx) => ProductProvider()),
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
+        ChangeNotifierProvider(create: (ctx) => OrderProvider()),
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,

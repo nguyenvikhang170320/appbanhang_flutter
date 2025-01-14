@@ -2,6 +2,7 @@ import 'package:appbanhang/model/category.dart';
 import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:random_string/random_string.dart';
 
 class DatabaseMethods {
   //đẩy dữ liệu users lên firebase cloud firestore
@@ -99,42 +100,57 @@ class DatabaseMethods {
         .where('Category', isEqualTo: category)
         .snapshots();
   }
-
-  Future<void> addOrder(
+  // lấy hóa đơn theo uid người dùng
+  Future<Stream<QuerySnapshot>> fetchOrders(String userId) async {
+    final uid = await UserPreferences.getUid();
+    // Replace with your actual logic to fetch product stream from Firebase
+    return FirebaseFirestore.instance
+        .collection("orders")
+        .doc(uid)
+        .collection("giohang")
+        .where('userId', isEqualTo: userId)
+        .snapshots();
+  }
+  //hóa đơn
+  Future<DocumentReference> addOrder(
       List<Products> products, double totalPrice, int quantitys) async {
     final uid = await UserPreferences.getUid();
     try {
+      String maHD = randomAlphaNumeric(10);
+
       // Tạo một tài liệu mới trong collection "orders"
-      DocumentReference orderRef =
-          await FirebaseFirestore.instance.collection('orders').add({
+      DocumentReference orderRef = await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(uid)
+          .collection('hoadon')
+          .add({
         'userId': uid,
-        'totalAmount': totalPrice, // Tính tổng tiền
-        'soluongdadat': quantitys, // số lượng đã đặt tất cả sản phẩm
+        'totalAmount': totalPrice,
+        'soluongdadat': quantitys,
         'createdAt': FieldValue.serverTimestamp(),
         'status': 'pending',
-        'products': [], // Khởi tạo mảng products
-        'thanhtoan': ''
+        'maHD': maHD,
       });
       // id tự sinh ra khi tạo cơ sở dữ liệu
       String idCart = orderRef.id;
-      orderRef.update({'idCart': idCart});
+      orderRef.update({'idHD': idCart});
+      // Chuẩn bị dữ liệu cho mảng products
+      List<Map<String, dynamic>> productsData = products.map((product) => {
+        'productId': product.idProduct,
+        'productName': product.name,
+        'productImage': product.image,
+        'productCategory': product.category,
+        'productDescription': product.description,
+        'productPrice': product.price,
+      }).toList();
 
-      // Tạo danh sách các phần tử cần thêm vào mảng products
-      List<Map<String, dynamic>> productsData = products
-          .map((product) => {
-                'productId': product.idProduct,
-                'productName': product.name,
-                'productImage': product.image,
-                'productCategory': product.category,
-                'productDescription': product.description,
-                'productPrice': product.price,
-              })
-          .toList();
-      // Thêm tất cả các phần tử vào mảng products một lần
+      // Cập nhật trường products
       await orderRef.update({'products': FieldValue.arrayUnion(productsData)});
-      print('Đơn hàng đã thanh toán thành công');
+
+      return orderRef;
     } catch (e) {
       print('Lỗi khi thanh toán đơn hàng: $e');
+      rethrow;
     }
   }
 
