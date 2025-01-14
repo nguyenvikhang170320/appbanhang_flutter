@@ -111,7 +111,7 @@ class DatabaseMethods {
         .where('userId', isEqualTo: userId)
         .snapshots();
   }
-  //hóa đơn
+  //tạo hóa đơn
   Future<DocumentReference> addOrder(
       List<Products> products, double totalPrice, int quantitys) async {
     final uid = await UserPreferences.getUid();
@@ -128,7 +128,7 @@ class DatabaseMethods {
         'totalAmount': totalPrice,
         'soluongdadat': quantitys,
         'createdAt': FieldValue.serverTimestamp(),
-        'status': 'pending',
+        'status': 'chưa thanh toán',
         'maHD': maHD,
       });
       // id tự sinh ra khi tạo cơ sở dữ liệu
@@ -153,7 +153,31 @@ class DatabaseMethods {
       rethrow;
     }
   }
-
+  //load hóa đơn
+  Future<Stream<QuerySnapshot>> getHoaDonStream() async {
+    final uid = await UserPreferences.getUid();
+    return FirebaseFirestore.instance
+        .collection("orders")
+        .doc(uid)
+        .collection("hoadon")
+        .snapshots();
+  }
+  // Hàm cập nhật trạng thái hóa đơn của đơn hàng
+  Future<void> updateOrderStatus(String documentId, String newStatus) async {
+    final uid = await UserPreferences.getUid();
+    await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(uid)
+        .collection("hoadon")
+        .doc(documentId)
+        .update({'status': newStatus});
+  }
+  //lấy uid
+  String? uidUser;
+  Future<void> _fetchUid() async {
+    final uid = await UserPreferences.getUid();
+    uidUser = uid;
+  }
   //cây lưu trữ giá trị màu, size, và thông tin sản phẩm
   Future<void> addColorSizeProduct(Products products, String size, String color,
       categoryRequiresSizeColor) async {

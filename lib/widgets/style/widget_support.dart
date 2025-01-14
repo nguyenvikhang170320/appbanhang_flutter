@@ -8,6 +8,23 @@ class AppWidget {
         fontWeight: FontWeight.bold,
         fontFamily: 'Poppins');
   }
+
+  static TextStyle billTextFeildStyle() {
+    return TextStyle(
+        color: Colors.red,
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Poppins');
+  }
+
+  static TextStyle userTextFeildStyle() {
+    return TextStyle(
+        color: Colors.blueAccent,
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Poppins');
+  }
+
   static TextStyle adminTextFeildStyle() {
     return TextStyle(
         color: Colors.redAccent,

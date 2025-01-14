@@ -63,10 +63,8 @@ class CartProvider extends ChangeNotifier {
         0, (total, item) => total + item.products.price * item.quantity);
   }
   //màu sắc
-  String _discountColor = ""; // Mặc định là 0% (không giảm giá)
-
+  String _discountColor = ""; //màu sắc mặc định trống
   String get discountColor => _discountColor;
-
   set discountColor(String newRate) {
     _discountColor = newRate;
     notifyListeners();

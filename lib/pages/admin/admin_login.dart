@@ -1,4 +1,4 @@
-import 'package:appbanhang/admin/home_admin.dart';
+import 'package:appbanhang/pages/admin/home_admin.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

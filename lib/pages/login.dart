@@ -1,4 +1,4 @@
-import 'package:appbanhang/admin/admin_login.dart';
+import 'package:appbanhang/pages/admin/admin_login.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/signup.dart';
 import 'package:appbanhang/pages/welcomepage.dart';

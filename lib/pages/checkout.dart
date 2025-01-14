@@ -74,7 +74,7 @@ class _CheckOutState extends State<CheckOut> {
 
           try {
             await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice, quantitys);
-            print('Thêm đơn hàng thành công');
+            print('Thanh toán đơn hàng thành công');
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,

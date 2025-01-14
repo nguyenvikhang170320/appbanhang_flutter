@@ -26,7 +26,8 @@ class UserProvider extends ChangeNotifier {
             phone: userData['phone'],
             isMale: userData['isMale'],
             accountstatus: userData['accountstatus'],
-            address: userData['address']);
+            address: userData['address'],
+            role: userData['role']);
 
         // Add the user to the internal list
         userModelList.add(user);
@@ -38,6 +39,7 @@ class UserProvider extends ChangeNotifier {
   List<Users> get getUserList{
     return userModelList;
   }
+
   void signOut() {
     userModelList.clear();
     print(userModelList);
@@ -90,5 +92,12 @@ class UserProvider extends ChangeNotifier {
       return ""; // Handle empty list case
     }
     return userModelList.first.accountstatus;// Get all emails
+  }
+  String getUidData () {
+    if (userModelList.isEmpty) {
+      return ""; // Handle empty list case
+    }
+    return  userModelList.fold(
+        "", (total, item) => item.uid); ;// Get all emails
   }
 }

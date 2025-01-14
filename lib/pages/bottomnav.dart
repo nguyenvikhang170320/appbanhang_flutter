@@ -1,10 +1,14 @@
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/homepages.dart';
-import 'package:appbanhang/pages/bill.dart';
+import 'package:appbanhang/pages/order.dart';
 import 'package:appbanhang/pages/profile.dart';
+import 'package:appbanhang/provider/userprovider.dart';
+import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -21,16 +25,19 @@ class _BottomNavState extends State<BottomNav> {
   late Profile profile;
   late Favorites favorites;
   late CheckOut checkOut;
-  late Bill bill;
+  late Order order;
 
   @override
   void initState() {
+    final user = Provider.of<UserProvider>(context, listen: false);
     home = HomePages();
     profile = Profile();
     favorites = Favorites();
     checkOut = CheckOut();
-    bill = Bill();
-    pages = [home, checkOut, bill, favorites, profile];
+    order = Order(
+      userId: user.getUidData(),
+    );
+    pages = [home, checkOut, order, favorites, profile];
     super.initState();
   }
 

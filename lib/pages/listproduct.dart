@@ -2,7 +2,6 @@ import 'package:appbanhang/model/products.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/search_product.dart';
-import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';

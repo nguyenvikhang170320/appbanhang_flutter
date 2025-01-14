@@ -6,6 +6,7 @@ import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
@@ -41,7 +42,7 @@ class _DetailPageState extends State<DetailPage> {
         setState(() {
           selectedColor = value!;
           Provider.of<CartProvider>(context, listen: false).discountColor =
-              value;
+              value; //kiểm tra màu người dùng chọn và lưu lại trạng thái
         });
         // Cập nhật mức giảm giá cho CartProvider
       },
@@ -163,6 +164,11 @@ class _DetailPageState extends State<DetailPage> {
 
   //tên sản phẩm and chữ mô tả
   Widget _buildNameAndDescription() {
+    //chuyển đổi giá trị tiền tệ
+    final locale = 'vi_VN';
+    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    formatter.maximumFractionDigits = 0;
+    String price = formatter.format(widget.products.price);
     return Container(
       height: 150,
       color: Colors.white,
@@ -172,17 +178,9 @@ class _DetailPageState extends State<DetailPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Text("Sản phẩm: "+widget.products.name, style: myStyle),
               Text(
-                "Sản phẩm",
-                style: myStyle,
-              ),
-              Text(widget.products.name, style: myStyle),
-              Text(
-                "Giá",
-                style: myStyle,
-              ),
-              Text(
-                "Giá: "+ widget.products.price.toString()+" đ",
+                "Giá: "+ price.toString(),
                 style: TextStyle(fontSize: 16, color: Colors.red),
               ),
               Text(

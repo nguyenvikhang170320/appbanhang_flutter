@@ -1,5 +1,4 @@
 import 'package:appbanhang/pages/login.dart';
-import 'package:appbanhang/pages/seller/signupseller.dart';
 import 'package:appbanhang/services/databasemethod.dart';
 import 'package:appbanhang/widgets/users/addresstextformfield.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
@@ -16,11 +15,11 @@ import 'package:flutter/widgets.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUpSeller extends StatefulWidget {
+  const SignUpSeller({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignUpSeller> createState() => _SignUpSellerState();
 }
 
 final RegExp emailRegExp = RegExp(
@@ -28,16 +27,18 @@ final RegExp emailRegExp = RegExp(
 
 bool isChecked = false;
 
-class _SignUpState extends State<SignUp> {
+class _SignUpSellerState extends State<SignUpSeller> {
   bool obserText = true;
   String email = "";
   String password = "";
   String name = "";
+  String shopName = "";
   String sdt = "";
   String address = "";
   bool isMale = true;
   String image = "";
   TextEditingController nameController = new TextEditingController();
+  TextEditingController shopNameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController phoneController = new TextEditingController();
@@ -55,6 +56,7 @@ class _SignUpState extends State<SignUp> {
         String IdUser = uid;
         Map<String, dynamic> addUserInfo = {
           "name": nameController.text,
+          "shopname": shopNameController.text,
           "email": emailController.text,
           "phone": phoneController.text,
           "isMale": isMale == true ? "Nam" : "Nữ",
@@ -62,7 +64,7 @@ class _SignUpState extends State<SignUp> {
           "address": addressController.text,
           "uid": IdUser,
           "image": image,
-          "role":"user",
+          "role":"seller",
         };
         // Lưu uid vào Cloud Firestore
         await DatabaseMethods().addUserDetail(addUserInfo, IdUser);
@@ -148,6 +150,24 @@ class _SignUpState extends State<SignUp> {
                   return "Vui lòng nhập tên, không được bỏ trống";
                 } else if (value.length < 3) {
                   return "Vui lòng nhập tên, tên bạn quá ngắn";
+                }
+                return null;
+              },
+            ),
+            NameTextFormField(
+              controllerUser:
+              shopNameController, //liên quan đến file mytextformfield.dart
+              name: "Nhập tên shop của bạn",
+              onChanged: (value) {
+                setState(() {
+                  shopName = value!;
+                });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Vui lòng nhập tên shop, không được bỏ trống";
+                } else if (value.length < 5) {
+                  return "Vui lòng nhập tên shop, tên bạn quá ngắn";
                 }
                 return null;
               },
@@ -289,14 +309,6 @@ class _SignUpState extends State<SignUp> {
             onTap: () {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (ctx) => Login()));
-            },
-          ),
-          ChangeScreen(
-            name: "Đăng ký",
-            whichAccount: "Bạn là người bán!!",
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (ctx) => SignUpSeller()));
             },
           ),
         ],
