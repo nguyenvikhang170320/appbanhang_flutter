@@ -1,8 +1,7 @@
-import 'package:appbanhang/model/users.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/provider/productprovider.dart';
 import 'package:appbanhang/provider/userprovider.dart';
-import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,7 +85,14 @@ class _OrderState extends State<Order> {
                         NumberFormat.currency(name: "đ", locale: locale);
                     formatter.maximumFractionDigits = 0;
                     String price = formatter.format(ds["totalAmount"]);
+                    //ngày giờ
+                    Timestamp timestamp = ds["createdAt"]; // Lấy từ Firebase hoặc nguồn khác
+                    int timestamps = timestamp.seconds;
+                    final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamps * 1000);
+                    final formatters = DateFormat('dd/MM/yyyy HH:mm:ss');
+                    final formattedDate = formatters.format(dateTime);
 
+                    //liên kết nhiều tên sản phẩm
                     StringBuffer productName = StringBuffer();
                     String productDes = "";
                     String productCategory = "";
@@ -105,6 +111,9 @@ class _OrderState extends State<Order> {
                     allProductNames = allProductNames.substring(
                         0, allProductNames.length - 2);
                     print('Các sản phẩm: $allProductNames');
+
+
+
                     return Container(
                       margin: EdgeInsets.all(10),
                       child: Material(
@@ -132,6 +141,14 @@ class _OrderState extends State<Order> {
                                 ],
                               ),
                               SizedBox(height: 10.0),
+                              Row(
+                                children: [
+                                  Text("Mã Hóa đơn:",
+                                      style: AppWidget.boldTextFeildStyle()),
+                                  Text(ds["maHD"],
+                                      style: TextStyle(fontSize: 14.0)),
+                                ],
+                              ),
                               // Product details
                               Row(
                                 children: [
@@ -152,9 +169,7 @@ class _OrderState extends State<Order> {
                                       style: AppWidget.billTextFeildStyle()),
                                 ],
                               ),
-
                               SizedBox(height: 5.0),
-
                               Row(
                                 children: [
                                   Text("Số lượng:",
@@ -163,9 +178,16 @@ class _OrderState extends State<Order> {
                                       style: AppWidget.billTextFeildStyle()),
                                 ],
                               ),
-
                               SizedBox(height: 5.0),
-
+                              Row(
+                                children: [
+                                  Text("Thời gian đặt hàng:",
+                                      style: AppWidget.boldTextFeildStyle()),
+                                  Text(formattedDate.toString(),
+                                      style: AppWidget.billTextFeildStyle()),
+                                ],
+                              ),
+                              SizedBox(height: 5.0),
                               // Customer details
                               Text("Thông tin khách hàng:",
                                   style: AppWidget.boldTextFeildStyle()),

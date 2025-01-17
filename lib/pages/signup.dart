@@ -1,6 +1,5 @@
 import 'package:appbanhang/pages/login.dart';
-import 'package:appbanhang/pages/seller/signupseller.dart';
-import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/users/addresstextformfield.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:appbanhang/widgets/users/mybuttonuser.dart';
@@ -291,14 +290,14 @@ class _SignUpState extends State<SignUp> {
                   MaterialPageRoute(builder: (ctx) => Login()));
             },
           ),
-          ChangeScreen(
-            name: "Đăng ký",
-            whichAccount: "Bạn là người bán!!",
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (ctx) => SignUpSeller()));
-            },
-          ),
+          // ChangeScreen(
+          //   name: "Đăng ký",
+          //   whichAccount: "Bạn là người bán!!",
+          //   onTap: () {
+          //     Navigator.of(context).pushReplacement(
+          //         MaterialPageRoute(builder: (ctx) => SignUpSeller()));
+          //   },
+          // ),
         ],
       ),
     );

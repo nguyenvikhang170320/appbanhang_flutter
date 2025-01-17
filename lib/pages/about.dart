@@ -1,5 +1,5 @@
-import 'package:appbanhang/pages/bottomnav.dart';
-import 'package:appbanhang/services/dieukhoanvachinhsachbaomat/service.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/services/dieukhoanvachinhsachbaomat/loadasset.dart';
 import 'package:flutter/material.dart';
 
 class About extends StatelessWidget {
@@ -19,7 +19,7 @@ class About extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (ctx) => BottomNav(),
+                builder: (ctx) => WelcomePage(),
               ),
             );
           },
@@ -27,7 +27,7 @@ class About extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-            future: Service().loadAsset(),
+            future: LoadAsset().loadAsset(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Text(snapshot.data!);

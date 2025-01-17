@@ -1,9 +1,9 @@
+import 'package:appbanhang/pages/about.dart';
 import 'package:appbanhang/pages/login.dart';
 import 'package:appbanhang/pages/signup.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:toasty_box/toast_enums.dart';
-import 'package:toasty_box/toast_service.dart';
+import 'package:flutter/widgets.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -48,7 +48,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     color: Colors.black),
               ),
               Container(
-                height: 200,
+                height: 300,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -73,27 +73,28 @@ class _WelcomePageState extends State<WelcomePage> {
                         child: Text('Đăng ký'),
                       ),
                     ),
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Bạn đã có tài khoản?"),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
+                        ChangeScreen(
+                          name: "Đăng nhập",
+                          whichAccount: "Bạn đã có tài khoản?",
                           onTap: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Login()));
+                            isChecked = false;
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (ctx) => Login()));
                           },
-                          child: Text(
-                            "Đăng nhập",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Text("Chính sách điều khoản và Quyền riêng tư bảo mật của chúng tôi dành cho bạn!!Bấm xem bên dưới nhá", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        SizedBox(height: 10,),
+                        ChangeScreen(
+                          name: "Bấm xem",
+                          whichAccount: "Điều khoản app và bảo mật",
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (ctx) => About()));
+                          },
                         ),
                       ],
                     ),

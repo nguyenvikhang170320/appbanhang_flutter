@@ -1,5 +1,5 @@
 import 'package:appbanhang/pages/bottomnav.dart';
-import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/pages/onboard.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, snapShot) =>
-              snapShot.hasData ? BottomNav() : WelcomePage(),
+              snapShot.hasData ? BottomNav() : Onboard(),
         ),
       ),
     );

@@ -4,8 +4,6 @@ import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/order.dart';
 import 'package:appbanhang/pages/profile.dart';
 import 'package:appbanhang/provider/userprovider.dart';
-import 'package:appbanhang/services/databasemethod.dart';
-import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

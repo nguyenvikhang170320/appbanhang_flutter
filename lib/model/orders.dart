@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Orders{
   final String idCart;
-  final String createAt;
+  final Timestamp createAt;
   final int soluongdadat;
   final Products products;
   final String status;

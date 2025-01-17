@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 
 class CarouselView extends StatelessWidget {
   final List<String> imageList = [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7FLN0H9DhNFztJl8WFIdGlPrxNCU43RMrSA&s",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnLT3cQFDm_FRe_jhZF1cTj0Eg0LCQ0u6nDQ&s",
-    "https://www.ansto.gov.au/sites/default/files/styles/hero_image/public/hero-images/Healthy%20food.jpg?h=10d202d3&itok=d0dHqxZq"
+    "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fappbanhang1.jpg?alt=media&token=ec09f148-480b-4b01-a73f-b8cfaff45d00",
+    "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fappbanhang2.jpg?alt=media&token=4b3f75d7-6ba0-4082-9da1-9796d0bc840b",
+    "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fappbanhang.png?alt=media&token=4696c94f-b564-436f-8507-90bd932aba51",
+    "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fapp-ban-hang.png?alt=media&token=ffd9614b-c1b4-49cc-a2b0-c8f22b932d6f",
+    "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fapp-ban-hang-online.png?alt=media&token=7257b28f-3f18-42c7-b2a3-d21478244c75",
+    "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fabout.jpg?alt=media&token=f41ef007-9993-45a5-8796-2545730d8adc"
   ];
   @override
   Widget build(BuildContext context) {

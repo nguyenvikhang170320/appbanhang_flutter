@@ -2,7 +2,6 @@ import 'package:appbanhang/pages/admin/admin_login.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/signup.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
-import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:appbanhang/widgets/users/mybuttonuser.dart';
 import 'package:appbanhang/widgets/users/emailtextformfield.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
@@ -200,11 +198,20 @@ class _LoginState extends State<Login> {
           ),
           ChangeScreen(
             name: "Đăng nhập",
-            whichAccount: "Bạn là người bán?",
+            whichAccount: "Bạn là quản trị viên?",
             onTap: () {
               isChecked = false;
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (ctx) => AdminLogin()));
+            },
+          ),
+          ChangeScreen(
+            name: "Welcome",
+            whichAccount: "Bạn muốn quay về trang trước?",
+            onTap: () {
+              isChecked = false;
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => WelcomePage()));
             },
           ),
         ],

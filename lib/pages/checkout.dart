@@ -1,9 +1,8 @@
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
-import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
-import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

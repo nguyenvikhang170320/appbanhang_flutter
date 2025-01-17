@@ -1,9 +1,7 @@
-import 'package:appbanhang/pages/about.dart';
+import 'package:appbanhang/pages/admin/admin_login.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
-import 'package:appbanhang/pages/chats.dart';
-import 'package:appbanhang/pages/checkout.dart';
+// import 'package:appbanhang/pages/chats.dart';
 import 'package:appbanhang/pages/contactus.dart';
-import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/provider/userprovider.dart';
@@ -185,50 +183,6 @@ class _HomePagesState extends State<HomePages> {
           ),
           ListTile(
             onTap: () {
-              //thẻ ngân hàng
-              setState(() {
-                homeColor = false;
-                cartColor = false;
-                billColor = false;
-                doanhthuColor = false;
-                walletColor = true;
-                aboutColor = false;
-                callColor = false;
-              });
-              ToastService.showToast(context,
-                  length: ToastLength.medium,
-                  expandedHeight: 100,
-                  message: "Chức năng đang phát triển");
-            },
-            title: Text("Thẻ ngân hàng"),
-            leading: Icon(Icons.add_card),
-            selected: walletColor,
-          ),
-          ListTile(
-            onTap: () {
-              //thông tin
-              setState(() {
-                homeColor = false;
-                cartColor = false;
-                billColor = false;
-                doanhthuColor = false;
-                walletColor = false;
-                aboutColor = true;
-                callColor = false;
-              });
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (ctx) => About(),
-                ),
-              );
-            },
-            title: Text(
-                "Điều khoản sử dụng ứng dụng và dịch vụ và Chính sách bảo mật"),
-            leading: Icon(Icons.info),
-            selected: aboutColor,
-          ),
-          ListTile(
-            onTap: () {
               //gọi điện
               setState(() {
                 homeColor = false;
@@ -248,11 +202,37 @@ class _HomePagesState extends State<HomePages> {
           ),
           ListTile(
             onTap: () {
+              //thông tin
+              setState(() {
+                homeColor = false;
+                cartColor = false;
+                billColor = false;
+                doanhthuColor = false;
+                walletColor = false;
+                aboutColor = true;
+                callColor = false;
+              });
+              // Navigator.of(context).pushReplacement(
+              //   MaterialPageRoute(
+              //     builder: (ctx) => AdminLogin(),
+              //   ),
+              // );
+              ToastService.showToast(context,
+                  length: ToastLength.medium,
+                  expandedHeight: 100,
+                  message: "Chức năng đang phát triển");
+            },
+            title: Text(
+                "Chức năng"),
+            leading: Icon(Icons.info),
+            selected: aboutColor,
+          ),
+          ListTile(
+            onTap: () {
               //đăng xuất
               authMethods.SignOut();
               //xóa sạch provider
               userProvider.signOut();
-              setState(() {});
               //show thông báo dạng toasty
               ToastService.showSuccessToast(context,
                   length: ToastLength.medium,

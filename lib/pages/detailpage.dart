@@ -2,7 +2,7 @@ import 'package:appbanhang/model/colorsize.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/checkout.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
-import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

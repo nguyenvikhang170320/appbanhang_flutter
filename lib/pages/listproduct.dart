@@ -3,7 +3,7 @@ import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/detailpage.dart';
 import 'package:appbanhang/pages/search_product.dart';
 import 'package:appbanhang/provider/productprovider.dart';
-import 'package:appbanhang/services/databasemethod.dart';
+import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

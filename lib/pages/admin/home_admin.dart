@@ -18,7 +18,6 @@ class HomeAdmin extends StatefulWidget {
 class _HomeAdminState extends State<HomeAdmin> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       body: Container(
         margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
@@ -38,7 +37,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OrderSeller(userId: user.getUidData(),),),);
+                        builder: (context) => OrderSeller(),),);
               },
               child: Material(
                 elevation: 10.0,
@@ -77,7 +76,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 ),
               ),
             ),
-           SizedBox(height: 5,),
+           SizedBox(height: 10,),
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
@@ -166,7 +165,7 @@ class _HomeAdminState extends State<HomeAdmin> {
               ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 10.0,
             ),
             GestureDetector(
               onTap: () {

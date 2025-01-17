@@ -15,7 +15,7 @@ class ChangeScreen extends StatelessWidget {
       children: [
         Text(
           whichAccount,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18,),
         ),
         const SizedBox(
           width: 10,

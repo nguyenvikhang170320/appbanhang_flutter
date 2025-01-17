@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/services/onboard/content_model.dart';
+import 'package:appbanhang/widgets/style/widget_support.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:foodappbasic/pages/signup.dart';
-import 'package:foodappbasic/widgets/content_model.dart';
-import 'package:foodappbasic/widgets/widget_support.dart';
+
 
 class Onboard extends StatefulWidget {
   const Onboard({super.key});
@@ -87,7 +86,7 @@ class _OnboardState extends State<Onboard> {
             onTap: () {
               if (currentIndex == contents.length - 1) {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => SignUp()));
+                    context, MaterialPageRoute(builder: (context) => WelcomePage()));
               }
               _controller.nextPage(
                   duration: Duration(milliseconds: 100),
@@ -101,7 +100,7 @@ class _OnboardState extends State<Onboard> {
               width: double.infinity,
               child: Center(
                 child: Text(
-                  currentIndex == contents.length - 1 ? "Start" : "Next",
+                  currentIndex == contents.length - 1 ? "Bắt đầu" : "Tiếp tục",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

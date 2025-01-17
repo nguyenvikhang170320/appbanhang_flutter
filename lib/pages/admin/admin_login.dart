@@ -1,5 +1,9 @@
 import 'package:appbanhang/pages/admin/home_admin.dart';
+import 'package:appbanhang/pages/signup.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
+import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
+import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -18,56 +22,52 @@ class _AdminLoginState extends State<AdminLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              //chuyển màn hình
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => WelcomePage()));
+            },
+            child: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: Color(0xFF373866),
+            )),
+        centerTitle: true,
+        title: Text(
+          "Trang Quản trị viên",
+          style: AppWidget.HeadlineTextFeildStyle(),
+        ),
+      ),
       backgroundColor: Color(0xFFededeb),
       body: Container(
         child: Stack(
           children: [
+
             Container(
-              margin:
-                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 2),
-              padding: EdgeInsets.only(top: 45.0, left: 20.0, right: 20.0),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Color.fromARGB(255, 53, 51, 51), Colors.black],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight),
-                  borderRadius: BorderRadius.vertical(
-                      top: Radius.elliptical(
-                          MediaQuery.of(context).size.width, 110.0))),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 60.0),
+              margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0, bottom: 20),
               child: Form(
                   key: _formkey,
                   child: Column(
-                    children: [
 
-                      Text(
-                        "Người dùng quản trị",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold),
-                      ),
+                    children: [
+                    Text(
+                  "Chú ý: Nếu bạn là người dùng app hoặc người bán hàng bạn không dùng được chức năng này!!Bạn vui lòng liên hệ admin để có tài khoản đăng nhập? SĐT 0855792196",
+                  style: TextStyle(fontSize: 16,color: Colors.red, fontWeight: FontWeight.bold)),
                       SizedBox(
-                        height: 30.0,
+                        height: 50.0,
                       ),
                       Material(
                         elevation: 3.0,
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 2.2,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                          height: 280,
                           child: Column(
                             children: [
                               SizedBox(
                                 height: 50.0,
                               ),
+
                               Container(
                                 padding: EdgeInsets.only(
                                     left: 20.0, top: 5.0, bottom: 5.0),
@@ -95,7 +95,7 @@ class _AdminLoginState extends State<AdminLogin> {
                                 ),
                               ),
                               SizedBox(
-                                height: 40.0,
+                                height: 20.0,
                               ),
                               Container(
                                 padding: EdgeInsets.only(
@@ -123,9 +123,8 @@ class _AdminLoginState extends State<AdminLogin> {
                                   ),
                                 ),
                               ),
-
                               SizedBox(
-                                height: 40.0,
+                                height: 20.0,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -155,18 +154,22 @@ class _AdminLoginState extends State<AdminLogin> {
                         ),
                       ),
                     ],
-                  )),
-            )
+                  ),),
+              ),
           ],
         ),
+
       ),
     );
   }
 
-  LoginAdmin() {
+  LoginAdmin(){
+    String? userId;
     FirebaseFirestore.instance.collection("admin").get().then((snapshot) {
       snapshot.docs.forEach((result) {
         if (result.data()['id'] != usernamecontroller.text.trim()) {
+          userId = result.data()['id'];
+          print(userId);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.orangeAccent,
               content: Text(

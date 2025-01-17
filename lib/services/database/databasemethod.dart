@@ -100,35 +100,25 @@ class DatabaseMethods {
         .where('Category', isEqualTo: category)
         .snapshots();
   }
-  // lấy hóa đơn theo uid người dùng
-  Future<Stream<QuerySnapshot>> fetchOrders(String userId) async {
-    final uid = await UserPreferences.getUid();
-    // Replace with your actual logic to fetch product stream from Firebase
-    return FirebaseFirestore.instance
-        .collection("orders")
-        .doc(uid)
-        .collection("giohang")
-        .where('userId', isEqualTo: userId)
-        .snapshots();
-  }
   //tạo hóa đơn
   Future<DocumentReference> addOrder(
       List<Products> products, double totalPrice, int quantitys) async {
     final uid = await UserPreferences.getUid();
     try {
-      String maHD = randomAlphaNumeric(10);
+      String maHD = randomAlphaNumeric(5);
 
       // Tạo một tài liệu mới trong collection "orders"
       DocumentReference orderRef = await FirebaseFirestore.instance
-          .collection('orders')
-          .doc(uid)
-          .collection('hoadon')
+          .collection("orders")
+          .doc("hoadon")
+          .collection(uid!)
           .add({
         'userId': uid,
         'totalAmount': totalPrice,
         'soluongdadat': quantitys,
         'createdAt': FieldValue.serverTimestamp(),
-        'status': 'chưa thanh toán',
+        'updateAt': Timestamp.now(), // dùng admin khi mình chỉnh sửa status
+        'status': "Đã thanh toán",
         'maHD': maHD,
       });
       // id tự sinh ra khi tạo cơ sở dữ liệu
@@ -158,8 +148,8 @@ class DatabaseMethods {
     final uid = await UserPreferences.getUid();
     return FirebaseFirestore.instance
         .collection("orders")
-        .doc(uid)
-        .collection("hoadon")
+        .doc("hoadon")
+        .collection(uid!)
         .snapshots();
   }
 
@@ -170,22 +160,7 @@ class DatabaseMethods {
         .collection("orders")
         .snapshots();
   }
-  // Hàm cập nhật trạng thái hóa đơn của đơn hàng
-  Future<void> updateOrderStatus(String documentId, String newStatus) async {
-    final uid = await UserPreferences.getUid();
-    await FirebaseFirestore.instance
-        .collection('orders')
-        .doc(uid)
-        .collection("hoadon")
-        .doc(documentId)
-        .update({'status': newStatus});
-  }
-  //lấy uid
-  String? uidUser;
-  Future<void> _fetchUid() async {
-    final uid = await UserPreferences.getUid();
-    uidUser = uid;
-  }
+
   //cây lưu trữ giá trị màu, size, và thông tin sản phẩm
   Future<void> addColorSizeProduct(Products products, String size, String color,
       categoryRequiresSizeColor) async {
@@ -197,6 +172,7 @@ class DatabaseMethods {
         'size': size,
         'color': color,
         'categoryRequiresSizeColor': categoryRequiresSizeColor,
+        'timestamp': Timestamp.now(),
         'productId': products.idProduct,
         'productName': products.name,
         'productPrice': products.price,
@@ -240,22 +216,22 @@ class DatabaseMethods {
   }
 
   //thẻ ngân hàng
-  Future<void> UpdateUserwallet(String id, String amount) async {
-    final idUser = await UserPreferences.getUid();
-    try {
-      DocumentReference userWallet =
-      await FirebaseFirestore.instance.collection('wallet').add({
-        'uidUser': idUser,
-        'amount': amount,
-      });
-      String idCart = userWallet.id;
-      userWallet.update({'id': idCart});
-
-      print('Thêm thanh toán ngân hàng thành công');
-      // id tự sinh ra khi tạo cơ sở dữ liệu
-    } catch (e) {
-      print('Lỗi khi thêm thanh toán ngân hàng: $e');
-    }
-
-  }
+  // Future<void> UpdateUserwallet(String id, String amount) async {
+  //   final idUser = await UserPreferences.getUid();
+  //   try {
+  //     DocumentReference userWallet =
+  //     await FirebaseFirestore.instance.collection('wallets').add({
+  //       'uidUser': idUser,
+  //       'amount': amount,
+  //     });
+  //     String idCart = userWallet.id;
+  //     userWallet.update({'id': idCart});
+  //
+  //     print('Thêm thanh toán ngân hàng thành công');
+  //     // id tự sinh ra khi tạo cơ sở dữ liệu
+  //   } catch (e) {
+  //     print('Lỗi khi thêm thanh toán ngân hàng: $e');
+  //   }
+  //
+  // }
 }
