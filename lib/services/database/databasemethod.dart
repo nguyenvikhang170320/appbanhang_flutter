@@ -153,13 +153,21 @@ class DatabaseMethods {
       rethrow;
     }
   }
-  //load hóa đơn
+  //load hóa đơn theo người dùng
   Future<Stream<QuerySnapshot>> getHoaDonStream() async {
     final uid = await UserPreferences.getUid();
     return FirebaseFirestore.instance
         .collection("orders")
         .doc(uid)
         .collection("hoadon")
+        .snapshots();
+  }
+
+
+  //load tất cả hóa đơn
+  Future<Stream<QuerySnapshot>> getAllHoaDonStream() async {
+    return FirebaseFirestore.instance
+        .collection("orders")
         .snapshots();
   }
   // Hàm cập nhật trạng thái hóa đơn của đơn hàng
@@ -229,5 +237,25 @@ class DatabaseMethods {
     return querySnapshot.docs
         .map((doc) => Products.fromFirestore(doc))
         .toList();
+  }
+
+  //thẻ ngân hàng
+  Future<void> UpdateUserwallet(String id, String amount) async {
+    final idUser = await UserPreferences.getUid();
+    try {
+      DocumentReference userWallet =
+      await FirebaseFirestore.instance.collection('wallet').add({
+        'uidUser': idUser,
+        'amount': amount,
+      });
+      String idCart = userWallet.id;
+      userWallet.update({'id': idCart});
+
+      print('Thêm thanh toán ngân hàng thành công');
+      // id tự sinh ra khi tạo cơ sở dữ liệu
+    } catch (e) {
+      print('Lỗi khi thêm thanh toán ngân hàng: $e');
+    }
+
   }
 }
