@@ -61,7 +61,7 @@ class _SignUpState extends State<SignUp> {
           "address": addressController.text,
           "uid": IdUser,
           "image": image,
-          "role":"user",
+          "role": "user",
         };
         // Lưu uid vào Cloud Firestore
         await DatabaseMethods().addUserDetail(addUserInfo, IdUser);
@@ -135,7 +135,7 @@ class _SignUpState extends State<SignUp> {
           children: [
             NameTextFormField(
               controllerUser:
-              nameController, //liên quan đến file mytextformfield.dart
+                  nameController, //liên quan đến file mytextformfield.dart
               name: "Nhập tên hoặc họ và tên",
               onChanged: (value) {
                 setState(() {
@@ -153,7 +153,7 @@ class _SignUpState extends State<SignUp> {
             ),
             EmailTextFormField(
               controllerUser:
-              emailController, //liên quan đến file mytextformfield.dart
+                  emailController, //liên quan đến file mytextformfield.dart
               name: "Nhập email",
               onChanged: (value) {
                 setState(() {
@@ -193,7 +193,7 @@ class _SignUpState extends State<SignUp> {
             ),
             PhoneTextFormField(
               controllerUser:
-              phoneController, //liên quan đến file mytextformfield.dart
+                  phoneController, //liên quan đến file mytextformfield.dart
               name: "Nhập SĐT",
               onChanged: (value) {
                 setState(() {
@@ -211,7 +211,7 @@ class _SignUpState extends State<SignUp> {
             ),
             AddressTextFormField(
               controllerUser:
-              addressController, //liên quan đến file mytextformfield.dart
+                  addressController, //liên quan đến file mytextformfield.dart
               name: "Nhập địa chỉ",
               onChanged: (value) {
                 setState(() {
@@ -231,25 +231,24 @@ class _SignUpState extends State<SignUp> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
-                        "Giới tính",
-                        style: AppWidget.semiBoolTextFeildStyle(),
-                      ),
-                      DropdownButton<bool>(
-                        value: isMale,
-                        onChanged: (value) {
-                          setState(() {
-                            isMale = value!;
-                          });
-                          // Cập nhật mức giảm giá cho CartProvider
-                        },
-                        items: [
-                          DropdownMenuItem(value: true, child: Text('Nam')),
-                          DropdownMenuItem(value: false, child: Text('Nữ')),
-                        ],
-                      ),
-                    ])),
-
+                  Text(
+                    "Giới tính",
+                    style: AppWidget.semiBoolTextFeildStyle(),
+                  ),
+                  DropdownButton<bool>(
+                    value: isMale,
+                    onChanged: (value) {
+                      setState(() {
+                        isMale = value!;
+                      });
+                      // Cập nhật mức giảm giá cho CartProvider
+                    },
+                    items: [
+                      DropdownMenuItem(value: true, child: Text('Nam')),
+                      DropdownMenuItem(value: false, child: Text('Nữ')),
+                    ],
+                  ),
+                ])),
           ],
         ),
       ),
@@ -307,45 +306,49 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                    Color.fromARGB(255, 226, 58, 11),
-                    Color.fromARGB(255, 231, 109, 75),
-                  ])),
-            ),
-            Container(
-              child: Form(
-                key: formState,
-                child: Container(
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Image.asset(
-                          "assets/images/logo.png",
-                          width: MediaQuery.of(context).size.width / 1.5,
-                          fit: BoxFit.cover,
-                        ),
+      body: ListView(
+        children: <Widget>[
+          SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 2,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                        Color.fromARGB(255, 226, 58, 11),
+                        Color.fromARGB(255, 231, 109, 75),
+                      ])),
+                ),
+                Container(
+                  child: Form(
+                    key: formState,
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/images/logo.png",
+                              width: MediaQuery.of(context).size.width / 1.5,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          _buildBottomPart(),
+                        ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildBottomPart(),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

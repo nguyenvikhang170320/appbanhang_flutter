@@ -1,6 +1,4 @@
-import 'package:appbanhang/model/colorsize.dart';
 import 'package:appbanhang/model/products.dart';
-import 'package:flutter/material.dart';
 
 class CartItem {
   final Products products;
