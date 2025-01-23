@@ -3,6 +3,7 @@ import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/order.dart';
 import 'package:appbanhang/pages/profile.dart';
+import 'package:appbanhang/pages/revenue.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _BottomNavState extends State<BottomNav> {
   late Widget currentPage;
   late HomePages home;
   late Profile profile;
-  late Favorites favorites;
+  late Revenue revenue;
   late CheckOut checkOut;
   late Order order;
 
@@ -30,12 +31,12 @@ class _BottomNavState extends State<BottomNav> {
     final user = Provider.of<UserProvider>(context, listen: false);
     home = HomePages();
     profile = Profile();
-    favorites = Favorites();
+    revenue = Revenue();
     checkOut = CheckOut();
     order = Order(
       userId: user.getUidData(),
     );
-    pages = [home, checkOut, order, favorites, profile];
+    pages = [home, checkOut, order, revenue, profile];
     super.initState();
   }
 
