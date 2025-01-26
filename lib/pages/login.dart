@@ -1,4 +1,3 @@
-import 'package:appbanhang/pages/admin/admin_login.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/signup.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
@@ -194,15 +193,6 @@ class _LoginState extends State<Login> {
               isChecked = false;
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (ctx) => SignUp()));
-            },
-          ),
-          ChangeScreen(
-            name: "Đăng nhập",
-            whichAccount: "Bạn là quản trị viên?",
-            onTap: () {
-              isChecked = false;
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (ctx) => AdminLogin()));
             },
           ),
           ChangeScreen(

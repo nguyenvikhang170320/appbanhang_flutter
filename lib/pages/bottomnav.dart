@@ -1,9 +1,8 @@
+import 'package:appbanhang/pages/admin/admin_login.dart';
 import 'package:appbanhang/pages/checkout.dart';
-import 'package:appbanhang/pages/favorites.dart';
 import 'package:appbanhang/pages/homepages.dart';
 import 'package:appbanhang/pages/order.dart';
 import 'package:appbanhang/pages/profile.dart';
-import 'package:appbanhang/pages/revenue.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class _BottomNavState extends State<BottomNav> {
   late Widget currentPage;
   late HomePages home;
   late Profile profile;
-  late Revenue revenue;
+  late AdminLogin adminLogin;
   late CheckOut checkOut;
   late Order order;
 
@@ -31,12 +30,12 @@ class _BottomNavState extends State<BottomNav> {
     final user = Provider.of<UserProvider>(context, listen: false);
     home = HomePages();
     profile = Profile();
-    revenue = Revenue();
+    adminLogin = AdminLogin();
     checkOut = CheckOut();
     order = Order(
-      userId: user.getUidData(),
+      // userId: user.getUidData(),
     );
-    pages = [home, checkOut, order, revenue, profile];
+    pages = [home, checkOut, order,  profile, adminLogin,];
     super.initState();
   }
 
@@ -71,12 +70,12 @@ class _BottomNavState extends State<BottomNav> {
               color: Colors.black,
             ),
             Icon(
-              Icons.favorite_border_outlined,
+              Icons.person_outlined,
               size: 30,
               color: Colors.black,
             ),
             Icon(
-              Icons.person_outlined,
+              Icons.admin_panel_settings_rounded,
               size: 30,
               color: Colors.black,
             ),

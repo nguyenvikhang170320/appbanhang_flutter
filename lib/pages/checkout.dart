@@ -2,6 +2,7 @@ import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/listproduct.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
+import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,14 +66,27 @@ class _CheckOutState extends State<CheckOut> {
           // print(listProducts);
           final cartProvider = Provider.of<CartProvider>(context, listen: false);
           final productProvider = Provider.of<ProductProvider>(context, listen: false);
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
           double totalPrice = cartProvider.calculateTotalPrice();
           print(totalPrice);
+          String reduce = cartProvider.discounts();
+          print(reduce);
+          double ship = cartProvider.ship();
+          print(ship);
           int quantitys = cartProvider.quantitys;
           print(quantitys);
+          String name = userProvider.getNameData();
+          print(name);
+          String email = userProvider.getEmailData();
+          print(email);
+          String sdt = userProvider.getPhoneData();
+          print(sdt);
+          String address = userProvider.getAddressData();
+          print(address);
 
 
           try {
-            await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice, quantitys);
+            await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice, quantitys, reduce,ship,name, email, sdt, address);
             print('Thanh toán đơn hàng thành công');
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,

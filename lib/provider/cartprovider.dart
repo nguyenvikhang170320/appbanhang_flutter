@@ -37,7 +37,7 @@ class CartProvider extends ChangeNotifier {
 //format tổng tiền ban đầu về VNĐ
   String get formattedPrice {
     final locale = 'vi_VN';
-    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    final formatter = NumberFormat.currency(name: "đ", locale: locale);
     formatter.maximumFractionDigits = 0;
     return formatter.format(subTotalPrice);
   }
@@ -45,22 +45,24 @@ class CartProvider extends ChangeNotifier {
   //format tong tien về VNĐ
   String get formattedTotalPrice {
     final locale = 'vi_VN';
-    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    final formatter = NumberFormat.currency(name: "đ", locale: locale);
     formatter.maximumFractionDigits = 0;
     return formatter.format(totalPrice);
   }
-
-  String get formattedShip{
+  //phí vận chuyển về VNĐ
+  String get formattedShip {
     final locale = 'vi_VN';
-    final formatter = NumberFormat.currency(name:"đ",locale: locale);
+    final formatter = NumberFormat.currency(name: "đ", locale: locale);
     formatter.maximumFractionDigits = 0;
     return formatter.format(shipCode);
   }
+
   //tổng tiền ban đầu
   double get subTotalPrice {
     return _items.fold(
         0, (total, item) => total + item.products.price * item.quantity);
   }
+
   //màu sắc
   String _discountColor = ""; //màu sắc mặc định trống
   String get discountColor => _discountColor;
@@ -68,25 +70,30 @@ class CartProvider extends ChangeNotifier {
     _discountColor = newRate;
     notifyListeners();
   }
+
   // lấy giảm giá bao nhiêu %
   double get discount {
-    if (subTotalPrice <= 50000) {
+    if (subTotalPrice <= 25000) {
       return 0;
-    } else if (subTotalPrice > 50000 && subTotalPrice <= 100000) {
-      return subTotalPrice * 0.02; // Giảm 2%
-    } else if (subTotalPrice> 100000 && subTotalPrice <= 1000000) {
+    } else if (subTotalPrice > 25000 && subTotalPrice <= 45000) {
       return subTotalPrice * 0.05; // Giảm 5%
     } else {
       return subTotalPrice * 0.1; // Giảm 10%
     }
   }
+
   String get discountPercentage {
-    if (subTotalPrice <= 50000) {
+    if (subTotalPrice <= 10000) {
       return '0%'; // No discount
     } else {
       NumberFormat percentFormat = NumberFormat.percentPattern();
       return percentFormat.format(discount / subTotalPrice);
     }
+  }
+
+  //% giá giảm để truyền giá trị qua trang hóa đơn
+  String discounts(){
+    return discountPercentage;
   }
 
   //số lượng đã đặt tất cả sản phẩm
@@ -100,6 +107,7 @@ class CartProvider extends ChangeNotifier {
     final discount = this.discount;
     return subTotal - discount + shipCode;
   }
+
   //tổng tiền để truyền giá trị qua trang hóa đơn
   double calculateTotalPrice() {
     return subTotalPrice - discount + shipCode;
@@ -107,15 +115,18 @@ class CartProvider extends ChangeNotifier {
 
   //phí vận chuyển
   double get shipCode {
-    if (subTotalPrice == 0){
+    if (subTotalPrice == 0) {
       return 0;
-    }else if (subTotalPrice <= 50000) {
+    } else if (subTotalPrice <= 15000) {
+      return 2000;
+    } else if (subTotalPrice > 15000 && subTotalPrice <= 50000) {
       return 5000;
-    }else if (subTotalPrice > 50000 && subTotalPrice <= 200000) {
-      return 10000;
     } else {
-      return 20000;
+      return 7000;
     }
   }
-
+  //phí vận chuyển để truyền giá trị qua trang hóa đơn
+  double ship(){
+    return shipCode;
+  }
 }

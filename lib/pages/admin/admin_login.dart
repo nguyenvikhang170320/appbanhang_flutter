@@ -1,9 +1,6 @@
 import 'package:appbanhang/pages/admin/home_admin.dart';
-import 'package:appbanhang/pages/signup.dart';
-import 'package:appbanhang/pages/welcomepage.dart';
-import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
+import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
-import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +24,7 @@ class _AdminLoginState extends State<AdminLogin> {
             onTap: () {
               //chuyển màn hình
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => WelcomePage()));
+                  context, MaterialPageRoute(builder: (context) => BottomNav()));
             },
             child: Icon(
               Icons.arrow_back_ios_new_outlined,
@@ -35,7 +32,7 @@ class _AdminLoginState extends State<AdminLogin> {
             )),
         centerTitle: true,
         title: Text(
-          "Trang Quản trị viên",
+          "Đăng nhập Admin",
           style: AppWidget.HeadlineTextFeildStyle(),
         ),
       ),
@@ -52,7 +49,7 @@ class _AdminLoginState extends State<AdminLogin> {
 
                     children: [
                     Text(
-                  "Chú ý: Nếu bạn là người dùng app hoặc người bán hàng bạn không dùng được chức năng này!!Bạn vui lòng liên hệ admin để có tài khoản đăng nhập? SĐT 0855792196",
+                  "Chú ý: Nếu bạn là người dùng app hoặc người bán hàng bạn không dùng được chức năng này!!Bạn vui lòng liên hệ admin để có tài khoản đăng nhập? SĐT 0939570046",
                   style: TextStyle(fontSize: 16,color: Colors.red, fontWeight: FontWeight.bold)),
                       SizedBox(
                         height: 50.0,

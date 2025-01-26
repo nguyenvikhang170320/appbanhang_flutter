@@ -13,13 +13,13 @@ class DatabaseMethods {
         .set(userInfoMap);
   }
 
-  String idProduct = "ZaVWCFmxoVVRyj51jaRC";
+  String idAdmin = "ZaVWCFmxoVVRyj51jaRC";
   //Đẩy danh sách sản phẩm mới lên firebase cloud firestore
   Future<DocumentReference> productMoiDetail(
       Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
-        .doc(idProduct) // Assuming idProduct is available
+        .doc(idAdmin) // Assuming idProduct is available
         .collection("sanphammoi")
         .add(userInfoMap);
   }
@@ -29,7 +29,7 @@ class DatabaseMethods {
       Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
-        .doc(idProduct)
+        .doc(idAdmin)
         .collection("sanphamnoibat")
         .add(userInfoMap);
   }
@@ -39,7 +39,7 @@ class DatabaseMethods {
       Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection('products')
-        .doc(idProduct)
+        .doc(idAdmin)
         .collection("sanpham")
         .add(userInfoMap);
   }
@@ -48,7 +48,7 @@ class DatabaseMethods {
   Future categoryDetail(Map<String, dynamic> userInfoMap) async {
     return await FirebaseFirestore.instance
         .collection("categorys")
-        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .doc(idAdmin)
         .collection("danhmuc")
         .add(userInfoMap);
   }
@@ -58,7 +58,7 @@ class DatabaseMethods {
     // Replace with your actual logic to fetch product stream from Firebase
     return FirebaseFirestore.instance
         .collection("products")
-        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .doc(idAdmin)
         .collection("sanphamnoibat")
         .snapshots();
   }
@@ -67,7 +67,7 @@ class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getProductMoiItem() async {
     return FirebaseFirestore.instance
         .collection("products")
-        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .doc(idAdmin)
         .collection("sanphammoi")
         .snapshots();
   }
@@ -76,7 +76,7 @@ class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getProductItem() async {
     return FirebaseFirestore.instance
         .collection("products")
-        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .doc(idAdmin)
         .collection("sanpham")
         .snapshots();
   }
@@ -85,7 +85,7 @@ class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getCategoryItem() async {
     return FirebaseFirestore.instance
         .collection("categorys")
-        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .doc(idAdmin)
         .collection("danhmuc")
         .snapshots();
   }
@@ -95,27 +95,34 @@ class DatabaseMethods {
     // Replace with your actual logic to fetch product stream from Firebase
     return FirebaseFirestore.instance
         .collection("products")
-        .doc("ZaVWCFmxoVVRyj51jaRC")
+        .doc(idAdmin)
         .collection("sanpham")
         .where('Category', isEqualTo: category)
         .snapshots();
   }
   //tạo hóa đơn
   Future<DocumentReference> addOrder(
-      List<Products> products, double totalPrice, int quantitys) async {
+      List<Products> products, double totalPrice, int quantitys, String reduce, double ship, String nameND, String emailND, String SDTND, String addressND) async {
     final uid = await UserPreferences.getUid();
+
     try {
       String maHD = randomAlphaNumeric(5);
 
       // Tạo một tài liệu mới trong collection "orders"
       DocumentReference orderRef = await FirebaseFirestore.instance
           .collection("orders")
-          .doc("hoadon")
-          .collection(uid!)
+          .doc(idAdmin)
+          .collection("hoadon")
           .add({
         'userId': uid,
         'totalAmount': totalPrice,
         'soluongdadat': quantitys,
+        'giamphantram': reduce,
+        'nameNM':nameND,
+        'emailNM':emailND,
+        'sdtNM':SDTND,
+        'addressNM':addressND,
+        'phivanchuyen':ship,
         'createdAt': FieldValue.serverTimestamp(),
         'updateAt': Timestamp.now(), // dùng admin khi mình chỉnh sửa status
         'status': "Đã thanh toán",
@@ -143,21 +150,22 @@ class DatabaseMethods {
       rethrow;
     }
   }
-  //load hóa đơn theo người dùng
+
+  // lấy hóa theo từng người dùng
   Future<Stream<QuerySnapshot>> getHoaDonStream() async {
+    // Replace with your actual logic to fetch product stream from Firebase
     final uid = await UserPreferences.getUid();
     return FirebaseFirestore.instance
         .collection("orders")
-        .doc("hoadon")
-        .collection(uid!)
+        .doc(idAdmin)
+        .collection("hoadon")
+        .where('userId', isEqualTo: uid)
         .snapshots();
   }
-
-
   //load tất cả hóa đơn
   Future<Stream<QuerySnapshot>> getAllHoaDonStream() async {
     return FirebaseFirestore.instance
-        .collection("orders")
+        .collectionGroup("hoadon")
         .snapshots();
   }
 

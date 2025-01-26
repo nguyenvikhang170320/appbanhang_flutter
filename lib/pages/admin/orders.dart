@@ -1,25 +1,18 @@
 import 'package:appbanhang/pages/admin/home_admin.dart';
-import 'package:appbanhang/provider/productprovider.dart';
-import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/services/database/databasemethod.dart';
-import 'package:appbanhang/services/sharedpreferences/userpreferences.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
-import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:toasty_box/toast_enums.dart';
-import 'package:toasty_box/toast_service.dart';
 
-class OrderSeller extends StatefulWidget {
-  const OrderSeller({super.key});
+class Order extends StatefulWidget {
+  const Order({super.key});
 
   @override
-  State<OrderSeller> createState() => _OrderSellerState();
+  State<Order> createState() => _OrderState();
 }
 
-class _OrderSellerState extends State<OrderSeller> {
+class _OrderState extends State<Order> {
   Stream? hoaDonStream;
 
   ontheload() async {
@@ -33,39 +26,12 @@ class _OrderSellerState extends State<OrderSeller> {
     super.initState();
   }
 
-  Future<void> updateOrderStatus(
-      String orderId, String newStatus) async {
-    final uid =
-    await UserPreferences.getUid();
-    try {
-      await FirebaseFirestore.instance
-          .collection("orders")
-          .doc("hoadon")
-          .collection(uid!)
-          .doc(orderId)
-          .update({'status': newStatus});
-
-      // Hiển thị thông báo cập nhật thành công
-      ToastService.showSuccessToast(context,
-          length: ToastLength.medium,
-          expandedHeight: 100,
-          message: "Trạng thái đã chỉnh sửa thành công");
-    } catch (e) {
-      // Xử lý lỗi
-      print('Error updating order status: $e');
-      ToastService.showSuccessToast(context,
-          length: ToastLength.medium,
-          expandedHeight: 100,
-          message: 'Có lỗi xảy ra khi cập nhật trạng thái');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Hóa đơn",
+          "Tất cả hóa đơn người dùng",
           style: AppWidget.boldTextFeildStyle(),
         ),
         backgroundColor: Colors.transparent,
@@ -81,9 +47,6 @@ class _OrderSellerState extends State<OrderSeller> {
             );
           },
         ),
-        actions: <Widget>[
-          NotificationButton(),
-        ],
       ),
       body: StreamBuilder(
         stream: hoaDonStream,
@@ -91,11 +54,9 @@ class _OrderSellerState extends State<OrderSeller> {
           if (snapshot.hasError) {
             return Text('Something went wrong');
           }
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
           }
-          print(snapshot.hasData);
           return snapshot.hasData
               ? ListView.builder(
               padding: EdgeInsets.zero,
@@ -105,8 +66,6 @@ class _OrderSellerState extends State<OrderSeller> {
               itemBuilder: (context, index) {
                 DocumentSnapshot ds = snapshot.data.docs[index];
                 print(ds);
-                final userProvider =
-                Provider.of<UserProvider>(context, listen: false);
                 //chuyển đổi giá trị tiền tệ
                 final locale = 'vi_VN';
                 final formatter =
@@ -114,9 +73,11 @@ class _OrderSellerState extends State<OrderSeller> {
                 formatter.maximumFractionDigits = 0;
                 String price = formatter.format(ds["totalAmount"]);
                 //ngày giờ
-                Timestamp timestamp = ds["hoadon"].ds["createdAt"]; // Lấy từ Firebase hoặc nguồn khác
+                Timestamp timestamp =
+                ds["createdAt"]; // Lấy từ Firebase hoặc nguồn khác
                 int timestamps = timestamp.seconds;
-                final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamps * 1000);
+                final dateTime =
+                DateTime.fromMillisecondsSinceEpoch(timestamps * 1000);
                 final formatters = DateFormat('dd/MM/yyyy HH:mm:ss');
                 final formattedDate = formatters.format(dateTime);
 
@@ -124,7 +85,7 @@ class _OrderSellerState extends State<OrderSeller> {
                 StringBuffer productName = StringBuffer();
                 String productDes = "";
                 String productCategory = "";
-                List<dynamic> products = ds["hoadon"].ds['products'] as List<dynamic>;
+                List<dynamic> products = ds['products'] as List<dynamic>;
                 for (var product in products) {
                   productName.write('${product['productName']}, ');
                   productDes = product['productDescription'];
@@ -139,8 +100,6 @@ class _OrderSellerState extends State<OrderSeller> {
                 allProductNames = allProductNames.substring(
                     0, allProductNames.length - 2);
                 print('Các sản phẩm: $allProductNames');
-
-
 
                 return Container(
                   margin: EdgeInsets.all(10),
@@ -177,6 +136,9 @@ class _OrderSellerState extends State<OrderSeller> {
                                   style: TextStyle(fontSize: 14.0)),
                             ],
                           ),
+                          SizedBox(
+                            height: 5,
+                          ),
                           // Product details
                           Row(
                             children: [
@@ -186,9 +148,18 @@ class _OrderSellerState extends State<OrderSeller> {
                                   style: TextStyle(fontSize: 14.0)),
                             ],
                           ),
-
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text("Danh mục:",
+                                  style: AppWidget.boldTextFeildStyle()),
+                              Text(productCategory,
+                                  style: TextStyle(fontSize: 14.0)),
+                            ],
+                          ),
                           SizedBox(height: 5.0),
-
                           Row(
                             children: [
                               Text("Giá:",
@@ -219,13 +190,13 @@ class _OrderSellerState extends State<OrderSeller> {
                           // Customer details
                           Text("Thông tin khách hàng:",
                               style: AppWidget.boldTextFeildStyle()),
-                          Text("Người mua: " + userProvider.getNameData(),
+                          Text("Người mua: " + ds["nameNM"].toString(),
                               style: AppWidget.userTextFeildStyle()),
-                          Text("Email: " + userProvider.getEmailData(),
+                          Text("Email: " + ds["emailNM"].toString(),
                               style: AppWidget.userTextFeildStyle()),
-                          Text("SĐT: " + userProvider.getPhoneData(),
+                          Text("SĐT: " + ds["sdtNM"].toString(),
                               style: AppWidget.userTextFeildStyle()),
-                          Text("Địa chỉ: " + userProvider.getAddressData(),
+                          Text("Địa chỉ: " + ds["addressNM"].toString(),
                               style: AppWidget.userTextFeildStyle()),
                           SizedBox(height: 5.0),
                           Row(
