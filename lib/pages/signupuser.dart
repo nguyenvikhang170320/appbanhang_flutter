@@ -318,8 +318,8 @@ class _SignUpState extends State<SignUp> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                        Color.fromARGB(255, 226, 58, 11),
-                        Color.fromARGB(255, 231, 109, 75),
+                        Color.fromARGB(255, 21, 228, 165),
+                        Color.fromARGB(255, 8, 230, 164),
                       ])),
                 ),
                 Container(

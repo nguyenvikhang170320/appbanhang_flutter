@@ -2,6 +2,7 @@ import 'package:appbanhang/model/users.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/onboard.dart';
 import 'package:appbanhang/pages/seller/bottomnavseller.dart';
+import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
@@ -44,14 +45,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
-      home: StreamBuilder(
+      home:  StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             User? user = snapshot.data;
             if (user != null) {
               print(user.uid);
-
               return  StreamBuilder<DocumentSnapshot>(
                 stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), // Lắng nghe thay đổi của document
                 builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -59,18 +59,18 @@ class MyApp extends StatelessWidget {
                     DocumentSnapshot? userData = snapshot.data;
                     if (userData != null && userData.exists) {
                       String role = userData['role']; // Lấy giá trị 'role' từ document
-                        if (role == 'user') {
-                          print("user");
-                          return BottomNav();
-                        } else if (role == 'seller') {
-                          print("seller");
-                          return BottomNavSeller();
-                        } else {
-                          // Xử lý trường hợp role không hợp lệ hoặc không tồn tại
-                          return Center(child: Text('Không có tài kh'));
-                        }
+                      if (role == 'user') {
+                        print("user");
+                        return BottomNav();
+                      } else if (role == 'seller') {
+                        print("seller");
+                        return BottomNavSeller();
+                      } else {
+                        // Xử lý trường hợp role không hợp lệ hoặc không tồn tại
+                        return Center(child: Text('Không có dữ liệu tài khoản'));
+                      }
                     } else {
-                      return Center(child: Text('Không tìm thấy dữ liệu người dùng!'));
+                      return Center(child: CircularProgressIndicator());
                     }
                   } else if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
                 child: CircularProgressIndicator()); // Hiển thị loading trong khi chờ trạng thái kết nối
           }
         },
-        ),
+      ),
       ),
     );
   }

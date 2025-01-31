@@ -128,7 +128,7 @@ class _SignUpSellerState extends State<SignUpSeller> {
     return Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
       width: MediaQuery.of(context).size.width,
-      height: 560,
+      height: 640,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: Container(

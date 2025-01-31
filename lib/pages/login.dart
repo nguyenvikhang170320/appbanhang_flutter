@@ -238,46 +238,50 @@ class _LoginState extends State<Login> {
     return Scaffold(
       key: _messangerKey, // dùng message scaffold
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                    Color.fromARGB(255, 11, 226, 154),
-                    Color.fromARGB(255, 13, 167, 146),
-                  ])),
-            ),
-            Container(
-              child: Form(
-                key: _formkey,
-                child: Container(
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Image.asset(
-                          "assets/images/logo.png",
-                          width: MediaQuery.of(context).size.width / 1.5,
-                          fit: BoxFit.cover,
-                        ),
+      body: ListView(
+        children: [
+          SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 2,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color.fromARGB(255, 11, 226, 154),
+                            Color.fromARGB(255, 13, 167, 146),
+                          ])),
+                ),
+                Container(
+                  child: Form(
+                    key: _formkey,
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/images/olx.png",
+                              width: MediaQuery.of(context).size.width / 1,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _buildBottomPart(),
+                        ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildBottomPart(),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )
     );
   }
 }
