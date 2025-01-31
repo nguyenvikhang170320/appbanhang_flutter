@@ -57,53 +57,68 @@ class _CheckOutState extends State<CheckOut> {
   );
   // button thanh toán
   Widget _buildCheckOut() {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    String cartId = cartProvider.idCart;
+    print(cartId);
+    // Your existing checkout logic here
+    double totalPrice = cartProvider.calculateTotalPrice();
+    print(totalPrice);
+    String reduce = cartProvider.discounts();
+    print(reduce);
+    double ship = cartProvider.ship();
+    print(ship);
+    int quantitys = cartProvider.quantitys;
+    print(quantitys);
+    String name = userProvider.getNameData();
+    print(name);
+    String email = userProvider.getEmailData();
+    print(email);
+    String sdt = userProvider.getPhoneData();
+    print(sdt);
+    String address = userProvider.getAddressData();
+    print(address);
     return Container(
       margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: ElevatedButton(
         style: raisedButtonStyle,
-        onPressed: () async {
-          // List<Products> listProducts = [widget.products];
-          // print(listProducts);
-          final cartProvider = Provider.of<CartProvider>(context, listen: false);
-          final productProvider = Provider.of<ProductProvider>(context, listen: false);
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
-          double totalPrice = cartProvider.calculateTotalPrice();
-          print(totalPrice);
-          String reduce = cartProvider.discounts();
-          print(reduce);
-          double ship = cartProvider.ship();
-          print(ship);
-          int quantitys = cartProvider.quantitys;
-          print(quantitys);
-          String name = userProvider.getNameData();
-          print(name);
-          String email = userProvider.getEmailData();
-          print(email);
-          String sdt = userProvider.getPhoneData();
-          print(sdt);
-          String address = userProvider.getAddressData();
-          print(address);
-
-
+        onPressed: cartProvider.items.isEmpty
+            ? null // Disable the button if the cart is empty
+            : () async {
           try {
-            await DatabaseMethods().addOrder(cartProvider.items.map((cartItem) => cartItem.products).toList(),totalPrice, quantitys, reduce,ship,name, email, sdt, address);
+            await DatabaseMethods().addOrder(
+                cartId,
+                cartProvider.items.map((cartItem) => cartItem.products).toList(),
+                totalPrice,
+                quantitys,
+                reduce,
+                ship,
+                name,
+                email,
+                sdt,
+                address);
             print('Thanh toán đơn hàng thành công');
             ToastService.showSuccessToast(context,
                 length: ToastLength.medium,
                 expandedHeight: 100,
                 message: "Thanh toán thành công");
             productProvider.addNotification("Notification");
-            cartProvider.clearCart();//xóa sạch đơn hàng sau khi thanh toán thành công
-
+            cartProvider.clearCart(); //xóa sạch đơn hàng sau khi thanh toán thành công
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => BottomNav(),
+              ),
+            );
           } catch (e) {
             print('Lỗi khi thanh toán đơn hàng: $e');
           }
-
         },
         child: Text('Thanh toán'),
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

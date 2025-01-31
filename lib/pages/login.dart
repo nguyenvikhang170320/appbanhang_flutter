@@ -1,11 +1,13 @@
 import 'package:appbanhang/pages/bottomnav.dart';
-import 'package:appbanhang/pages/signup.dart';
+import 'package:appbanhang/pages/seller/bottomnavseller.dart';
+import 'package:appbanhang/pages/signupuser.dart';
 import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:appbanhang/widgets/users/mybuttonuser.dart';
 import 'package:appbanhang/widgets/users/emailtextformfield.dart';
 import 'package:appbanhang/widgets/users/passwordTextformfield.dart';
 import 'package:appbanhang/widgets/style/widget_support.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,26 +50,48 @@ class _LoginState extends State<Login> {
           email = emailController.text;
           password = passwordController.text;
         });
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password)
-            .then((userCredential) async {
-          // Lấy userId từ userCredential
-          String userId = userCredential.user!.uid;
-          // Lưu userId vào SharedPreferences
-          await UserPreferences.setUid(userId);
-          print("UserID đã được lưu: $userId");
-        });
-        await FirebaseAuth.instance
+        UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 
-        //show thông báo dạng toasty
-        ToastService.showSuccessToast(context,
-            length: ToastLength.medium,
-            expandedHeight: 100,
-            message: "Đăng nhập thành công");
-        //chuyển màn hình
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BottomNav()));
+        String userId = userCredential.user!.uid;
+        await UserPreferences.setUid(userId);
+        print("UserID đã được lưu: $userId");
+
+        // Lấy thông tin người dùng từ Firestore sau khi đăng nhập
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users') // Thay 'users' bằng tên collection của bạn
+            .doc(userId)
+            .get();
+
+        String role = userData['role'];
+
+        if (role == 'user') {
+          print("user");
+          //show thông báo dạng toasty
+          ToastService.showSuccessToast(context,
+              length: ToastLength.medium,
+              expandedHeight: 100,
+              message: "Đăng nhập thành công");
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BottomNav()));
+        } else if (role == 'seller') {
+          print("seller");
+          //show thông báo dạng toasty
+          ToastService.showSuccessToast(context,
+              length: ToastLength.medium,
+              expandedHeight: 100,
+              message: "Đăng nhập thành công");
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BottomNavSeller()));
+        } else {
+          // Xử lý trường hợp role không hợp lệ hoặc không tồn tại
+          ToastService.showErrorToast(context,
+              message: "Vai trò không xác định!",
+              length: ToastLength.medium,
+              expandedHeight: 100);
+          FirebaseAuth.instance.signOut(); // Đăng xuất người dùng nếu vai trò không hợp lệ
+        }
+
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           ToastService.showWarningToast(context,

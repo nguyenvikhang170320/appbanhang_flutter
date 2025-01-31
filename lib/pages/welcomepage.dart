@@ -1,6 +1,6 @@
 import 'package:appbanhang/pages/about.dart';
 import 'package:appbanhang/pages/login.dart';
-import 'package:appbanhang/pages/signup.dart';
+import 'package:appbanhang/pages/signupuser.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

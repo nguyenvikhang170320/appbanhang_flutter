@@ -101,12 +101,10 @@ class DatabaseMethods {
         .snapshots();
   }
   //tạo hóa đơn
-  Future<DocumentReference> addOrder(
-      List<Products> products, double totalPrice, int quantitys, String reduce, double ship, String nameND, String emailND, String SDTND, String addressND) async {
+  Future<DocumentReference> addOrder(String idCart, List<Products> products, double totalPrice, int quantitys, String reduce, double ship, String nameND, String emailND, String SDTND, String addressND) async {
     final uid = await UserPreferences.getUid();
-
+    String maHD = randomAlphaNumeric(8);
     try {
-      String maHD = randomAlphaNumeric(5);
 
       // Tạo một tài liệu mới trong collection "orders"
       DocumentReference orderRef = await FirebaseFirestore.instance
@@ -118,19 +116,23 @@ class DatabaseMethods {
         'totalAmount': totalPrice,
         'soluongdadat': quantitys,
         'giamphantram': reduce,
+        'maHD': maHD,
         'nameNM':nameND,
         'emailNM':emailND,
         'sdtNM':SDTND,
         'addressNM':addressND,
         'phivanchuyen':ship,
         'createdAt': FieldValue.serverTimestamp(),
-        'updateAt': Timestamp.now(), // dùng admin khi mình chỉnh sửa status
-        'status': "Đã thanh toán",
-        'maHD': maHD,
+        'updateAt': FieldValue.serverTimestamp(),
+        'idCart': idCart,
+        'status': "đã thanh toán",
+        "thanhtoan":"",
       });
       // id tự sinh ra khi tạo cơ sở dữ liệu
-      String idCart = orderRef.id;
-      orderRef.update({'idHD': idCart});
+      String idHD = orderRef.id;
+      print(idHD);
+      orderRef.update({'idHD': idHD});
+
       // Chuẩn bị dữ liệu cho mảng products
       List<Map<String, dynamic>> productsData = products.map((product) => {
         'productId': product.idProduct,
@@ -143,11 +145,37 @@ class DatabaseMethods {
 
       // Cập nhật trường products
       await orderRef.update({'products': FieldValue.arrayUnion(productsData)});
-
+      print('Tạo đơn hàng thành công');
       return orderRef;
     } catch (e) {
-      print('Lỗi khi thanh toán đơn hàng: $e');
+      print('Lỗi khi tạo đơn hàng: $e');
       rethrow;
+    }
+  }
+  //thêm đơn hàng vào giỏ
+  Future<DocumentReference?> addCart(String idCart, Products products, int quantity) async {
+    final uid = await UserPreferences.getUid();
+    bool trangthaidonhang = true;
+    try {
+      DocumentReference cartRef =
+      await FirebaseFirestore.instance.collection('cart').doc(idAdmin).collection("giohang").add({
+        'uidUser': uid,
+        'idCart': idCart,
+        'quantity': quantity,
+        'timestamp': FieldValue.serverTimestamp(),
+        'productName': products.name,
+        'productPrice': products.price,
+        'trangthaidonhang': trangthaidonhang,
+      });
+
+      String id = cartRef.id;
+      cartRef.update({'id': id});
+
+      print('Đơn hàng đã được thêm thành công');
+      return cartRef;
+      // id tự sinh ra khi tạo cơ sở dữ liệu
+    } catch (e) {
+      print('Lỗi khi thêm đơn hàng: $e');
     }
   }
 

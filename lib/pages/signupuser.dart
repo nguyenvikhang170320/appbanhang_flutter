@@ -1,4 +1,5 @@
 import 'package:appbanhang/pages/login.dart';
+import 'package:appbanhang/pages/signupseller.dart';
 import 'package:appbanhang/services/database/databasemethod.dart';
 import 'package:appbanhang/widgets/users/addresstextformfield.dart';
 import 'package:appbanhang/widgets/users/changescreen.dart';
@@ -36,6 +37,7 @@ class _SignUpState extends State<SignUp> {
   String address = "";
   bool isMale = true;
   String image = "";
+  String shopname = "";
   TextEditingController nameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
@@ -56,6 +58,7 @@ class _SignUpState extends State<SignUp> {
           "name": nameController.text,
           "email": emailController.text,
           "phone": phoneController.text,
+          "shopname": shopname,
           "isMale": isMale == true ? "Nam" : "Nữ",
           "accountstatus": "chưa xác minh",
           "address": addressController.text,
@@ -63,6 +66,7 @@ class _SignUpState extends State<SignUp> {
           "image": image,
           "role": "user",
         };
+        print(addUserInfo);
         // Lưu uid vào Cloud Firestore
         await DatabaseMethods().addUserDetail(addUserInfo, IdUser);
 
@@ -106,11 +110,6 @@ class _SignUpState extends State<SignUp> {
         );
       }
     } else {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(
-      //     content: Text('Vui lòng kiểm tra lại thông tin nhập liệu.'),
-      //   ),
-      // );
       ToastService.showWarningToast(
         context,
         length: ToastLength.medium,
@@ -289,14 +288,14 @@ class _SignUpState extends State<SignUp> {
                   MaterialPageRoute(builder: (ctx) => Login()));
             },
           ),
-          // ChangeScreen(
-          //   name: "Đăng ký",
-          //   whichAccount: "Bạn là người bán!!",
-          //   onTap: () {
-          //     Navigator.of(context).pushReplacement(
-          //         MaterialPageRoute(builder: (ctx) => SignUpSeller()));
-          //   },
-          // ),
+          ChangeScreen(
+            name: "Đăng ký",
+            whichAccount: "Bạn là người bán!!",
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => SignUpSeller()));
+            },
+          ),
         ],
       ),
     );

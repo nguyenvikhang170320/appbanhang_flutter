@@ -5,14 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class Order extends StatefulWidget {
-  const Order({super.key});
+class Orders extends StatefulWidget {
+  const Orders({super.key});
 
   @override
-  State<Order> createState() => _OrderState();
+  State<Orders> createState() => _OrdersState();
 }
 
-class _OrderState extends State<Order> {
+class _OrdersState extends State<Orders> {
   Stream? hoaDonStream;
 
   ontheload() async {

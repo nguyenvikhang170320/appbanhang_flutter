@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:random_string/random_string.dart';
 import 'package:toasty_box/toast_enums.dart';
 import 'package:toasty_box/toast_service.dart';
 
@@ -293,26 +294,27 @@ class _DetailPageState extends State<DetailPage> {
               style: raisedButtonStyle,
               onPressed: () async {
                 // print(1);
-                final ColorSize colorSize;
+                final cart = Provider.of<CartProvider>(context, listen: false);
+                String idCart = randomAlphaNumeric(8);
+                print(idCart);
+                cart.addItem(idCart, widget.products, _selectedSize,selectedColor, count);
 
-                cart.addItem(widget.products, _selectedSize,selectedColor, count);
                 try {
-                  await DatabaseMethods().addColorSizeProduct(widget.products, _selectedSize, selectedColor,categoryRequiresSizeColor);
+                  await DatabaseMethods().addCart(
+                      idCart, widget.products,count);
                   print('Thêm đơn hàng thành công');
                   ToastService.showSuccessToast(context,
                       length: ToastLength.medium,
                       expandedHeight: 100,
                       message: "Thêm sản phẩm vào giỏ hàng thành công");
-
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => CheckOut(),
+                    ),
+                  );
                 } catch (e) {
                   print('Lỗi khi thêm sản phẩm: $e');
                 }
-
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => CheckOut(),
-                  ),
-                );
               },
               child: Text('Thêm vào giỏ hàng'),
             ),
@@ -338,7 +340,7 @@ class _DetailPageState extends State<DetailPage> {
           },
         ),
         actions: <Widget>[
-         NotificationButton(),
+          NotificationButton(),
         ],
       ),
       body: Container(
@@ -356,14 +358,6 @@ class _DetailPageState extends State<DetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildSize(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildColor(), // màu sản phẩm
-                      SizedBox(
-                        height: 10,
-                      ),
                       _buildQuantity(), // số lượng tăng giảm sản phẩm
                       SizedBox(
                         height: 20,

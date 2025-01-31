@@ -60,6 +60,8 @@ class _HomePagesState extends State<HomePages> {
   Widget _buildUserAccountsDrawerHeader() {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: true);
+    print(userProvider.getNameData());
+    print(userProvider.getEmailData());
     // Handle empty user list gracefully
     return UserAccountsDrawerHeader(
       accountName: Text(

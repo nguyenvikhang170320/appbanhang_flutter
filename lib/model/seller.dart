@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Users {
+class Seller {
   final String uid;
   final String name;
-  final String shopname;
   final String email;
+  final String shopname;
   final String phone;
   final String image;
   final String accountstatus;
@@ -12,7 +12,7 @@ class Users {
   final String address;
   final String role;
 
-  Users(
+  Seller(
       {required this.uid,
       required this.name,
       required this.shopname,
@@ -23,8 +23,8 @@ class Users {
       required this.isMale,
       required this.address,
       required this.role,});
-  factory Users.fromFirestore(DocumentSnapshot doc) {
-    return Users(
+  factory Seller.fromFirestore(DocumentSnapshot doc) {
+    return Seller(
       uid: doc['uid'] as String,
       name: doc['name'] as String,
       shopname: doc['shopname'] as String,

@@ -1,10 +1,11 @@
+import 'package:appbanhang/model/seller.dart';
 import 'package:appbanhang/model/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-class UserProvider extends ChangeNotifier {
-  List<Users> userModelList = [];
-  List<Users> get items => userModelList;
+class SellerProvider extends ChangeNotifier {
+  List<Seller> userModelList = [];
+  List<Seller> get items => userModelList;
   Future<void> getUserData() async {
     // Get current user (optional, if needed)
     User? currentUser = FirebaseAuth.instance.currentUser;
@@ -18,7 +19,7 @@ class UserProvider extends ChangeNotifier {
       if (currentUser?.uid == doc.data()['uid']) {
         Map<String, dynamic> userData = doc.data();
         // Create a Users object (assuming appropriate constructor)
-        Users user = Users(
+        Seller seller = Seller(
             uid: userData['uid'],
             name: userData['name'],
             shopname: userData['shopname'],
@@ -31,13 +32,13 @@ class UserProvider extends ChangeNotifier {
             role: userData['role']);
 
         // Add the user to the internal list
-        userModelList.add(user);
+        userModelList.add(seller);
       }
     });
     // Notify listeners about changes
     notifyListeners();
   }
-  List<Users> get getUserList{
+  List<Seller> get getUserList{
     return userModelList;
   }
 
@@ -54,7 +55,6 @@ class UserProvider extends ChangeNotifier {
     return  userModelList.fold(
         "", (total, item) => item.name); // Get all names
   }
-
   String getShopNameData() {
     if (userModelList.isEmpty) {
       return ""; // Handle empty list case

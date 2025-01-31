@@ -48,7 +48,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Order()));
+                        MaterialPageRoute(builder: (context) => Orders()));
                   },
                   child: Material(
                     elevation: 10.0,

@@ -1,9 +1,13 @@
+import 'package:appbanhang/model/users.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/onboard.dart';
+import 'package:appbanhang/pages/seller/bottomnavseller.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';
+import 'package:appbanhang/provider/sellerprovider.dart';
 import 'package:appbanhang/provider/userprovider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -35,14 +39,54 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => ProductProvider()),
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
         ChangeNotifierProvider(create: (ctx) => OrderProvider()),
+        ChangeNotifierProvider(create: (ctx) => SellerProvider()),
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, snapShot) =>
-              snapShot.hasData ? BottomNav() : Onboard(),
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            User? user = snapshot.data;
+            if (user != null) {
+              print(user.uid);
+
+              return  StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), // Lắng nghe thay đổi của document
+                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    DocumentSnapshot? userData = snapshot.data;
+                    if (userData != null && userData.exists) {
+                      String role = userData['role']; // Lấy giá trị 'role' từ document
+                        if (role == 'user') {
+                          print("user");
+                          return BottomNav();
+                        } else if (role == 'seller') {
+                          print("seller");
+                          return BottomNavSeller();
+                        } else {
+                          // Xử lý trường hợp role không hợp lệ hoặc không tồn tại
+                          return Center(child: Text('Không có tài kh'));
+                        }
+                    } else {
+                      return Center(child: Text('Không tìm thấy dữ liệu người dùng!'));
+                    }
+                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return Center(child: Text('Lỗi: ${snapshot.error}'));
+                  }
+                },
+              );
+            } else {
+              return Onboard();
+            }
+          } else {
+            return Center(
+                child: CircularProgressIndicator()); // Hiển thị loading trong khi chờ trạng thái kết nối
+          }
+        },
         ),
       ),
     );
