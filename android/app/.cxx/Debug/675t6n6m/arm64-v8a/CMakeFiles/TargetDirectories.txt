@@ -1,0 +1,2 @@
+C:/Users/tuankenofficial2025/AndroidStudioProjects/flutter/appbanhang/android/app/.cxx/Debug/675t6n6m/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/tuankenofficial2025/AndroidStudioProjects/flutter/appbanhang/android/app/.cxx/Debug/675t6n6m/arm64-v8a/CMakeFiles/rebuild_cache.dir

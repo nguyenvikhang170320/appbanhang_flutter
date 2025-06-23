@@ -1,8 +1,6 @@
-import 'package:appbanhang/model/users.dart';
 import 'package:appbanhang/pages/bottomnav.dart';
 import 'package:appbanhang/pages/onboard.dart';
 import 'package:appbanhang/pages/seller/bottomnavseller.dart';
-import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/provider/cartprovider.dart';
 import 'package:appbanhang/provider/orderprovider.dart';
 import 'package:appbanhang/provider/productprovider.dart';

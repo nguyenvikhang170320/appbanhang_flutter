@@ -6,9 +6,9 @@ import 'package:appbanhang/pages/welcomepage.dart';
 import 'package:appbanhang/pages/listcategory.dart';
 import 'package:appbanhang/provider/userprovider.dart';
 import 'package:appbanhang/services/auth/auth.dart';
-import 'package:appbanhang/widgets/slidebar/carouselview.dart';
 import 'package:appbanhang/widgets/products/loadproducthortical.dart';
 import 'package:appbanhang/widgets/products/loadproductvertical.dart';
+import 'package:appbanhang/widgets/slidebar/carouselview.dart';
 import 'package:appbanhang/widgets/thongbao/notificationbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -357,7 +357,7 @@ class _HomePagesState extends State<HomePages> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CarouselView(),
+              Carousel(),
               SizedBox(
                 height: 10,
               ),

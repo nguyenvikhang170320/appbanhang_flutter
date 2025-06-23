@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-class CarouselView extends StatelessWidget {
+class Carousel extends StatelessWidget {
   final List<String> imageList = [
     "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fappbanhang1.jpg?alt=media&token=ec09f148-480b-4b01-a73f-b8cfaff45d00",
     "https://firebasestorage.googleapis.com/v0/b/foodappflutter-d99ee.appspot.com/o/sliderbar_appbanhang%2Fappbanhang2.jpg?alt=media&token=4b3f75d7-6ba0-4082-9da1-9796d0bc840b",
